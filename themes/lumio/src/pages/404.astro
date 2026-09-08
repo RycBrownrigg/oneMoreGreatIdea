@@ -1,0 +1,19 @@
+---
+import Base from "@/layouts/Base.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import NotFoundSection from "@/components/sections/404Section.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const title = "Page Not Found";
+---
+
+<Base status={404} title={title} disableTagline={true} fitToScreen={false}>
+  <PageHeader title={title} breadcrumbTitle={"Page Not Found"} />
+  <NotFoundSection />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

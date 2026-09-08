@@ -1,0 +1,281 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { testimonialSectionSchema } from "@/sections.schema";
+import SectionTitle from "../global/SectionTitle.astro";
+import TestimonialCard from "@/layouts/components/cards/TestimonialCard.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+// Type
+export type TestimonialSectionType = z.infer<typeof testimonialSectionSchema>;
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "testimonial-section", Astro.currentLocale)
+)?.data as TestimonialSectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as TestimonialSectionType;
+
+let { enable = true, title } = (actualContent as TestimonialSectionType) || {};
+if (!enable) return;
+
+let pageData = (await getEntryCTM("testimonial", "-index", Astro.currentLocale))
+  ?.data;
+const items = pageData.list?.filter((item) => item.enable !== false) ?? [];
+
+const { hasSectionSpacing = true } = Astro.props;
+---
+
+<section class:list={["overflow-hidden", { "pt-0": !hasSectionSpacing }]}>
+  <div class="bg-primary section-spacing-vertical relative">
+    <div class="relative container">
+      {
+        title && (
+          <Reveal
+            class="mx-auto mb-10 max-w-6xl text-center md:mb-15"
+            animation="fade-up-sm">
+            <SectionTitle title={title} variant="dark" />
+          </Reveal>
+        )
+      }
+
+      {
+        items.length > 0 && (
+          <Reveal
+            class="relative flex min-w-0 flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-0"
+            animation="fade-up-sm"
+            delay="150">
+            <button
+              data-testimonial-action="prev"
+              aria-label={t("aria.prevTestimonial")}
+              class="border-text-inverse bg-primary absolute left-5 z-20 hidden h-14 w-25 items-center justify-center rounded-full border p-3 text-white transition-all duration-300 disabled:pointer-events-none disabled:opacity-40 lg:flex xl:left-18.75">
+              <OptimizedImage
+                src={"/images/icons/svg/arrow-left.svg"}
+                alt={t("aria.prevTestimonial")}
+                width={44}
+                height={27}
+                class="h-full w-auto object-cover"
+              />
+            </button>
+
+            <div class="w-full min-w-0 overflow-hidden" data-testimonial-slider>
+              <div
+                class="flex min-w-0 transition-transform duration-700 ease-out will-change-transform"
+                data-testimonial-track>
+                {items.map((testimonial, index) => (
+                  <div
+                    class="w-full min-w-full shrink-0"
+                    data-testimonial-slide
+                    aria-hidden={index === 0 ? "false" : "true"}>
+                    <div class="lg:mx-25 xl:mx-50">
+                      <TestimonialCard
+                        content={testimonial.content}
+                        customer={testimonial.customer}
+                        index={index}
+                        options={{ card: { layout: "featured" } }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              data-testimonial-action="next"
+              aria-label={t("aria.nextTestimonial")}
+              class="border-text-inverse bg-primary absolute right-5 z-20 hidden h-14 w-25 items-center justify-center rounded-full border p-3 text-white transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 lg:flex xl:right-15">
+              <OptimizedImage
+                src={"/images/icons/svg/arrow-right.svg"}
+                alt={t("aria.nextTestimonial")}
+                width={44}
+                height={27}
+                class="h-full w-auto object-cover"
+              />
+            </button>
+
+            <div class="flex items-center justify-center gap-4 lg:hidden">
+              <button
+                data-testimonial-action="prev"
+                aria-label={t("aria.prevTestimonial")}
+                class="border-text-inverse bg-primary flex h-11 w-20 items-center justify-center rounded-full border p-3 text-white transition-all duration-300 disabled:pointer-events-none disabled:opacity-40">
+                <OptimizedImage
+                  src={"/images/icons/svg/arrow-left.svg"}
+                  alt={t("aria.prevTestimonial")}
+                  width={44}
+                  height={27}
+                  class="h-full w-auto object-cover"
+                />
+              </button>
+
+              <button
+                data-testimonial-action="next"
+                aria-label={t("aria.nextTestimonial")}
+                class="border-text-inverse bg-primary flex h-11 w-20 items-center justify-center rounded-full border p-3 text-white transition-all duration-300 disabled:pointer-events-none disabled:opacity-50">
+                <OptimizedImage
+                  src={"/images/icons/svg/arrow-right.svg"}
+                  alt={t("aria.nextTestimonial")}
+                  width={44}
+                  height={27}
+                  class="h-full w-auto object-cover"
+                />
+              </button>
+            </div>
+          </Reveal>
+        )
+      }
+    </div>
+  </div>
+
+  <script>
+    function initTestimonialSliders() {
+      document
+        .querySelectorAll<HTMLElement>("[data-testimonial-slider]")
+        .forEach((slider) => {
+          if (slider.dataset.enhanced === "true") return;
+          slider.dataset.enhanced = "true";
+
+          const track = slider.querySelector<HTMLElement>(
+            "[data-testimonial-track]",
+          );
+          const slides = Array.from(
+            slider.querySelectorAll<HTMLElement>("[data-testimonial-slide]"),
+          );
+          const section = slider.closest("section");
+          const prevButtons = Array.from(
+            section?.querySelectorAll<HTMLButtonElement>(
+              '[data-testimonial-action="prev"]',
+            ) ?? [],
+          );
+          const nextButtons = Array.from(
+            section?.querySelectorAll<HTMLButtonElement>(
+              '[data-testimonial-action="next"]',
+            ) ?? [],
+          );
+
+          if (!track || slides.length <= 1) return;
+
+          let current = 0;
+          let autoplayTimer = 0;
+          let touchStartX = 0;
+          let touchCurrentX = 0;
+          let isTouchTracking = false;
+          const swipeThreshold = 48;
+
+          const update = (index: number) => {
+            current = (index + slides.length) % slides.length;
+            track.style.transform = `translate3d(-${current * 100}%, 0, 0)`;
+
+            slides.forEach((slide, slideIndex) => {
+              slide.setAttribute(
+                "aria-hidden",
+                slideIndex === current ? "false" : "true",
+              );
+            });
+
+            const atStart = current === 0;
+            const atEnd = current === slides.length - 1;
+
+            prevButtons.forEach((button) => {
+              button.disabled = atStart;
+            });
+            nextButtons.forEach((button) => {
+              button.disabled = atEnd;
+            });
+          };
+
+          const stopAutoplay = () => {
+            window.clearInterval(autoplayTimer);
+          };
+
+          const startAutoplay = () => {
+            stopAutoplay();
+            autoplayTimer = window.setInterval(
+              () => update(current + 1),
+              50000,
+            );
+          };
+
+          prevButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              update(current - 1);
+              startAutoplay();
+            });
+          });
+
+          nextButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              update(current + 1);
+              startAutoplay();
+            });
+          });
+
+          slider.addEventListener("mouseenter", stopAutoplay);
+          slider.addEventListener("mouseleave", startAutoplay);
+          slider.addEventListener("focusin", stopAutoplay);
+          slider.addEventListener("focusout", startAutoplay);
+          slider.addEventListener(
+            "touchstart",
+            (event) => {
+              const touch = event.touches[0];
+              if (!touch) return;
+              touchStartX = touch.clientX;
+              touchCurrentX = touch.clientX;
+              isTouchTracking = true;
+              stopAutoplay();
+            },
+            { passive: true },
+          );
+          slider.addEventListener(
+            "touchmove",
+            (event) => {
+              if (!isTouchTracking) return;
+              const touch = event.touches[0];
+              if (!touch) return;
+              touchCurrentX = touch.clientX;
+            },
+            { passive: true },
+          );
+          slider.addEventListener(
+            "touchend",
+            () => {
+              if (!isTouchTracking) return;
+              const deltaX = touchCurrentX - touchStartX;
+
+              if (Math.abs(deltaX) >= swipeThreshold) {
+                update(deltaX < 0 ? current + 1 : current - 1);
+              }
+
+              isTouchTracking = false;
+              startAutoplay();
+            },
+            { passive: true },
+          );
+          slider.addEventListener(
+            "touchcancel",
+            () => {
+              isTouchTracking = false;
+              startAutoplay();
+            },
+            { passive: true },
+          );
+
+          update(0);
+          startAutoplay();
+        });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initTestimonialSliders);
+    } else {
+      initTestimonialSliders();
+    }
+  </script>
+</section>

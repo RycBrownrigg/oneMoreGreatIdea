@@ -1,0 +1,94 @@
+---
+import config from ".astro/config.generated.json";
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM, getCollectionCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { ourServicesSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import Button from "@/components/Button.astro";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import ServiceCard from "@/components/cards/ServiceCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+type SectionType = Section &
+  NonNullable<z.infer<typeof ourServicesSectionSchema>>;
+type Props = { content?: SectionType };
+
+// Default content fetch from sections collection
+let defaultContent = (
+  await getEntryCTM("sections", "our-services-three", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  badge,
+  title,
+  footerText,
+  footerLink,
+  limit,
+  cardLayout,
+} = actualContent;
+
+if (!enable) return;
+
+let servicesList = await getCollectionCTM(
+  config.settings.servicesFolder as "services",
+  Astro.currentLocale,
+);
+// Ensure sorting uses the weight
+servicesList.sort((a, b) => (a.data.weight || 0) - (b.data.weight || 0));
+
+if (limit) {
+  servicesList = servicesList.slice(0, limit);
+}
+---
+
+<section class="relative overflow-hidden">
+  <div class="container">
+    <div
+      class="mx-auto mb-8 flex max-w-4xl flex-col gap-4 text-center md:mb-15 md:px-4 lg:gap-6">
+      {badge && <SectionBadge title={badge} />}
+      {title && <SectionTitle title={title} />}
+    </div>
+
+    {
+      servicesList && servicesList.length > 0 && (
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-7.5">
+          {servicesList.map((service, i) => (
+            <ServiceCard
+              content={service}
+              options={{ card: { layout: cardLayout } }}
+              index={i}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      footerText && (
+        <div
+          class="mt-10 flex flex-col items-center justify-center text-center text-sm font-medium md:flex-row md:text-lg xl:mt-15"
+          data-aos="fade-up"
+          data-aos-delay="400"
+          data-aos-duration="600">
+          <span set:html={markdownify(footerText)} />
+          {footerLink && (
+            <Button
+              {...footerLink}
+              tag="a"
+              variant="text"
+              class="text-primary ml-1 font-semibold"
+            />
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import TeamCard from "../cards/TeamCard.astro";
+
+// Type for this section data
+let pageData = (await getEntryCTM("team", "-index", Astro.currentLocale))?.data;
+
+const { list, draft } = pageData;
+if (draft) return;
+---
+
+<section class="overflow-hidden">
+  <div class="container">
+    <div
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-7.5">
+      {
+        list &&
+          list?.map((item, index) => (
+            <TeamCard
+              name={item.name}
+              role={item.role}
+              image={item.image}
+              index={index}
+              layout={"card"}
+              social={item.social}
+              status={item.status}
+            />
+          ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,136 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { getInTouchSectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import VideoModal from "@/components/widgets/VideoModal.astro";
+import Button from "../Button.astro";
+import { getLocaleUrlCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+// Type
+type SectionType = z.infer<typeof getInTouchSectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasBackgroundWhite?: boolean;
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "get-in-touch", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, hero } = actualContent ?? {};
+const t = await useTranslations(Astro.currentLocale as string);
+const heroImage = hero?.image;
+const heroImageAlt = hero?.imageAlt;
+const heroPlayLabel = hero?.playLabel;
+const heroVideo = hero?.video;
+const heroTaglineLeft = hero?.taglineLeft;
+const heroTaglineRight = hero?.taglineRight;
+const heroButton = hero?.button;
+
+if (!enable) return;
+---
+
+<section
+  class:list={[
+    "has-video-modal relative overflow-hidden px-4 pt-0",
+    Astro.props.hasSectionSpacing !== false && "section-spacing-bottom",
+    Astro.props.hasBackgroundWhite ? "bg-theme-light" : "",
+  ]}>
+  {
+    heroImage && (
+      <>
+        {/* Background image */}
+        <OptimizedImage
+          src={heroImage}
+          alt={heroImageAlt || "Get In Touch"}
+          width={1920}
+          height={700}
+          class="absolute inset-0 size-full object-cover"
+        />
+
+        {/* Dark overlay */}
+        <div class="bg-theme-dark/40 absolute inset-0" />
+      </>
+    )
+  }
+  <div class="container">
+    <Reveal
+      class="section-spacing-vertical relative h-[clamp(440px,50vw,700px)] w-full overflow-hidden rounded-lg py-10"
+      animation="reveal-anim-up"
+      duration="900">
+      {/* Center: PLAY button + Get In Touch CTA */}
+      <Reveal
+        class="absolute inset-0 mb-44 flex flex-col items-center justify-center gap-6"
+        animation="fade-up-sm"
+        delay="150">
+        {/* PLAY circle */}
+        {
+          heroPlayLabel && (
+            <Button
+              tag="button"
+              aria-label={t("aria.playVideo")}
+              aria-haspopup={heroVideo?.src ? "dialog" : undefined}
+              aria-expanded={heroVideo?.src ? "false" : undefined}
+              aria-controls={heroVideo?.id}
+              data-hs-overlay={heroVideo?.id ? "#" + heroVideo.id : undefined}
+              data-hs-overlay-options={
+                heroVideo?.id ? `{"emulateScrollbarSpace" : true}` : undefined
+              }
+              variant="outline"
+              label={heroPlayLabel}
+              class="video-modal-toggle bg-theme-light flex size-20 items-center justify-center rounded-full p-0 text-lg font-bold tracking-widest shadow-lg transition-transform duration-300 hover:scale-110 lg:size-30 xl:size-37"
+            />
+          )
+        }
+      </Reveal>
+
+      <Reveal
+        class="border-text-inverse/15 absolute bottom-0 left-0 flex w-full flex-col items-center justify-between gap-6 border-t py-6 text-center md:mx-6 md:w-[calc(100%-48px)] md:flex-row md:gap-6 md:text-left lg:mx-12 lg:w-[calc(100%-96px)] lg:py-14 xl:ms-17 xl:me-14 xl:w-[calc(100%-108px)]"
+        animation="fade-up-sm"
+        delay="250">
+        {/* Bottom-left tagline */}
+        {
+          heroTaglineLeft && (
+            <p class="max-w-xs flex-1 leading-snug font-medium text-white/90 md:left-12 md:text-lg lg:text-xl">
+              {heroTaglineLeft}
+            </p>
+          )
+        }
+
+        {/* Get In Touch button */}
+        {
+          heroButton && (
+            <Button
+              variant="fill"
+              url={getLocaleUrlCTM(heroButton.url ?? "#", Astro.currentLocale)}
+              icon={{ enable: true, name: "ArrowUpRight", position: "left" }}
+              class="btn-primary"
+              {...heroButton}
+            />
+          )
+        }
+        {/* Bottom-right tagline */}
+        {
+          heroTaglineRight && (
+            <p class="max-w-xs flex-1 leading-snug font-medium text-white/90 md:right-12 md:text-lg lg:text-xl">
+              {heroTaglineRight}
+            </p>
+          )
+        }
+      </Reveal>
+    </Reveal>
+  </div>
+</section>
+
+{heroVideo && heroVideo.src && <VideoModal video={heroVideo} />}

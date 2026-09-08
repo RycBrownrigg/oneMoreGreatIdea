@@ -1,0 +1,83 @@
+---
+import "aos/dist/aos.css";
+import "@/styles/global.css";
+import Head from "@/components/global/Head.astro";
+import Footer from "@/components/global/Footer.astro";
+import FooterTwo from "@/components/global/FooterTwo.astro";
+import Header from "@/components/global/header/Header.astro";
+import HeaderTwo from "@/components/global/header/HeaderTwo.astro";
+import HeaderThree from "@/components/global/header/HeaderThree.astro";
+import type { JSONLDProps } from "@/lib/utils/JsonLdGenerator";
+import PageLoader from "./components/utilities/PageLoader.astro";
+import GlobalScripts from "./components/widgets/GlobalScripts.astro";
+import config from ".astro/config.generated.json";
+import BackToTop from "./components/widgets/BackToTop.astro";
+import KeepAstroSourceLoc from "./components/widgets/KeepAstroSourceLoc.astro";
+import BreakpointIndicator from "./components/widgets/BreakpointIndicator.astro";
+
+type Props = JSONLDProps & {
+  className?: string;
+  fitToScreen?: boolean;
+  draft?: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  robots?: string;
+  excludeFromSitemap?: boolean;
+  customSlug?: string;
+  canonical?: string;
+  status?: number;
+  keywords?: string[]; // Array of strings
+  disableTagline?: boolean;
+  structuredData?: Props;
+  header?: "one" | "two" | "three";
+  footer?: "one" | "two";
+  preloadImages?: string[];
+};
+
+// destructure frontmatter
+let { structuredData } = Astro.props;
+
+const { pathname } = Astro.url;
+
+const defaultHeader = "one";
+const defaultFooter = "two";
+
+const resolvedHeader = Astro.props.header || defaultHeader;
+const resolvedFooter = Astro.props.footer || defaultFooter;
+---
+
+<!doctype html>
+<html
+  lang={Astro.currentLocale ||
+    config.settings.multilingual.defaultLanguage ||
+    "en"}>
+  <Head {...Astro.props} structuredData={structuredData} />
+  <body
+    class:list={[
+      {
+        "home-three": pathname.includes("/home-three"),
+        "is-homepage": Astro.props.homepage,
+      },
+    ]}>
+    {!Astro.props.homepage && <PageLoader />}
+    {
+      resolvedHeader === "two" ? (
+        <HeaderTwo />
+      ) : resolvedHeader === "three" ? (
+        <HeaderThree />
+      ) : (
+        <Header />
+      )
+    }
+    <main class:list={["has-section-gap", Astro.props.class]}>
+      <slot />
+    </main>
+    {resolvedFooter === "two" ? <FooterTwo /> : <Footer />}
+
+    <GlobalScripts />
+    <BreakpointIndicator />
+
+    <BackToTop />
+    <KeepAstroSourceLoc />
+  </body>
+</html>

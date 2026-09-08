@@ -1,0 +1,37 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import MarqueeSectionTwo from "@/components/sections/MarqueeSectionTwo.astro";
+import ServicesWorkSection from "@/components/sections/ServicesWorkSection.astro";
+import FactSection from "@/components/sections/FactSection.astro";
+import TestimonialSection from "@/components/sections/TestimonialSection.astro";
+import SuccessSection from "@/components/sections/SuccessSection.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
+import ServiceListSection from "@/components/sections/ServiceListSection.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const services = await getEntryCTM("services", "-index", Astro.currentLocale);
+---
+
+<Base {...services.data}>
+  <PageHeader
+    title={services.data.title}
+    breadcrumbTitle={services?.data?.breadcrumbTitle}
+  />
+  <ServiceListSection />
+  <MarqueeSectionTwo />
+  <ServicesWorkSection />
+  <FactSection />
+  <TestimonialSection />
+  <SuccessSection />
+  <CustomersSection hasSectionSpacing={false} />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

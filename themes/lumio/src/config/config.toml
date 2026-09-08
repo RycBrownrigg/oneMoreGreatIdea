@@ -1,0 +1,97 @@
+# Site Configuration
+[site]
+  title            = "Ryc Brownrigg"
+  description      = "Principal OTT, Web3 and AI Architect. Streaming platform architecture, cross-chain content rights, and technical due diligence for founders, CTOs, and investors."
+  tagline          = "Principal OTT, Web3 and AI Architect"
+  taglineSeparator = " — "
+  baseUrl          = "https://onemoregreatidea.com"
+  logo             = "/images/rb-logo.svg"
+  logoWhite        = "/images/rb-logo.svg"
+  logoText         = "Ryc Brownrigg"
+  logoWidth        = "36px"
+  logoHeight       = "36px"
+
+  trailingSlash = true
+
+  [site.favicon]
+    image = "/images/rb-logo.svg"
+
+
+# SEO Metadata
+[seo]
+  author   = "Ryc Brownrigg"
+  keywords = ["OTT architect", "Web3 consultant", "streaming platform architecture", "technical due diligence", "fractional CTO", "Polkadot", "content rights blockchain"]
+  robots   = "index, follow"
+
+  [seo.robotsTxt]
+    enable   = true
+    disallow = []
+
+  [seo.sitemap]
+    enable  = true
+    exclude = []
+
+
+# Contact Information
+[contact]
+  location = "Remote / Alabama / Denver"
+  phone    = "+1.720.277.1420"
+  email    = "ryc@askryc.mt"
+
+
+# Theme settings
+[settings]
+  blogFolder        = "blog"
+  servicesFolder    = "services"
+  caseStudiesFolder = "case-studies"
+
+  pagination   = 3
+  stickyHeader = true
+
+  contactFormAction   = "https://formsubmit.co/ryc@askryc.mt"
+  contactFormProvider = "formsubmit.co"
+
+  footerDescription = "Principal OTT, Web3 and AI Architect — 25+ years shipping consumer platforms at scale. Available for architecture reviews, feasibility studies, due diligence, and fractional advisory."
+
+  [settings.copyright]
+    enable = true
+    text   = "Copyright © 2025 Ryc Brownrigg. All Rights Reserved."
+
+  [settings.subscription]
+    enable     = false
+    title      = ""
+    formAction = ""
+
+  [settings.multilingual]
+    enable               = true
+    defaultLanguage      = "en"
+    disableLanguages     = ["fr"]
+    showDefaultLangInUrl = false
+
+  [settings.navigationButton]
+    enable = true
+    label  = "Start a Conversation"
+    url    = "/contact/"
+
+  [settings.announcementBar]
+    enable = false
+    label  = ""
+
+  [settings.markup.tableOfContents]
+    enable     = true
+    expanded   = true
+    endLevel   = 5
+    ordered    = false
+    startLevel = 1
+
+
+# OpenGraph Metadata
+[opengraph]
+  image       = "/images/og-image.jpg"
+  ogLocale    = "en_US"
+  ogType      = "website"
+  twitter     = ""
+  twitterCard = "summary_large_image"
+
+[head]
+  content = ""

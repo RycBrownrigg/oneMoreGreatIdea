@@ -1,0 +1,87 @@
+---
+import type { z } from "astro/zod";
+import type { FAQItem, Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { faqSectionSchema } from "@/sections.schema";
+import AccordionList from "@/components/widgets/AccordionList.astro";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+export type SectionType = Section & z.infer<typeof faqSectionSchema>;
+
+type Props = {
+  content?: SectionType;
+  class?: string;
+  hasSectionSpacing?: boolean;
+  hasLightBackground?: boolean;
+  variant?: "onlyCard" | "default";
+};
+
+// Fetching the default content for this section
+let defaultContent = (
+  await getEntryCTM("sections", "faq-section", Astro.currentLocale)
+)?.data as SectionType;
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, badge, title } = actualContent as SectionType;
+
+const {
+  class: className,
+  hasSectionSpacing = true,
+  variant = "default",
+} = Astro.props;
+
+// Type for this section data
+type PageType = Section & {
+  list?: FAQItem[];
+};
+let pageData = (await getEntryCTM("faq", "-index", Astro.currentLocale))
+  ?.data as PageType;
+
+if (!enable) return;
+
+// Pre-process list to add numbering to titles
+const faqs = pageData?.list?.map((item, index) => ({
+  ...item,
+  title: `${index + 1}. ${item.title}`,
+}));
+---
+
+{
+  variant === "default" ? (
+    <section
+      class:list={["overflow-hidden", className, !hasSectionSpacing && "pt-0"]}>
+      <div class="bg-theme-light section-spacing-vertical rounded-2xl">
+        <div class="container">
+          <div class="mx-auto mb-8 flex max-w-3xl flex-col gap-4 text-center md:mb-15 lg:gap-6">
+            {badge && <SectionBadge title={badge} />}
+            {title && <SectionTitle title={title} />}
+          </div>
+
+          {faqs && faqs.length > 0 && (
+            <div class="" data-aos="fade-up" data-aos-delay="200">
+              <AccordionList content={faqs} bgColor="white" />
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section class:list={["overflow-hidden", className]}>
+      <div class="rounded-2xl">
+        <div class="container">
+          {faqs && faqs.length > 0 && (
+            <div data-aos="fade-up" data-aos-delay="200">
+              <AccordionList content={faqs} bgColor="light" />
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

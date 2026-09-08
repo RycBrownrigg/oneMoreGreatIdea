@@ -1,0 +1,64 @@
+---
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import Pagination from "../widgets/Pagination.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json";
+import type { caseStudiesSectionSchema } from "@/sections.schema";
+import type { z } from "astro/zod";
+import type { CollectionKey } from "astro:content";
+import CaseStudyCard from "../cards/CaseStudyCard.astro";
+
+const { caseStudiesFolder } = config.settings;
+
+// Type for this section data
+type SectionType = z.infer<typeof caseStudiesSectionSchema>;
+type Props = {
+  listPage?: boolean;
+  content?: SectionType;
+  pagination?: {
+    enable: boolean;
+    currentPage: number;
+  };
+};
+
+let { listPage = false } = Astro.props as Props;
+
+let list = await getCollectionCTM(
+  caseStudiesFolder as CollectionKey,
+  Astro.currentLocale,
+);
+
+// Sort list by date
+list = sortByDate(list);
+// Limit the number of items to be displayed
+let totalPages = Math.ceil(list?.length / config.settings.pagination);
+const pagination = Astro.props.pagination;
+if (pagination) {
+  const indexOfLastPost = pagination?.currentPage * config.settings.pagination;
+  const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
+  list = list.slice(indexOfFirstPost, indexOfLastPost);
+}
+---
+
+<section>
+  <div class="container space-y-10 md:space-y-16">
+    {
+      list && list.length > 0 && (
+        <div class="mx-auto grid gap-5 lg:grid-cols-2 lg:gap-7 xl:max-w-312.5">
+          {list.map((item, index) => {
+            return <CaseStudyCard content={item} index={index} />;
+          })}
+        </div>
+      )
+    }
+    {
+      listPage && (
+        <Pagination
+          collection={caseStudiesFolder}
+          currentPage={pagination?.currentPage || 1}
+          totalPages={totalPages}
+        />
+      )
+    }
+  </div>
+</section>

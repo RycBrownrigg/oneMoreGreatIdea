@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E27"/>
+      <stop offset="55%" stop-color="#0F1A3D"/>
+      <stop offset="100%" stop-color="#131B3A"/>
+    </linearGradient>
+    <linearGradient id="footerBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+    <radialGradient id="bridgeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <g stroke="#2E3A5C" stroke-width="1" opacity="0.25">
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+  </g>
+  <circle cx="935" cy="305" r="190" fill="url(#bridgeGlow)"/>
+  <line x1="770" y1="148" x2="770" y2="452" stroke="#22D3EE" stroke-width="2" opacity="0.35"/>
+  <rect x="742" y="140" width="56" height="32" rx="5" fill="#1B2547" stroke="#22D3EE" stroke-width="1.5"/>
+  <rect x="742" y="210" width="56" height="32" rx="5" fill="#1B2547" stroke="#22D3EE" stroke-width="1.5"/>
+  <rect x="742" y="280" width="56" height="32" rx="5" fill="#1B2A52" stroke="#22D3EE" stroke-width="2"/>
+  <rect x="742" y="350" width="56" height="32" rx="5" fill="#1B2547" stroke="#22D3EE" stroke-width="1.5"/>
+  <rect x="742" y="420" width="56" height="32" rx="5" fill="#1B2547" stroke="#22D3EE" stroke-width="1.5"/>
+  <circle cx="770" cy="156" r="3" fill="#22D3EE"/>
+  <circle cx="770" cy="226" r="3" fill="#22D3EE"/>
+  <circle cx="770" cy="296" r="4" fill="#22D3EE"/>
+  <circle cx="770" cy="366" r="3" fill="#22D3EE"/>
+  <circle cx="770" cy="436" r="3" fill="#22D3EE"/>
+  <text x="770" y="508" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="2" fill="#22D3EE" opacity="0.65">CHAIN A</text>
+  <line x1="1100" y1="148" x2="1100" y2="452" stroke="#FB923C" stroke-width="2" opacity="0.35"/>
+  <rect x="1072" y="140" width="56" height="32" rx="5" fill="#1B2547" stroke="#FB923C" stroke-width="1.5"/>
+  <rect x="1072" y="210" width="56" height="32" rx="5" fill="#1B2547" stroke="#FB923C" stroke-width="1.5"/>
+  <rect x="1072" y="280" width="56" height="32" rx="5" fill="#1B2A52" stroke="#FB923C" stroke-width="2"/>
+  <rect x="1072" y="350" width="56" height="32" rx="5" fill="#1B2547" stroke="#FB923C" stroke-width="1.5"/>
+  <rect x="1072" y="420" width="56" height="32" rx="5" fill="#1B2547" stroke="#FB923C" stroke-width="1.5"/>
+  <circle cx="1100" cy="156" r="3" fill="#FB923C"/>
+  <circle cx="1100" cy="226" r="3" fill="#FB923C"/>
+  <circle cx="1100" cy="296" r="4" fill="#FB923C"/>
+  <circle cx="1100" cy="366" r="3" fill="#FB923C"/>
+  <circle cx="1100" cy="436" r="3" fill="#FB923C"/>
+  <text x="1100" y="508" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="2" fill="#FB923C" opacity="0.65">CHAIN B</text>
+  <line x1="798" y1="296" x2="886" y2="296" stroke="#22D3EE" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.55"/>
+  <line x1="984" y1="296" x2="1072" y2="296" stroke="#FB923C" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.55"/>
+  <circle cx="935" cy="296" r="52" fill="#0D1330" stroke="#22D3EE" stroke-width="2"/>
+  <circle cx="935" cy="296" r="37" fill="none" stroke="#FB923C" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="935" cy="296" r="22" fill="#1B2547"/>
+  <line x1="919" y1="296" x2="951" y2="296" stroke="#F8FAFC" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 945 289 L 951 296 L 945 303" fill="none" stroke="#F8FAFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 925 289 L 919 296 L 925 303" fill="none" stroke="#F8FAFC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="935" y="372" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="2" fill="#A8B4D0" opacity="0.6">XCM / BRIDGE</text>
+  <g fill="#22D3EE" opacity="0.5"><circle cx="820" cy="296" r="3"/><circle cx="840" cy="296" r="3"/><circle cx="860" cy="296" r="3"/></g>
+  <g fill="#FB923C" opacity="0.5"><circle cx="1010" cy="296" r="3"/><circle cx="1030" cy="296" r="3"/><circle cx="1050" cy="296" r="3"/></g>
+
+  <text x="70" y="122" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="4" fill="#22D3EE">CCRMS SERIES · PART 2 OF 7</text>
+  <text x="70" y="210" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" fill="#F8FAFC">Why Creator Monetization</text>
+  <text x="70" y="258" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" fill="#F8FAFC">Is Still Broken</text>
+  <text x="70" y="308" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="500" fill="#A8B4D0">and why "just use blockchain" hasn't fixed it</text>
+  <rect x="70" y="330" width="90" height="5" rx="2.5" fill="url(#footerBar)"/>
+  <rect x="0" y="606" width="1200" height="24" fill="url(#footerBar)"/>
+  <g transform="translate(70, 540)">
+    <rect x="0" y="18" width="8" height="14" fill="#22D3EE"/>
+    <rect x="12" y="10" width="8" height="22" fill="#22D3EE"/>
+    <rect x="24" y="2" width="8" height="30" fill="#FB923C"/>
+    <text x="46" y="26" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">AskRyc</text>
+  </g>
+</svg>

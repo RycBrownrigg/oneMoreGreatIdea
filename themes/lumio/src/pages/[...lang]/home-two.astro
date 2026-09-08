@@ -1,0 +1,47 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import HomeBannerTwo from "@/components/sections/HomeBannerTwo.astro";
+import FeaturesGridTwo from "@/components/sections/FeaturesGridTwo.astro";
+import AboutCompanySectionTwo from "@/components/sections/AboutCompanySectionTwo.astro";
+import MarqueeTickerSection from "@/components/sections/MarqueeTickerSection.astro";
+import OurServicesSectionTwo from "@/components/sections/OurServicesSectionTwo.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import WorkingProcessSection from "@/components/sections/WorkingProcessSection.astro";
+import GetInTouchSection from "@/components/sections/GetInTouchSection.astro";
+import TestimonialSectionTwo from "@/components/sections/TestimonialSectionTwo.astro";
+import WhoWeAreSection from "@/components/sections/WhoWeAreSection.astro";
+import CaseStudiesSection from "@/components/sections/CaseStudiesSection.astro";
+import RecentBlogsSectionTwo from "@/components/sections/RecentBlogsSectionTwo.astro";
+import JoinOurCommunitySection from "@/components/sections/JoinOurCommunitySection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const homepage = await getEntryCTM("homepage", "home-two", Astro.currentLocale);
+---
+
+<Base
+  {...homepage.data}
+  homepage={true}
+  hasGradientShape={false}
+  header="two"
+  footer="two">
+  <HomeBannerTwo />
+  <FeaturesGridTwo />
+  <AboutCompanySectionTwo hasSectionSpacing={false} />
+  <MarqueeTickerSection variant="black" hasSectionSpacing={false} />
+  <OurServicesSectionTwo />
+  <CustomersSection hasSectionSpacing={false} />
+  <WorkingProcessSection />
+  <TestimonialSectionTwo />
+  <WhoWeAreSection />
+  <CaseStudiesSection />
+  <GetInTouchSection hasBackgroundWhite={true} />
+  <RecentBlogsSectionTwo />
+  <JoinOurCommunitySection />
+  <MarqueeSection hasBgPattern={true} hasSectionSpacing={false} />
+</Base>

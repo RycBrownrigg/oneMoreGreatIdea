@@ -1,0 +1,112 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { businessServiceSchema } from "@/sections.schema";
+import SatisfactionClientsCard from "@/layouts/components/cards/SatisfactionClientsCard.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import AccordionList from "../widgets/AccordionList.astro";
+
+export type SectionType = Section & z.infer<typeof businessServiceSchema>;
+
+type Props = {
+  content?: SectionType;
+  class?: string;
+  variant?: "default" | "onlyCard";
+  hasSectionSpacing?: boolean;
+};
+
+// Fetching the default content for this section
+let defaultContent = (
+  await getEntryCTM("sections", "business-service", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  enable = true,
+  title,
+  list,
+  image,
+  imageAlt,
+  satisfactionClients,
+} = actualContent as SectionType;
+
+if (!enable) return;
+
+const { hasSectionSpacing = true } = Astro.props;
+---
+
+<section
+  class:list={["relative overflow-hidden", { "pt-0": !hasSectionSpacing }]}>
+  <div class="bg-theme-light">
+    <div class="container">
+      <div class="flex flex-col lg:flex-row">
+        <div class="relative w-full lg:w-130 xl:w-164.5">
+          {
+            image && (
+              <OptimizedImage
+                src={image}
+                alt={imageAlt}
+                width={658}
+                height={772}
+                class="size-full object-cover"
+              />
+            )
+          }
+          {
+            satisfactionClients?.enable && (
+              <div
+                class="bg-theme-light -right-px bottom-0 p-5 md:absolute xl:p-10"
+                data-aos="fade-up"
+                data-aos-delay="300"
+                data-aos-duration="600">
+                <SatisfactionClientsCard
+                  avatars={satisfactionClients.avatars}
+                  avatarAlt={satisfactionClients.avatarAlt}
+                  count={satisfactionClients.count}
+                  label={satisfactionClients.label}
+                  leftAligned={true}
+                  class="flex flex-wrap gap-4"
+                />
+              </div>
+            )
+          }
+        </div>
+        <div
+          class="section-spacing-vertical relative w-full flex-1 max-lg:pt-5 lg:ps-10 xl:ps-25">
+          <div class="flex flex-col gap-6 md:gap-8">
+            {title && <SectionTitle title={title} />}
+            <p
+              class="text-text-default/60 leading-relaxed md:text-lg"
+              data-aos="fade-up"
+              data-aos-delay="200"
+              data-aos-duration="600">
+              At vero eos et accusamus et iusto odio dignissimos ducimus
+              blanditiis praesentium voluptatum deleniti atque corrupti quos
+              dolores et quas molestias excepturi sint occaecati
+            </p>
+          </div>
+
+          {
+            list && list.length > 0 && (
+              <div
+                class="mt-10 block lg:min-h-80 xl:mt-15 xl:min-h-70"
+                data-aos="fade-up"
+                data-aos-delay="300"
+                data-aos-duration="600">
+                <AccordionList content={list} bgColor="transparent" />
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

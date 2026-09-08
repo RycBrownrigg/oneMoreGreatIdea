@@ -1,0 +1,64 @@
+---
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import type { officeLocationsSchema } from "@/sections.schema";
+import type { z } from "astro/zod";
+import Reveal from "@/components/widgets/Reveal.astro";
+type sectionType = Section & z.infer<typeof officeLocationsSchema>;
+
+type Props = {
+  content?: sectionType;
+  hasSectionSpacing?: boolean;
+};
+
+// Fetching the default content for the service section
+let defaultContent = (
+  await getEntryCTM("sections", "office-locations", Astro.currentLocale)
+)?.data as sectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = {
+  ...defaultContent,
+  ...Astro.props.content,
+} as sectionType;
+
+// Extracting required values from 'content' object
+let { list } = actualContent as sectionType;
+---
+
+<section class="relative overflow-hidden">
+  <div class="container">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:gap-6">
+      {
+        list.map((item, index) => (
+          <Reveal
+            class="bg-theme-light flex flex-col items-center rounded-xl p-4 text-center lg:p-6 xl:p-8"
+            animation="fade-up-sm"
+            delay={index * 100}>
+            {item.image && (
+              <div class="mb-4 lg:mb-6">
+                <OptimizedImage
+                  width={69}
+                  height={69}
+                  src={item.image}
+                  alt="Icon"
+                  class="h-auto w-15 xl:w-17.25"
+                />
+              </div>
+            )}
+            <h2 class="mb-2 text-lg font-medium lg:mb-3 lg:text-xl xl:text-2xl">
+              {item.title}
+            </h2>
+            <p class="text-text-default/60 text-sm lg:text-base xl:text-lg">
+              {item.description}
+            </p>
+          </Reveal>
+        ))
+      }
+    </div>
+  </div>
+</section>

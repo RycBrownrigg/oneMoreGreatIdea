@@ -1,0 +1,227 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { aboutCompanySectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Button from "@/components/Button.astro";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+
+type SectionType = Section &
+  NonNullable<z.infer<typeof aboutCompanySectionSchema>>;
+type Props = { content?: SectionType; hasSectionSpacing?: boolean };
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+let defaultContent = (
+  await getEntryCTM("sections", "about-company-three", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  badge,
+  title,
+  description,
+  features,
+  button,
+  founder,
+  experienceBadge,
+  images,
+} = actualContent;
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden pt-0">
+  <div class="bg-theme-light section-spacing-vertical rounded-2xl">
+    <div
+      class="container flex flex-col gap-10 md:items-end lg:flex-row lg:gap-12 xl:gap-20">
+      <div class="flex flex-1 flex-col gap-4 xl:gap-6">
+        <div class="flex flex-col gap-4 lg:gap-6">
+          {badge && <SectionBadge title={badge} />}
+          {title && <SectionTitle title={title} />}
+        </div>
+
+        {/* Description */}
+        {
+          description && (
+            <p
+              class="text-text-default/70 text-base xl:text-lg xl:leading-relaxed"
+              data-aos="fade-up"
+              data-aos-delay="100"
+              data-aos-duration="600"
+              set:html={markdownify(description)}
+            />
+          )
+        }
+
+        {/* Feature Items */}
+        {
+          features && features.length > 0 && (
+            <div class="flex flex-col gap-6 xl:gap-8">
+              {features.map((feature, index) => (
+                <div
+                  class="flex flex-col gap-3 md:flex-row md:gap-6"
+                  data-aos="fade-up"
+                  data-aos-delay={150 + index * 100}
+                  data-aos-duration="600">
+                  <div class="bg-primary text-text-inverse flex size-20 shrink-0 items-center justify-center rounded-full xl:size-22.5">
+                    <OptimizedImage
+                      src={feature.icon}
+                      width={48}
+                      height={48}
+                      class="size-1/2"
+                      inlineSvg={true}
+                    />
+                  </div>
+                  <div>
+                    <h3 class="text-text-dark text-h5-sm md:text-h5 font-semibold">
+                      {feature.title}
+                    </h3>
+                    <p
+                      class="text-text-default/60 mt-1 text-sm md:text-base xl:text-lg"
+                      set:html={markdownify(feature.description)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+
+        {/* Button + Founder */}
+        <div
+          class="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center md:gap-8.5 xl:mt-7"
+          data-aos="fade-up"
+          data-aos-delay="350"
+          data-aos-duration="600">
+          {
+            button && (
+              <Button
+                {...button}
+                class="bg-text-default! rounded-full xl:py-4.5!"
+              />
+            )
+          }
+          {
+            founder && (
+              <div class="flex items-center gap-3">
+                {founder.avatar && (
+                  <div class="h-11 w-11 overflow-hidden rounded-full lg:h-12 lg:w-12">
+                    <OptimizedImage
+                      src={founder.avatar}
+                      alt={founder.name}
+                      width={48}
+                      height={48}
+                      class="size-full object-cover"
+                    />
+                  </div>
+                )}
+                <div>
+                  <span class="text-text-dark block text-sm font-semibold lg:text-xl">
+                    {founder.name}
+                  </span>
+                  <span class="text-text-default/60 block text-xs lg:text-lg">
+                    {founder.role}
+                  </span>
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col gap-4 md:flex-row lg:w-100 xl:w-155 xl:gap-5 2xl:w-171.25">
+        <div
+          class="flex flex-col gap-4 xl:gap-5"
+          data-aos="fade-left"
+          data-aos-duration="800">
+          {/* Top-left image */}
+          {
+            images && images[0] && (
+              <div class="flex-1 overflow-hidden rounded-xl">
+                <OptimizedImage
+                  src={images[0]}
+                  alt={t("area.aboutCompany")}
+                  width={440}
+                  height={388}
+                  class="size-full object-cover"
+                />
+              </div>
+            )
+          }
+
+          {/* Bottom-left image */}
+          {
+            images && images[1] && (
+              <div class="overflow-hidden rounded-xl md:h-50 xl:h-60 2xl:max-h-69.75">
+                <OptimizedImage
+                  src={images[1]}
+                  alt={t("area.aboutCompany")}
+                  width={400}
+                  height={380}
+                  class="size-full object-cover"
+                />
+              </div>
+            )
+          }
+        </div>
+        <div
+          class="flex flex-col gap-4 lg:w-65 xl:w-56 xl:gap-5"
+          data-aos="fade-left"
+          data-aos-duration="800">
+          {/* Top-right: Experience Badge */}
+          {
+            experienceBadge && (
+              <div class="bg-primary text-text-inverse flex flex-col items-start justify-start gap-4 rounded-2xl p-4 text-start 2xl:gap-6 2xl:p-8.5">
+                {experienceBadge.icon && (
+                  <div class="flex size-10 items-center justify-center rounded-full bg-white/20 xl:size-14">
+                    <OptimizedImage
+                      src={experienceBadge.icon}
+                      alt={t("area.aboutCompany")}
+                      width={48}
+                      height={48}
+                      class="size-full object-cover"
+                    />
+                  </div>
+                )}
+                <span class="flex items-center gap-1 text-xs font-semibold tracking-wider">
+                  <span class="bg-theme-light block h-px w-10" />
+                  {experienceBadge.label}
+                </span>
+                <span class="xl:text-h5 text-xl leading-tight font-semibold">
+                  {experienceBadge.value}
+                </span>
+              </div>
+            )
+          }
+
+          {/* Bottom-right image */}
+          {
+            images && images[2] && (
+              <div class="flex-1 overflow-hidden rounded-xl">
+                <OptimizedImage
+                  src={images[2]}
+                  alt={t("area.aboutCompany")}
+                  width={400}
+                  height={580}
+                  class="size-full h-100 object-cover"
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

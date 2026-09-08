@@ -1,0 +1,127 @@
+---
+import Icons from "@/helpers/Icons.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+interface AccordionItem {
+  title: string;
+  content?: string;
+  active?: boolean;
+  list?: { color: string; label: string; content: string }[];
+}
+
+interface Props {
+  content: AccordionItem[];
+  class?: string;
+  bgColor?: "white" | "light" | "transparent";
+  [key: string]: unknown;
+}
+
+const { content: list, bgColor = "light", ...rest } = Astro.props;
+const groupId = "accordion-" + Math.random().toString(36).slice(2, 9);
+---
+
+<div {...rest}>
+  <div class="hs-accordion-group" id={groupId}>
+    {
+      list.map((item, index) => {
+        const uniqueId = `${groupId}-${index + 1}`;
+
+        return (
+          <div
+            class:list={[
+              "hs-accordion rounded-lg",
+              item.active && "active",
+              bgColor === "light"
+                ? "bg-theme-light mb-4 px-4 md:px-6 lg:px-8 xl:mb-6"
+                : bgColor === "white"
+                  ? "mb-4 bg-white px-4 md:px-6 lg:px-8 xl:mb-6"
+                  : "transparent",
+            ]}
+            id={"faq-" + uniqueId}>
+            <button
+              aria-expanded={item.active ? "true" : "false"}
+              class:list={[
+                "hs-accordion-toggle border-border-dark/10 flex w-full items-center justify-between py-4 text-start font-semibold md:text-xl xl:py-5",
+                bgColor === "light" ? "" : "border-b",
+              ]}
+              aria-controls={"faq-content-" + uniqueId}>
+              <span set:html={item.title} />
+              <span
+                class:list={[
+                  "hs-accordion-active:rotate-180 rounded-sm p-1 transition duration-200 ease-out",
+                ]}>
+                {bgColor === "light" ? (
+                  <>
+                    <Icons
+                      icon="Plus"
+                      class="hs-accordion-active:hidden text-xl"
+                    />
+                    <Icons
+                      icon="Minus"
+                      class="hs-accordion-active:block hidden text-xl"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Icons
+                      icon="ChevronDown"
+                      class="hs-accordion-active:hidden text-xl"
+                    />
+                    <Icons
+                      icon="ChevronUp"
+                      class="hs-accordion-active:block hidden text-xl"
+                    />
+                  </>
+                )}
+              </span>
+            </button>
+            <div
+              role="region"
+              id={"faq-content-" + uniqueId}
+              aria-labelledby={"faq-" + uniqueId}
+              class:list={[
+                "hs-accordion-content overflow-hidden transition-[height] duration-200 ease-out",
+                !item.active && "hidden",
+                bgColor === "light"
+                  ? "border-border hs-accordion-active:text-primary border-t"
+                  : "",
+              ]}>
+              <div
+                class:list={[
+                  "prose-styles text-text-default/60 pt-4 pb-5 md:text-lg xl:pt-5",
+                  bgColor === "light"
+                    ? "hs-accordion-active:text-primary"
+                    : "border-border-dark/10 border-b",
+                ]}
+                set:html={markdownify(item.content || "", true)}
+              />
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+  <script is:inline define:vars={{ groupId }}>
+    // Recalculate AOS Elements positions after accordion is opened
+    // @ts-nocheck
+
+    const initAccordionAOSRefresh = () => {
+      const container = document.getElementById(groupId);
+
+      if (!container || container.dataset.aosAccordionBound === "true") return;
+
+      container.dataset.aosAccordionBound = "true";
+      container.addEventListener("open.hs.accordion", () => {
+        window.AOS?.refreshHard?.();
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAccordionAOSRefresh, {
+        once: true,
+      });
+    } else {
+      initAccordionAOSRefresh();
+    }
+  </script>
+</div>

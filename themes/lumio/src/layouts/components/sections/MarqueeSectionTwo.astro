@@ -1,0 +1,73 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { marqueeSectionSchema } from "@/sections.schema";
+import Marquee from "@/components/widgets/Marquee.astro";
+
+// Type
+type SectionType = z.infer<typeof marqueeSectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "marquee-section-two", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, marquee } = actualContent ?? {};
+
+if (!enable) return;
+
+// Generate enough items for seamless loop
+const loopCount = 12;
+const loopedItems = Array.from({ length: loopCount }, (_, i) => i);
+---
+
+<section class:list={["overflow-hidden"]}>
+  <div>
+    <div
+      class="relative flex items-center overflow-hidden mask-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgb(0,0,0)_10%,rgb(0,0,0)_90%,rgba(0,0,0,0)_100%)]">
+      <Marquee
+        marqueeElements={loopedItems.length}
+        marqueePauseOnHover={marquee?.pauseOnHover}
+        marqueeReverse={marquee?.reverse}
+        marqueeDuration={marquee?.duration}
+        marqueeElementWidth={marquee?.elementWidth ?? ""}
+        marqueeElementWidthAuto={marquee?.elementWidthAuto}
+        marqueeElementWidthResponsive={marquee?.elementWidthInSmallDevices ??
+          ""}>
+        {
+          loopedItems.map(() => (
+            <div
+              class:list={[
+                "flex items-center gap-11",
+                {
+                  "min-w-(--marquee-element-width-responsive) md:min-w-(--marquee-element-width)":
+                    !marquee?.elementWidthAuto,
+                },
+                {
+                  "min-w-fit": marquee?.elementWidthAuto,
+                },
+              ]}>
+              <span class="bg-text-default -mb-2 ml-7 flex size-3 items-center gap-11 rounded-full leading-16 lg:-mb-5 lg:ml-5 lg:size-4" />
+              {marquee?.text && (
+                <span class="text-body lg:text-display-4 xl:text-display-3 2xl:text-display-1 bg-clip-text text-5xl leading-relaxed font-bold tracking-widest whitespace-nowrap opacity-80 [-webkit-background-clip:text] [text-shadow:-1px_-1px_0_var(--color-text-default),1px_-1px_0_var(--color-text-default),-1px_1px_0_var(--color-text-default),1px_1px_0_var(--color-text-default)] md:text-6xl">
+                  {marquee.text}
+                </span>
+              )}
+            </div>
+          ))
+        }
+      </Marquee>
+    </div>
+  </div>
+</section>

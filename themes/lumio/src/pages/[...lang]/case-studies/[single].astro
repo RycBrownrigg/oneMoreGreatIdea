@@ -1,0 +1,72 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { getEntryRouteParam, supportedLanguages } from "@/lib/utils/i18nUtils";
+import { render, type CollectionKey } from "astro:content";
+import CaseStudiesPageDetailSection from "@/components/sections/CaseStudiesPageDetailSection.astro";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      const caseStudiesIndex = await getEntryCTM(
+        config.settings.caseStudiesFolder as CollectionKey,
+        "-index",
+        lang.languageCode,
+      );
+
+      let caseStudiesItems = await getCollectionCTM(
+        config.settings.caseStudiesFolder as CollectionKey,
+        lang.languageCode,
+      );
+
+      if (caseStudiesIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      return caseStudiesItems.map((item) => ({
+        params: {
+          lang:
+            lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+              ? undefined
+              : lang.languageCode,
+          single: getEntryRouteParam(item),
+        },
+        props: {
+          item,
+          caseStudiesIndex,
+          list: caseStudiesItems,
+        },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { item: caseStudy, list } = Astro.props;
+const { Content } = await render(caseStudy);
+---
+
+<Base {...caseStudy.data}>
+  <PageHeader
+    title={caseStudy.data.title}
+    breadcrumbTitle={caseStudy?.data.title}
+  />
+
+  <CaseStudiesPageDetailSection
+    content={caseStudy}
+    Content={Content}
+    list={list}
+  />
+
+  <ContactSection />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

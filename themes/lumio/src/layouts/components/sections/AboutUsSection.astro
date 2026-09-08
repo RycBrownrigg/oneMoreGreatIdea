@@ -1,0 +1,132 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { aboutUsSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import SatisfactionClientsCard from "@/components/cards/SatisfactionClientsCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+type SectionType = Section & NonNullable<z.infer<typeof aboutUsSectionSchema>>;
+type Props = { content?: SectionType };
+
+let defaultContent = (
+  await getEntryCTM("sections", "about-us-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  title,
+  features,
+  imageLeft,
+  imageLeftAlt,
+  imageRight,
+  imageRightAlt,
+  satisfactionClients,
+} = actualContent ?? {};
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden">
+  <div class="container">
+    {/* ── Title ── */}
+    {title && <SectionTitle title={title} />}
+
+    {/* ── 3-Column Features ── */}
+    {
+      features && features.length > 0 && (
+        <div
+          class="mt-15 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8 lg:gap-15 xl:gap-26.5"
+          data-aos="fade-up"
+          data-aos-delay="100"
+          data-aos-duration="600">
+          {features.map((feature) => (
+            <div class="flex flex-col gap-5 xl:gap-8">
+              <h3 class="text-h4-sm md:text-h4 flex items-center gap-2 font-semibold">
+                <span class="bg-text-default inline-block size-2 rounded-full" />
+                {feature.title}
+              </h3>
+              {feature.description && (
+                <p
+                  class="text-text-default/60 leading-tight xl:text-lg"
+                  set:html={markdownify(feature.description)}
+                />
+              )}
+
+              {/* ── Divider ── */}
+              <div class="bg-text-default h-px" />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {/* ── Images Row ── */}
+    {
+      (imageLeft || imageRight) && (
+        <div class="relative mt-15 md:mt-16.5 lg:mt-20 xl:mt-30">
+          <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-20 xl:gap-30">
+            {imageLeft && (
+              <div
+                class="overflow-hidden"
+                data-aos="fade-right"
+                data-aos-delay="0"
+                data-aos-duration="700">
+                <OptimizedImage
+                  src={imageLeft}
+                  alt={imageLeftAlt || t("common.aboutUs")}
+                  width={600}
+                  height={503}
+                  class="w-full object-cover"
+                />
+                {/* ── Satisfaction Clients Card (bottom-left) ── */}
+                {satisfactionClients?.enable && (
+                  <div
+                    class="mt-10 lg:mt-14 xl:mt-17.5"
+                    data-aos="fade-up"
+                    data-aos-delay="300"
+                    data-aos-duration="600">
+                    <SatisfactionClientsCard
+                      avatars={satisfactionClients.avatars}
+                      avatarAlt={satisfactionClients.avatarAlt}
+                      count={satisfactionClients.count}
+                      label={satisfactionClients.label}
+                      leftAligned={true}
+                      class="flex gap-5"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {imageRight && (
+              <div
+                class="overflow-hidden"
+                data-aos="fade-left"
+                data-aos-delay="150"
+                data-aos-duration="700">
+                <OptimizedImage
+                  src={imageRight}
+                  alt={imageRightAlt || t("common.aboutUs")}
+                  width={600}
+                  height={700}
+                  class="w-full -scale-x-100 object-cover"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</section>

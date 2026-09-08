@@ -1,0 +1,137 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { teamSectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import TeamCard from "@/components/cards/TeamCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+type SectionType = Section & NonNullable<z.infer<typeof teamSectionSchema>>;
+type Props = { content?: SectionType };
+
+let defaultContent = (
+  await getEntryCTM("sections", "our-team", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, badge, title } = actualContent;
+
+if (!enable) return;
+
+// Type for this section data
+let pageData = (await getEntryCTM("team", "-index", Astro.currentLocale))?.data;
+
+const { list } = pageData;
+---
+
+<section class="relative overflow-hidden">
+  <div class="container">
+    <div
+      class="mx-auto mb-8 flex max-w-6xl flex-col gap-4 text-center md:mb-15 lg:gap-6">
+      {badge && <SectionBadge title={badge} />}
+      {title && <SectionTitle title={title} />}
+    </div>
+
+    {
+      list && list.length > 0 && (
+        <div class="flex items-start gap-10 lg:gap-15 xl:gap-28">
+          {/* Left Column: Team Member List */}
+          <div
+            id="team-list"
+            class="border-border-default/20 col-span-2 flex-1 border-t">
+            {list.map((member, i) => (
+              <TeamCard
+                name={member.name}
+                role={member.role}
+                image={member.image}
+                index={i}
+                isActive={i === 0}
+              />
+            ))}
+          </div>
+
+          {/* Right Column: Pre-rendered images, toggled by JS */}
+          <div
+            id="team-preview"
+            class="relative hidden w-50 overflow-hidden md:block lg:w-80 xl:w-106"
+            data-aos="fade-left"
+            data-aos-duration="800">
+            {list.map((member, i) => (
+              <div
+                class:list={[
+                  "team-preview-item transition-opacity duration-500",
+                  i === 0 ? "opacity-100" : "absolute inset-0 opacity-0",
+                ]}
+                data-team-index={i}>
+                <OptimizedImage
+                  src={member.image}
+                  alt={member.name}
+                  width={380}
+                  height={380}
+                  class="h-auto w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <script>
+    function initTeamHover() {
+      const rows = document.querySelectorAll<HTMLElement>(
+        "#team-list [data-index]",
+      );
+      const previews = document.querySelectorAll<HTMLElement>(
+        "#team-preview .team-preview-item",
+      );
+
+      if (!rows.length || !previews.length) return;
+
+      function setActive(activeRow: HTMLElement) {
+        rows.forEach((r) => {
+          const number = r.querySelector(".team-number");
+          const arrow = r.querySelector(".team-arrow");
+          if (r === activeRow) {
+            number?.classList.add("w-19.5", "opacity-100");
+            number?.classList.remove("w-0", "opacity-0");
+            arrow?.classList.add("rotate-90");
+          } else {
+            number?.classList.remove("w-19.5", "opacity-100");
+            number?.classList.add("w-0", "opacity-0");
+            arrow?.classList.remove("rotate-90");
+          }
+        });
+
+        const idx = activeRow.dataset.index;
+        previews.forEach((p) => {
+          if (p.dataset.teamIndex === idx) {
+            p.classList.remove("absolute", "inset-0", "opacity-0");
+            p.classList.add("opacity-100");
+          } else {
+            p.classList.add("absolute", "inset-0", "opacity-0");
+            p.classList.remove("opacity-100");
+          }
+        });
+      }
+
+      rows.forEach((row) => {
+        row.addEventListener("mouseenter", () => setActive(row));
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initTeamHover);
+    } else {
+      initTeamHover();
+    }
+  </script>
+</section>

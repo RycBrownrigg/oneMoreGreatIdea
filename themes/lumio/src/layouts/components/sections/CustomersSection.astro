@@ -1,0 +1,73 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { customersSectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+
+// Type
+type SectionType = z.infer<typeof customersSectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "customers", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, list, description } = actualContent ?? {};
+const { hasSectionSpacing = true } = Astro.props;
+
+if (!enable) return;
+---
+
+<section class:list={["overflow-hidden", !hasSectionSpacing && "pt-0"]}>
+  {
+    list && (
+      <div class="section-spacing-vertical">
+        <div class="container">
+          {/* Tagline with horizontal lines */}
+          {description && (
+            <div
+              class="mb-5 flex items-center gap-4 md:mb-10"
+              data-aos="fade-up-sm"
+              data-aos-duration="600">
+              <span class="bg-border-light h-px flex-1" />
+              <p class="text-text-default/80 text-xl">{description}</p>
+              <span class="bg-border-light h-px flex-1" />
+            </div>
+          )}
+
+          {/* Logo cards */}
+          {list && list.length > 0 && (
+            <div
+              class="flex flex-wrap items-center justify-center justify-items-center gap-3 py-2"
+              data-aos="fade-up-sm"
+              data-aos-duration="700"
+              data-aos-delay="100">
+              {list.map((logo) => (
+                <div class="border-border-light/50 flex items-center justify-center rounded-lg border bg-white p-5">
+                  <OptimizedImage
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={140}
+                    height={40}
+                    class="h-7.5 w-auto object-contain grayscale"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+</section>

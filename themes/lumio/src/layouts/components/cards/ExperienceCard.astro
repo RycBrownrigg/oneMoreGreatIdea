@@ -1,0 +1,48 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  description?: string;
+  variant?: "white" | "primary";
+  index?: number;
+}
+
+const { value, label, description, variant = "white", index = 0 } = Astro.props;
+
+const isBlue = variant === "primary";
+---
+
+<div
+  class:list={[
+    "p-4 md:p-6 xl:px-8.5 xl:py-8.5",
+    isBlue ? "bg-primary text-text-inverse" : "text-text-dark bg-theme-light",
+  ]}
+  data-aos="fade-up"
+  data-aos-delay={index * 120}
+  data-aos-duration="600">
+  <span
+    class:list={[
+      "xl:text-display-5 mb-2 block text-4xl font-semibold",
+      isBlue ? "text-text-inverse" : "text-text-dark",
+    ]}>
+    {value}
+  </span>
+  <p
+    class:list={[
+      "mb-2 text-base font-semibold lg:text-xl",
+      isBlue ? "text-text-inverse" : "text-text-dark",
+    ]}>
+    {label}
+  </p>
+  {
+    description && (
+      <p
+        class:list={[
+          "text-sm lg:text-lg xl:leading-relaxed",
+          isBlue ? "text-text-inverse" : "text-text-default/60",
+        ]}>
+        {description}
+      </p>
+    )
+  }
+</div>

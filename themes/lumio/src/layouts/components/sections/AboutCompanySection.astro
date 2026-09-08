@@ -1,0 +1,186 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { aboutCompanySectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Icons from "@/helpers/Icons.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import VerticalLabel from "@/components/widgets/VerticalLabel.astro";
+
+// Type
+type SectionType = z.infer<typeof aboutCompanySectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "about-company", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Destructure
+const {
+  enable = true,
+  badge,
+  title,
+  description,
+  image,
+  imageAlt,
+  imageSecondary,
+  imageSecondaryAlt,
+  bgPatternImage,
+  bgPatternImageAlt,
+  sinceYear,
+  rating,
+} = actualContent ?? {};
+
+const { hasSectionSpacing = true } = Astro.props;
+
+if (!enable) return;
+---
+
+<section class:list={["relative", !hasSectionSpacing && "pt-0"]}>
+  {/* Background pattern */}
+  {
+    bgPatternImage && (
+      <OptimizedImage
+        src={bgPatternImage}
+        alt={bgPatternImageAlt}
+        width={546}
+        height={666}
+        sizes="(min-width: 1280px) 546px, (min-width: 768px) 40vw, 55vw"
+        loading="lazy"
+        decoding="async"
+        class="pointer-events-none absolute bottom-0 left-0 aspect-546/666 h-auto w-[min(55vw,546px)]"
+      />
+    )
+  }
+
+  <div class="has-vertical-text-right relative container mx-auto">
+    {/* ─── HEADER BLOCK: badge + title ─── */}
+    <div class="mb-14">
+      {
+        badge && (
+          <div
+            class="mb-5 flex items-center gap-3 font-semibold uppercase"
+            data-aos="fade-up-sm"
+            data-aos-duration="600">
+            <Icons icon="Diamond" fill={"#000000"} />
+            {badge}
+          </div>
+        )
+      }
+
+      {
+        title && (
+          <div
+            data-aos="fade-up-sm"
+            data-aos-duration="700"
+            data-aos-delay="100">
+            <SectionTitle title={title} />
+          </div>
+        )
+      }
+    </div>
+
+    {/* ─── MAIN CONTENT ROW: image + right column ─── */}
+    <div
+      class="flex flex-col gap-10 lg:flex-row lg:gap-16 xl:gap-20 2xl:gap-28">
+      {
+        image && (
+          <div
+            class="min-size-full relative mx-auto max-h-180 shrink-0 overflow-hidden lg:w-100 xl:w-120 2xl:w-140"
+            data-aos="fade-right-sm"
+            data-aos-duration="800"
+            data-aos-delay="100">
+            <OptimizedImage
+              src={image}
+              alt={imageAlt}
+              class="size-full object-cover"
+            />
+          </div>
+        )
+      }
+
+      {/* ─── RIGHT COLUMN ─── */}
+      <div class="relative flex flex-col gap-10 xl:gap-21.75 2xl:gap-28">
+        <div
+          data-aos="fade-left-sm"
+          data-aos-duration="800"
+          data-aos-delay="200">
+          {
+            description && (
+              <p class="text-text-default/70 pb-8 leading-6.5 2xl:text-lg">
+                {markdownify(description)}
+              </p>
+            )
+          }
+          <div
+            class="border-border-dark/25 flex border-b transition-all duration-300"
+            aria-hidden="true">
+            <div class="border-border-dark w-1/3 border-b"></div>
+          </div>
+
+          {
+            rating?.enable && (
+              <div
+                class="-mt-px inline-flex items-center gap-7.5 pt-8"
+                data-aos="fade-up-sm"
+                data-aos-duration="600"
+                data-aos-delay="350">
+                <span class="bg-theme-dark flex h-14 w-14 shrink-0 items-center justify-center rounded-sm text-white">
+                  <Icons icon="Star" class="h-8 w-8 fill-current" />
+                </span>
+                <div>
+                  <p class="text-2xl leading-tight font-semibold">
+                    {rating.score}
+                  </p>
+                  <p class="text-2xl leading-tight font-semibold">
+                    {rating.label}
+                  </p>
+                </div>
+              </div>
+            )
+          }
+        </div>
+
+        {
+          imageSecondary && (
+            <div
+              class="h-80 overflow-hidden lg:h-61.75 xl:h-91.75"
+              data-aos="fade-up-sm"
+              data-aos-duration="800"
+              data-aos-delay="250">
+              <OptimizedImage
+                src={imageSecondary}
+                alt={imageSecondaryAlt}
+                width={648}
+                height={367}
+                class="size-full object-cover"
+              />
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      sinceYear && (
+        <VerticalLabel
+          text={sinceYear}
+          scrambleDelay={550}
+          class="text-text-default/10 md:text-display-4 lg:text-text-default/7 lg:text-display-2 -z-1 mt-5 h-full text-4xl font-semibold tracking-widest lg:absolute lg:right-4 lg:bottom-0 lg:rotate-180"
+        />
+      )
+    }
+  </div>
+</section>

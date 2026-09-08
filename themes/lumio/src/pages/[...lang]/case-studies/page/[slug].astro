@@ -1,0 +1,98 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json";
+import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
+import type { CollectionKey } from "astro:content";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+import CaseStudiesListSection from "@/components/sections/CaseStudiesListSection.astro";
+import removeEmptyKeys from "@/lib/utils/removeEmptyKeys";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { caseStudiesFolder } = config.settings;
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      const caseStudiesIndex = await getEntryCTM(
+        caseStudiesFolder as CollectionKey,
+        "-index",
+        lang.languageCode,
+      );
+
+      const caseStudies = await getCollectionCTM(
+        caseStudiesFolder as CollectionKey,
+        lang.languageCode,
+      );
+      const totalPages = Math.ceil(
+        caseStudies.length / config.settings.pagination,
+      );
+      const paths = [];
+
+      // If draft true in index.md file frontmatter don't include any page related to this page collection in production
+      if (caseStudiesIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      // Disable page generation if config.settings.pagination is 0 or false
+      if (config.settings.pagination === 0 || !config.settings.pagination) {
+        return [];
+      }
+
+      for (let i = 1; i < totalPages; i++) {
+        paths.push({
+          params: {
+            slug: (i + 1).toString(),
+          },
+        });
+      }
+
+      return paths.map((path) => ({
+        params: {
+          slug: path.params.slug,
+          lang:
+            lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+              ? undefined
+              : lang.languageCode,
+        },
+        props: {
+          caseStudiesIndex,
+          pagination: config.settings.pagination,
+          caseStudiesCollection: caseStudies,
+        },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { slug } = Astro.params;
+const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+let { caseStudiesIndex } = Astro.props;
+---
+
+<Base {...caseStudiesIndex?.data}>
+  <PageHeader
+    title={caseStudiesIndex.data.title}
+    breadcrumbTitle={caseStudiesIndex?.data?.breadcrumbTitle}
+  />
+  <CaseStudiesListSection
+    content={{
+      ...removeEmptyKeys(caseStudiesIndex.data),
+    }}
+    listPage={true}
+    pagination={{
+      enable: true,
+      currentPage,
+    }}
+  />
+  <CustomersSection hasSectionSpacing={false} />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

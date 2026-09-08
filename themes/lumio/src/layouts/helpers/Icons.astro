@@ -1,0 +1,148 @@
+---
+import SocialIcon from "./SocialIcon.astro";
+import type { IconName as SupportedIconName } from "../../lib/iconNames.ts";
+import type { IconNode as LucideIconNode } from "lucide";
+import {
+  ArrowRight,
+  ArrowUp,
+  ArrowUpRight,
+  BookOpenText,
+  ChartNoAxesCombined,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronsRight,
+  Clock,
+  Clock3,
+  Code2,
+  Diamond,
+  FolderKanban,
+  Languages,
+  Link,
+  MailOpen,
+  MessageCircle,
+  MessageSquareMore,
+  Minus,
+  Monitor,
+  MoveLeft,
+  MoveRight,
+  PenTool,
+  Phone,
+  Play,
+  Plus,
+  RefreshCcw,
+  Rocket,
+  Search,
+  Send,
+  Star,
+  TriangleRight,
+  Users,
+  X,
+} from "lucide";
+
+interface Props {
+  icon: SupportedIconName;
+  [key: string]: any;
+}
+
+const { icon, title, ...restProps } = Astro.props;
+const iconKey = (icon || "").toString().toLowerCase();
+const socialKeys = new Set([
+  "facebook",
+  "twitter",
+  "twitter-old",
+  "twitter-new",
+  "linkedin",
+  "instagram",
+  "github",
+  "youtube",
+  "pinterest",
+  "dribbble",
+]);
+
+const iconMap: Record<string, LucideIconNode> = {
+  arrowright: ArrowRight,
+  arrowup: ArrowUp,
+  arrowupright: ArrowUpRight,
+  bookopentext: BookOpenText,
+  chartnoaxescombined: ChartNoAxesCombined,
+  chevrondown: ChevronDown,
+  chevronleft: ChevronLeft,
+  chevronright: ChevronRight,
+  chevronup: ChevronUp,
+  chevronsright: ChevronsRight,
+  clock: Clock,
+  clock3: Clock3,
+  code2: Code2,
+  diamond: Diamond,
+  folderkanban: FolderKanban,
+  languages: Languages,
+  link: Link,
+  mailopen: MailOpen,
+  messagecircle: MessageCircle,
+  messagesquaremore: MessageSquareMore,
+  minus: Minus,
+  monitor: Monitor,
+  moveleft: MoveLeft,
+  moveright: MoveRight,
+  pentool: PenTool,
+  phone: Phone,
+  play: Play,
+  plus: Plus,
+  refreshccw: RefreshCcw,
+  rocket: Rocket,
+  search: Search,
+  send: Send,
+  star: Star,
+  triangleright: TriangleRight,
+  users: Users,
+  x: X,
+};
+
+const inlineIcon = iconMap[iconKey];
+---
+
+{
+  socialKeys.has(iconKey) ? (
+    <SocialIcon name={icon as string} title={title} {...restProps} />
+  ) : inlineIcon ? (
+    <svg
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden={title ? "false" : "true"}
+      role={title ? "img" : "presentation"}
+      {...restProps}>
+      {title && <title>{title}</title>}
+      {inlineIcon.map(([tag, attrs]) =>
+        tag === "path" ? (
+          <path {...attrs} />
+        ) : tag === "polyline" ? (
+          <polyline {...attrs} />
+        ) : tag === "polygon" ? (
+          <polygon {...attrs} />
+        ) : tag === "line" ? (
+          <line {...attrs} />
+        ) : tag === "circle" ? (
+          <circle {...attrs} />
+        ) : (
+          <rect {...attrs} />
+        ),
+      )}
+    </svg>
+  ) : (
+    <div
+      data-lucide={icon}
+      data-lucide-title={title}
+      aria-hidden={title ? "false" : "true"}
+      role={title ? "img" : "presentation"}
+      {...restProps}
+    />
+  )
+}

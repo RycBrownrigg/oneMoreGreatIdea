@@ -1,0 +1,124 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Icons from "@/helpers/Icons.astro";
+import { getEntrySlugCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import type { CollectionEntry, CollectionKey } from "astro:content";
+
+const t = await useTranslations(Astro.currentLocale as string);
+type CaseStudyData = {
+  title?: string;
+  image?: string;
+  imageAlt?: string;
+  projectDetails?: { label: string; value: string }[];
+};
+type CaseStudyEntry = CollectionEntry<CollectionKey> & { data: CaseStudyData };
+type ProjectDetail = NonNullable<CaseStudyData["projectDetails"]>[number];
+
+interface Props {
+  content: CaseStudyEntry;
+  options?: {
+    layout?: "case-studies" | "casestudy";
+  };
+  index?: number;
+}
+
+const { content, options, index = 0 } = Astro.props;
+let { title, image, imageAlt, projectDetails } = content.data || {};
+const layout = options?.layout || "case-studies";
+
+let slug =
+  content.id && content.collection
+    ? getEntrySlugCTM(content, Astro.currentLocale)
+    : "#";
+const href = slug ?? "#";
+---
+
+{
+  layout === "case-studies" ? (
+    <a
+      href={href}
+      class="group relative flex w-full grid-cols-1 flex-col-reverse sm:grid sm:grid-cols-2 lg:w-auto"
+      aria-label={title}
+      data-aos="fade-up-sm"
+      data-aos-duration="700"
+      data-aos-delay={index * 80}>
+      <div class="bg-theme-light flex flex-1 flex-col justify-between p-5 md:p-6 lg:flex-auto 2xl:p-9">
+        <div class="flex flex-col gap-3 xl:gap-10">
+          <span class="text-text-default/70 text-lg font-medium">
+            {String(index + 1).padStart(3, "0")}
+          </span>
+
+          <span class="decoration-dark text-h5-sm md:text-h5 leading-snug font-semibold whitespace-normal underline-offset-4 transition-all max-md:underline md:group-hover:underline">
+            {title}
+          </span>
+        </div>
+
+        {projectDetails && projectDetails.length > 0 && (
+          <div class="mt-5 flex flex-wrap gap-3 xl:mt-8">
+            {projectDetails
+              .filter((t: ProjectDetail) => t.label === "Category")
+              .map((t: ProjectDetail) => (
+                <span class="border-border-dark relative z-20 rounded-full border px-4 py-1 font-medium">
+                  {t.value}
+                </span>
+              ))}
+          </div>
+        )}
+      </div>
+
+      <div class="relative overflow-hidden">
+        <OptimizedImage
+          src={image || ""}
+          alt={imageAlt || title || ""}
+          width={300}
+          height={386}
+          class="h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105 lg:h-full"
+        />
+
+        <span class="absolute top-1/2 left-1/2 size-18 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 max-md:opacity-100 md:group-hover:opacity-100">
+          <span class="bg-theme-light text-primary inline-flex size-14 items-center justify-center rounded-full transition-colors md:size-18">
+            <Icons icon="ArrowUpRight" class="size-8" />
+          </span>
+        </span>
+      </div>
+    </a>
+  ) : layout === "casestudy" ? (
+    <a
+      href={href}
+      class="group flex flex-col"
+      data-aos="fade-up-sm"
+      data-aos-duration="700"
+      data-aos-delay={index * 100}
+      aria-label={`View project: ${title}`}>
+      <div class="relative mb-4 block aspect-4/5 overflow-hidden 2xl:mb-8">
+        <OptimizedImage
+          src={image || ""}
+          alt={imageAlt || title || ""}
+          width={424}
+          height={480}
+          class="size-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+        />
+
+        <div class="text-text-default bg-theme-light absolute right-0 bottom-0 flex items-center overflow-hidden p-4.5 transition-all duration-600 ease-out select-none">
+          <span class="max-w-0 overflow-hidden font-bold whitespace-nowrap opacity-0 transition-all duration-600 max-lg:max-w-40 max-lg:pr-2 max-lg:opacity-100 lg:group-hover:max-w-40 lg:group-hover:pr-2 lg:group-hover:opacity-100">
+            {t("button.viewProjects")}
+          </span>
+          <Icons icon="Plus" class="size-7 transition-transform duration-600" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <span class="text-text-default/71 leading-normal">
+          {projectDetails &&
+            projectDetails.length > 0 &&
+            projectDetails.filter(
+              (t: ProjectDetail) => t.label !== "Category",
+            )[0].value}
+        </span>
+        <h3 class="text-text-default text-h5-sm md:text-h5 leading-tight font-semibold whitespace-normal transition-colors">
+          {title}
+        </h3>
+      </div>
+    </a>
+  ) : null
+}

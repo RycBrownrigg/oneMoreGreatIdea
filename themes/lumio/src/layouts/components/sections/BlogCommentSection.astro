@@ -1,0 +1,36 @@
+---
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import CommentForm from "../widgets/CommentForm.astro";
+import type { commentSectionSchema } from "@/sections.schema";
+import type { z } from "astro/zod";
+import Reveal from "@/components/widgets/Reveal.astro";
+type SectionType = Section & z.infer<typeof commentSectionSchema>;
+
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+let defaultContent = (
+  await getEntryCTM("sections", "comment-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let { enable = true, title, form } = actualContent;
+
+if (!enable) return null;
+---
+
+<Reveal
+  class="bg-theme-light container p-4 md:p-8 lg:p-10 xl:p-13.75"
+  animation="fade-up-sm">
+  {title && <h3 class="mb-8.5 text-4xl font-bold">{title}</h3>}
+
+  {form && <CommentForm form={form} />}
+</Reveal>

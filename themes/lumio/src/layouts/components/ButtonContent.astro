@@ -1,0 +1,135 @@
+---
+import Icons from "@/helpers/Icons.astro";
+import type { IconName as SupportedIconName } from "../../lib/iconNames.ts";
+import type { sharedButtonTag } from "@/sections.schema";
+import type { z } from "astro/zod";
+
+interface Props extends z.infer<typeof sharedButtonTag> {}
+
+const {
+  label,
+  variant,
+  icon,
+  title,
+  isCreativeHoverEffect,
+  isTextFlipHoverEffect,
+  isMagneticTextFlipHoverEffect,
+} = Astro.props;
+
+const labelText = label
+  ?.replace(/<[^>]*>/g, "")
+  .replace(/&nbsp;/g, " ")
+  .replace(/&amp;/g, "&")
+  .replace(/&lt;/g, "<")
+  .replace(/&gt;/g, ">")
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;/g, "'")
+  .trim();
+
+// Check if the label contain "learn more" "read more" type of text that need to add support for accessibility
+let addAriaLabel = false;
+if (
+  labelText?.toLowerCase().includes("learn more") ||
+  labelText?.toLowerCase().includes("read more")
+) {
+  addAriaLabel = true;
+}
+
+const iconLeft =
+  icon?.enable && icon?.position === "left" && variant !== "text";
+const iconRight =
+  icon?.enable && icon?.position === "right" && variant !== "text";
+const accessibleLabel = addAriaLabel && title ? title : labelText;
+---
+
+{
+  iconLeft && !iconRight && (
+    <span
+      class={`icons-wrapper -mb-px inline-flex min-h-4 min-w-4 items-center justify-center ${icon?.className || ""}`}>
+      <span class="icon icon-before flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className || ""}`}
+          icon={icon.name as SupportedIconName}
+        />
+      </span>
+      <span class="icon icon-after flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className || ""}`}
+          icon={icon.name as SupportedIconName}
+        />
+      </span>
+    </span>
+  )
+}
+
+{
+  variant === "text" && icon?.enable ? (
+    <span
+      class:list={[
+        "icons-wrapper -mb-px inline-flex min-h-[.9em] min-w-[1em] items-center justify-center",
+        { "": label },
+        icon?.className || "",
+      ]}>
+      <span class="icon icon-before flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className}`}
+          icon={(icon.name as SupportedIconName) || "ArrowUpRight"}
+        />
+      </span>
+      <span class="icon icon-after flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className}`}
+          icon={(icon.name as SupportedIconName) || "ArrowUpRight"}
+        />
+      </span>
+    </span>
+  ) : isCreativeHoverEffect ? (
+    <span class="hover-bg" />
+  ) : null
+}
+
+{
+  isTextFlipHoverEffect || isMagneticTextFlipHoverEffect ? (
+    <>
+      {label && (
+        <>
+          <span class="text-flip-inner" aria-hidden="true">
+            <span
+              class="text-flip-line text-flip-line-current"
+              set:html={label}
+            />
+            <span class="text-flip-line text-flip-line-next" set:html={label} />
+          </span>
+          {accessibleLabel && (
+            <span class="sr-only" set:html={accessibleLabel} />
+          )}
+        </>
+      )}
+    </>
+  ) : (
+    <>
+      {label && <span class="btn-label" set:html={label} />}
+      {addAriaLabel && <span class="sr-only" set:html={title} />}
+    </>
+  )
+}
+
+{
+  !iconLeft && iconRight && (
+    <span
+      class={`icons-wrapper -mb-px inline-flex min-h-4 min-w-4 items-center justify-center ${icon?.className}`}>
+      <span class="icon icon-before flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className}`}
+          icon={icon.name as SupportedIconName}
+        />
+      </span>
+      <span class="icon icon-after flex items-center justify-center">
+        <Icons
+          class={`[font-size:inherit] ${icon?.className}`}
+          icon={icon.name as SupportedIconName}
+        />
+      </span>
+    </span>
+  )
+}

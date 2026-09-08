@@ -1,0 +1,46 @@
+---
+import type { HTMLTag } from "astro/types";
+
+type Props = {
+  animation?:
+    | "fade-up"
+    | "fade-down"
+    | "fade-left"
+    | "fade-right"
+    | "fade-up-sm"
+    | "fade-down-sm"
+    | "fade-left-sm"
+    | "fade-right-sm"
+    | "zoom-in"
+    | "zoom-in-sm"
+    | "reveal-anim-up"
+    | "reveal-anim-down"
+    | "reveal-anim-left"
+    | "reveal-anim-right";
+  anchorPlacement?: string;
+  class?: string;
+  delay?: number | string;
+  duration?: number | string;
+  tag?: HTMLTag;
+};
+
+const {
+  animation = "fade-up-sm",
+  anchorPlacement,
+  class: className = "",
+  delay,
+  duration = 700,
+  tag: Tag = "div",
+  ...rest
+} = Astro.props;
+---
+
+<Tag
+  class={className}
+  data-aos={animation}
+  data-aos-delay={delay !== undefined ? String(delay) : undefined}
+  data-aos-duration={duration !== undefined ? String(duration) : undefined}
+  data-aos-anchor-placement={anchorPlacement}
+  {...rest}>
+  <slot />
+</Tag>

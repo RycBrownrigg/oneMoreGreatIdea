@@ -1,0 +1,174 @@
+---
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import Pagination from "../widgets/Pagination.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import BlogCard from "@/layouts/components/cards/BlogCard.astro";
+import config from ".astro/config.generated.json";
+import type { blogSectionSchema } from "@/sections.schema";
+import type { z } from "astro/zod";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import type { Category } from "@/types";
+import { slugifyyy } from "@/lib/utils/textConverter";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Button from "@/components/Button.astro";
+
+const { blogFolder } = config.settings;
+const t = await useTranslations(Astro.currentLocale as string);
+
+// Type for this section data
+type SectionType = z.infer<typeof blogSectionSchema>;
+type Props = {
+  listPage?: boolean;
+  content?: SectionType;
+  pagination?: {
+    enable: boolean;
+    currentPage: number;
+  };
+  currentCategory?: string;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "blog-list-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, cardLayout } = actualContent as SectionType;
+let { listPage = false } = Astro.props as Props;
+
+let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+
+// Sort posts by date
+posts = sortByDate(posts);
+
+const { currentCategory } = Astro.props;
+
+if (currentCategory) {
+  posts = posts.filter(
+    (post) =>
+      post.data.categories &&
+      post.data.categories.some(
+        (c: string) => slugifyyy(c) === currentCategory,
+      ),
+  );
+}
+
+const searchQuery = Astro.url.searchParams.get("search");
+
+if (searchQuery) {
+  const lowercaseSearch = searchQuery.toLowerCase();
+  posts = posts.filter((post) =>
+    post.data.title.toLowerCase().includes(lowercaseSearch),
+  );
+}
+
+// Limit the number of items to be displayed
+let totalPages = Math.ceil(posts?.length / config.settings.pagination);
+
+const featuredPost = posts.find((post) => post.data.featured);
+
+// Remove featured posts from the main list
+if (featuredPost) {
+  posts = posts.filter((post) => post.data.featured !== true);
+}
+
+const pagination = Astro.props.pagination;
+if (pagination) {
+  const indexOfLastPost = pagination?.currentPage * config.settings.pagination;
+  const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
+  posts = posts.slice(indexOfFirstPost, indexOfLastPost);
+}
+
+let categories = (await getTaxonomy(
+  config.settings.blogFolder as "blog",
+  "categories",
+  Astro.currentLocale as string,
+)) as Category[];
+
+const activeCategoryClass =
+  "!text-primary font-bold underline underline-offset-3";
+const inactiveCategoryClass = "text-text-default";
+
+if (!enable) return;
+---
+
+<section>
+  <div class="container space-y-10 md:space-y-16">
+    {
+      categories && categories.length > 0 && (
+        <div class="filter-tabs flex flex-wrap justify-center gap-x-6 gap-y-3 tracking-wide md:gap-6 lg:gap-14 xl:gap-20">
+          <Button
+            tag="a"
+            url={`/${blogFolder}`}
+            variant="text"
+            label={t("button.showAll")}
+            class={`tab-button hover:text-primary font-medium underline-offset-3 transition-colors hover:underline hover:underline-offset-3 md:text-lg lg:text-xl ${currentCategory === undefined ? activeCategoryClass : inactiveCategoryClass}`}
+            data-group="all"
+            aria-current={currentCategory === undefined ? "page" : undefined}
+          />
+          {categories.map((c) => {
+            const slug = slugifyyy(c.slug);
+            const isActive = currentCategory === slug;
+            return (
+              <Button
+                tag="a"
+                url={`/${blogFolder}/category/${slug}`}
+                variant="text"
+                label={c.name}
+                data-group={slug}
+                class={`tab-button hover:text-primary font-medium transition-colors hover:underline hover:underline-offset-3 md:text-lg lg:text-xl ${isActive ? activeCategoryClass : inactiveCategoryClass}`}
+                aria-current={isActive ? "page" : undefined}
+              />
+            );
+          })}
+        </div>
+      )
+    }
+
+    <div class="divide-dark/10 border-dark/10 flex flex-col divide-y border-t">
+      {
+        posts?.map((post, index) => {
+          const postCategories =
+            post.data.categories?.map((c: string) => slugifyyy(c)).join(",") ||
+            "";
+          return (
+            <div class="blog-post-wrapper" data-groups={postCategories}>
+              <BlogCard
+                content={post}
+                options={{ card: { layout: cardLayout } }}
+                data-aos-delay={
+                  !Astro.props.pagination && ((index % 3) + 1) * 100
+                }
+                data-aos={!Astro.props.pagination && "fade-up-sm"}
+              />
+            </div>
+          );
+        })
+      }
+    </div>
+    {
+      listPage && (
+        <Pagination
+          collection={
+            currentCategory
+              ? `${blogFolder}/category/${currentCategory}`
+              : blogFolder
+          }
+          currentPage={Astro.props.pagination?.currentPage || 1}
+          totalPages={totalPages}
+        />
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,227 @@
+---
+import "swiper/css";
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { testimonialSectionSchema } from "@/sections.schema";
+import SectionBadge from "../global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import TestimonialCard from "@/components/cards/TestimonialCard.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+// Type
+export type SectionType = z.infer<typeof testimonialSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "testimonial-section-two", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let { enable = true, badge, title } = (actualContent as SectionType) || {};
+
+if (!enable) return;
+
+let pageData = (await getEntryCTM("testimonial", "-index", Astro.currentLocale))
+  ?.data;
+const items = pageData.listHome2?.filter((item) => item.enable !== false) ?? [];
+---
+
+<section class="relative overflow-hidden pt-0">
+  <div
+    class="section-spacing-vertical relative z-10 bg-black bg-[linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-size-[80px_80px] bg-center">
+    <div class="relative z-20 container">
+      <div
+        class="mb-15 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-4xl">
+          {
+            badge && (
+              <SectionBadge className="text-text-inverse" title={badge} />
+            )
+          }
+          {title && <SectionTitle title={title} variant="dark" />}
+        </div>
+
+        <Reveal
+          class="hidden items-center gap-5 md:flex"
+          animation="fade-left-sm"
+          delay="150">
+          <button
+            id="testimonial-two-prev"
+            aria-label={t("aria.prevTestimonial")}
+            class="group border-text-inverse hover:bg-primary hover:border-primary flex h-14 w-25 items-center justify-center rounded-[30px] border transition-all duration-300 disabled:pointer-events-none disabled:opacity-40">
+            <OptimizedImage
+              src="/images/icons/svg/arrow-left.svg"
+              alt={t("aria.prevTestimonial")}
+              width={24}
+              height={16}
+              class="text-text-inverse h-auto w-11 transition-colors"
+            />
+          </button>
+          <button
+            id="testimonial-two-next"
+            aria-label={t("aria.nextTestimonial")}
+            class="group border-text-inverse hover:bg-primary hover:border-primary flex h-14 w-25 items-center justify-center rounded-[30px] border transition-all duration-300 disabled:pointer-events-none disabled:opacity-40">
+            <OptimizedImage
+              src="/images/icons/svg/arrow-right.svg"
+              alt={t("aria.nextTestimonial")}
+              width={24}
+              height={16}
+              class="text-text-inverse h-auto w-11 transition-colors"
+            />
+          </button>
+        </Reveal>
+      </div>
+
+      {
+        items.length > 0 && (
+          <>
+            <Reveal
+              class="swiper swiper-testimonial-two w-full min-w-0"
+              animation="fade-up-sm"
+              delay="200">
+              <div class="swiper-wrapper">
+                {items.map((testimonial) => (
+                  <div class="swiper-slide !h-auto">
+                    <TestimonialCard
+                      content={testimonial.content}
+                      customer={testimonial.customer}
+                      options={{ card: { layout: "horizontal" } }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <div class="mt-6 flex items-center justify-center gap-4 md:hidden">
+              <button
+                id="testimonial-two-prev-mobile"
+                aria-label={t("aria.prevTestimonial")}
+                class="group border-text-inverse hover:bg-primary hover:border-primary flex h-11 w-20 items-center justify-center rounded-full border transition-all duration-300 disabled:pointer-events-none disabled:opacity-40">
+                <OptimizedImage
+                  src="/images/icons/svg/arrow-left.svg"
+                  alt={t("aria.prevTestimonial")}
+                  width={24}
+                  height={16}
+                  class="text-text-inverse h-auto w-11 transition-colors"
+                />
+              </button>
+              <button
+                id="testimonial-two-next-mobile"
+                aria-label={t("aria.nextTestimonial")}
+                class="group border-text-inverse hover:bg-primary hover:border-primary flex h-11 w-20 items-center justify-center rounded-full border transition-all duration-300 disabled:pointer-events-none disabled:opacity-40">
+                <OptimizedImage
+                  src="/images/icons/svg/arrow-right.svg"
+                  alt={t("aria.nextTestimonial")}
+                  width={24}
+                  height={16}
+                  class="text-text-inverse h-auto w-11 transition-colors"
+                />
+              </button>
+            </div>
+          </>
+        )
+      }
+    </div>
+  </div>
+
+  <script>
+    import Swiper from "swiper";
+    import { Navigation, Autoplay } from "swiper/modules";
+
+    const initSwiper = () => {
+      const swiper = new Swiper(".swiper-testimonial-two", {
+        modules: [Navigation, Autoplay],
+        slidesPerView: 1,
+        spaceBetween: 24,
+        speed: 700,
+        grabCursor: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+        /*
+         * We were previously relying on Swiper's built-in navigation option
+         * and then commented it out when the disabled state stopped working.
+         *
+         * The problem is not Tailwind – the `disabled:` variant is working
+         * correctly – but Swiper does **not** add a `disabled` attribute to the
+         * buttons when you reach the beginning/end of the slider.  Instead it
+         * toggles a CSS class (`swiper-button-disabled`).  Tailwind's
+         * `disabled:` variant matches the `[disabled]` attribute, so nothing
+         * happens when Swiper only toggles a class.  In `TestimonialSection`
+         * we never noticed because we were always using the default navigation
+         * and the buttons are never really disabled in practice.
+         *
+         * To make the `disabled:` styles work we need to manage the attribute
+         * ourselves.  After the Swiper instance is created we watch for
+         * `slideChange`/`reachBeginning`/`reachEnd` events and enable/disable
+         * the buttons explicitly.  That way the Tailwind variants kick in and
+         * the `pointer-events-none`/`opacity-40` rules apply as expected.
+         */
+        breakpoints: {
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 24,
+          },
+          1024: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+        },
+      });
+
+      const prevButtons = document.querySelectorAll(
+        "#testimonial-two-prev, #testimonial-two-prev-mobile",
+      );
+      const nextButtons = document.querySelectorAll(
+        "#testimonial-two-next, #testimonial-two-next-mobile",
+      );
+
+      // hook up the buttons manually so we can control their disabled state
+      prevButtons.forEach((btn) => {
+        btn.addEventListener("click", () => swiper.slidePrev());
+      });
+      nextButtons.forEach((btn) => {
+        btn.addEventListener("click", () => swiper.slideNext());
+      });
+
+      const updateDisabledState = () => {
+        const atBegin = swiper.isBeginning;
+        const atEnd = swiper.isEnd;
+        // `querySelectorAll` returns a generic `NodeListOf<Element>`, so TS
+        // doesn't know that our buttons actually have a `disabled` property.
+        // Cast to `HTMLButtonElement` before setting the attribute.
+        prevButtons.forEach((b) => {
+          (b as HTMLButtonElement).disabled = atBegin;
+        });
+        nextButtons.forEach((b) => {
+          (b as HTMLButtonElement).disabled = atEnd;
+        });
+      };
+
+      // initial state + keep in sync with swiper events
+      swiper.on("slideChange", updateDisabledState);
+      swiper.on("reachBeginning", updateDisabledState);
+      swiper.on("reachEnd", updateDisabledState);
+      updateDisabledState();
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initSwiper);
+    } else {
+      initSwiper();
+    }
+  </script>
+</section>

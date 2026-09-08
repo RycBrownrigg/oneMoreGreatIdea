@@ -1,0 +1,23 @@
+# build output
+themes/lumio/dist/
+themes/lumio/.output/
+
+# dependencies
+themes/lumio/node_modules/
+
+# astro cache
+themes/lumio/.astro/
+
+# env
+themes/lumio/.env
+themes/lumio/.env.production
+
+# macOS
+.DS_Store
+
+# local netlify/vercel
+themes/lumio/.netlify/
+themes/lumio/.vercel/
+
+# GSD research cache (regenerable)
+.planning/research/.cache/

@@ -1,0 +1,118 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json" with { type: "json" };
+import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+import BlogListSection from "@/components/sections/BlogListSection.astro";
+import removeEmptyKeys from "@/lib/utils/removeEmptyKeys";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { slugifyyy, titleify } from "@/lib/utils/textConverter";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { blogFolder } = config.settings;
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      const postIndex = await getEntryCTM(
+        blogFolder as "blog",
+        "-index",
+        lang.languageCode,
+      );
+
+      // If draft true in index.md file frontmatter don't include any page related to this page collection in production
+      if (postIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      // Disable page generation if config.settings.pagination is 0 or false
+      if (config.settings.pagination === 0 || !config.settings.pagination) {
+        return [];
+      }
+
+      const posts = await getCollectionCTM(
+        blogFolder as "blog",
+        lang.languageCode,
+      );
+      const categories = await getTaxonomy(
+        blogFolder as "blog",
+        "categories",
+        lang.languageCode,
+      );
+
+      const categoryPaths = categories.flatMap((category) => {
+        // Filter posts by the current category
+        const categoryPosts = posts.filter(
+          (post: any) =>
+            post.data.categories &&
+            post.data.categories.some(
+              (c: string) => slugifyyy(c) === slugifyyy(category.slug),
+            ),
+        );
+
+        const totalPages = Math.ceil(
+          categoryPosts.length / config.settings.pagination,
+        );
+        const pathsForCategory = [];
+
+        // Pagination pages start at 2 (page 1 is just the category index)
+        for (let i = 1; i < totalPages; i++) {
+          pathsForCategory.push({
+            params: {
+              category: slugifyyy(category.slug),
+              slug: (i + 1).toString(),
+              lang:
+                lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+                  ? undefined
+                  : lang.languageCode,
+            },
+            props: {
+              category,
+              postIndex,
+              pagination: config.settings.pagination,
+            },
+          });
+        }
+        return pathsForCategory;
+      });
+
+      return categoryPaths;
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { slug } = Astro.params;
+const { category, postIndex } = Astro.props;
+const currentPage = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+
+let title = titleify(`${category.name} posts - Page ${currentPage}`);
+---
+
+<Base {...postIndex?.data} title={title} disableTagline={true}>
+  <PageHeader
+    title={postIndex.data.title}
+    breadcrumbTitle={postIndex?.data?.breadcrumbTitle}
+  />
+  <BlogListSection
+    content={{
+      ...removeEmptyKeys(postIndex.data),
+    }}
+    listPage={true}
+    pagination={{
+      enable: true,
+      currentPage,
+    }}
+    currentCategory={slugifyyy(category.slug)}
+  />
+  <CustomersSection />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

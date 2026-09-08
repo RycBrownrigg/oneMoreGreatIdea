@@ -1,0 +1,73 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { experienceSectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import ExperienceCard from "@/components/cards/ExperienceCard.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+type SectionType = Section &
+  NonNullable<z.infer<typeof experienceSectionSchema>>;
+type Props = { content?: SectionType };
+
+let defaultContent = (
+  await getEntryCTM("sections", "experience-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, image, imageAlt, stats } = actualContent;
+
+if (!enable) return;
+---
+
+<section class="relative">
+  <div class="relative md:h-100 lg:h-150 xl:h-162.5">
+    <div class="bg-theme-dark/70 absolute inset-0 z-1"></div>
+    {
+      image && (
+        <Reveal
+          class="relative z-0 size-full overflow-hidden rounded-t-2xl md:rounded-2xl"
+          animation="reveal-anim-up"
+          duration="900">
+          <OptimizedImage
+            src={image}
+            alt={imageAlt || t("common.experience")}
+            width={1770}
+            height={650}
+            class="size-full object-cover"
+          />
+        </Reveal>
+      )
+    }
+
+    {
+      stats && stats.length > 0 && (
+        <Reveal
+          class="relative z-20 container mt-5 flex justify-center px-0 md:mt-0 md:justify-end md:px-4 2xl:px-0"
+          animation="fade-up-sm"
+          delay="150">
+          <div class="right-0 bottom-0 grid grid-cols-2 gap-0 md:absolute md:max-w-148">
+            {stats.map((stat, i) => (
+              <ExperienceCard
+                value={stat.value}
+                label={stat.label}
+                description={stat.description}
+                variant={stat.variant}
+                index={i}
+              />
+            ))}
+          </div>
+        </Reveal>
+      )
+    }
+  </div>
+</section>

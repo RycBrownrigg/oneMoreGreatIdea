@@ -1,0 +1,132 @@
+---
+import type { NavigationLink } from "@/types";
+import Logo from "@/components/global/Logo.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import { sortByWeight } from "@/lib/utils/sortFunctions";
+import Button from "@/components/Button.astro";
+import { filteredEnabled } from "@/lib/utils/filteredEnabled";
+import config from ".astro/config.generated.json";
+import NavMenuItem from "@/layouts/components/global/header/MenuItem.astro";
+import NavToggleBtn from "@/components/global/header/NavbarToggler.astro";
+import LanguageSwitcher from "@/layouts/components/global/header/LanguageSwitcher.astro";
+import HeaderTwoTopBar from "@/components/global/header/Topbar.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+let main = t("main") as NavigationLink[];
+let topbarMenu = t("topbar") as NavigationLink[];
+topbarMenu = filteredEnabled(topbarMenu);
+main = filteredEnabled(main);
+
+// Sort menus by weight
+main = sortByWeight(main) as NavigationLink[];
+
+const { stickyHeader, navigationButton } = config.settings;
+const { class: ClassName } = Astro.props;
+---
+
+{/* Top bar */}
+<HeaderTwoTopBar menu={topbarMenu} />
+<header
+  class:list={[
+    "header header-two group/header bg-theme-light transform",
+    { "sticky-header": stickyHeader },
+    ClassName,
+  ]}>
+  <div class="container-2xl">
+    {/* Main bar */}
+    <div class="relative mx-auto flex items-stretch">
+      <nav
+        class="hs-dropdown relative flex w-full items-stretch justify-between [--auto-close:inside] [--gpu-acceleration:false] [--strategy:absolute] lg:pr-0 lg:[--strategy:static]">
+        {/* Logo container with blue background */}
+        <div
+          class="logo-section bg-primary after:bg-primary relative z-10 flex transform flex-row-reverse items-center justify-center gap-6 py-4 pe-4 after:pointer-events-none after:absolute after:right-0 after:-z-10 after:h-full after:w-screen after:select-none lg:flex-row lg:py-2">
+          <Logo variant="blue" />
+        </div>
+
+        <ul
+          id="nav-menu"
+          class="navbar hs-dropdown-menu ms-0 lg:flex! lg:pl-3 xl:pl-10 2xl:pl-14">
+          {main.map((menu) => <NavMenuItem menu={menu} />)}
+
+          {/* Language Switcher For Small Devices */}
+          {
+            config.settings.multilingual.enable && (
+              <li class="max-lg:px-2 max-lg:py-2 lg:hidden" role="menuitem">
+                <LanguageSwitcher />
+              </li>
+            )
+          }
+          {
+            navigationButton.enable && (
+              <li class="max-lg:px-2 max-lg:py-2 lg:hidden" role="menuitem">
+                {navigationButton.enable && (
+                  <Button
+                    variant="fill"
+                    {...navigationButton}
+                    icon={{
+                      enable: true,
+                      name: "ArrowUpRight",
+                      position: "left",
+                    }}
+                    label={t("button.getAQuote")}
+                  />
+                )}
+              </li>
+            )
+          }
+        </ul>
+
+        {/* Utilities Right Side */}
+        <div
+          class="header-right hidden gap-3 lg:flex lg:items-center lg:py-4 xl:gap-6 2xl:gap-8">
+          {config.settings.multilingual.enable && <LanguageSwitcher />}
+          {
+            navigationButton.enable && (
+              <Button
+                variant="fill"
+                {...navigationButton}
+                icon={{ enable: true, name: "ArrowUpRight", position: "left" }}
+                label={t("button.getAQuote")}
+                class="xl:px-5! xl:py-4.5!"
+              />
+            )
+          }
+        </div>
+
+        <NavToggleBtn />
+      </nav>
+    </div>
+    <script>
+      import HSDropdown from "@preline/dropdown";
+
+      if (
+        [".hs-dropdown", "[data-hs-dropdown]"].some((selector) =>
+          document.querySelector(selector),
+        )
+      ) {
+        HSDropdown?.autoInit();
+      }
+
+      function updateMegaMenuOffset(): void {
+        const header = document.querySelector(
+          "header.header-two",
+        ) as HTMLElement | null;
+        if (!header) return;
+
+        const headerBottom = Math.round(header.getBoundingClientRect().bottom);
+        document.documentElement.style.setProperty(
+          "--header-bottom",
+          `${Math.max(headerBottom, 0)}px`,
+        );
+      }
+
+      updateMegaMenuOffset();
+      window.addEventListener("resize", updateMegaMenuOffset, {
+        passive: true,
+      });
+      window.addEventListener("scroll", updateMegaMenuOffset, {
+        passive: true,
+      });
+    </script>
+  </div>
+</header>

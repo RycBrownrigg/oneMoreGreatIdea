@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E27"/>
+      <stop offset="55%" stop-color="#0F1A3D"/>
+      <stop offset="100%" stop-color="#131B3A"/>
+    </linearGradient>
+    <linearGradient id="footerBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+    <radialGradient id="badgeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F8FAFC" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#F8FAFC" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- faint data-flow footer texture -->
+  <g stroke="#2E3A5C" stroke-width="1.5" opacity="0.5">
+    <line x1="0" y1="560" x2="1200" y2="560"/>
+    <line x1="0" y1="580" x2="1200" y2="580"/>
+  </g>
+  <g fill="#22D3EE" opacity="0.6">
+    <circle cx="150" cy="560" r="2.5"/>
+    <circle cx="330" cy="560" r="2.5"/>
+    <circle cx="510" cy="560" r="2.5"/>
+    <circle cx="690" cy="580" r="2.5"/>
+    <circle cx="870" cy="580" r="2.5"/>
+    <circle cx="1050" cy="580" r="2.5"/>
+  </g>
+
+  <!-- central VS divider -->
+  <line x1="880" y1="110" x2="880" y2="510" stroke="#3B4A72" stroke-width="2"/>
+
+  <!-- left column: BMad virtual team (orange) -->
+  <g>
+    <line x1="775" y1="170" x2="775" y2="430" stroke="#7A4A2E" stroke-width="2"/>
+    <circle cx="775" cy="170" r="24" fill="#FB923C"/>
+    <circle cx="775" cy="260" r="18" fill="#FB923C" opacity="0.85"/>
+    <circle cx="775" cy="340" r="18" fill="#FB923C" opacity="0.7"/>
+    <circle cx="775" cy="420" r="18" fill="#FB923C" opacity="0.55"/>
+  </g>
+  <text x="775" y="470" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#FDBA74">BMAD</text>
+
+  <!-- right column: GSD execution pipeline (cyan) -->
+  <g>
+    <line x1="985" y1="170" x2="985" y2="430" stroke="#1B5E6B" stroke-width="2"/>
+    <rect x="961" y="150" width="48" height="34" rx="6" fill="#22D3EE"/>
+    <rect x="961" y="228" width="48" height="34" rx="6" fill="#22D3EE" opacity="0.85"/>
+    <rect x="961" y="306" width="48" height="34" rx="6" fill="#22D3EE" opacity="0.7"/>
+    <rect x="961" y="384" width="48" height="34" rx="6" fill="#22D3EE" opacity="0.55"/>
+  </g>
+  <text x="985" y="470" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#67E8F9">GSD</text>
+
+  <!-- center verdict badge -->
+  <circle cx="880" cy="300" r="70" fill="url(#badgeGlow)"/>
+  <circle cx="880" cy="300" r="46" fill="#131B3A" stroke="url(#footerBar)" stroke-width="4"/>
+  <path d="M 858 300 L 874 316 L 906 280" fill="none" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- kicker -->
+  <text x="70" y="150" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4" fill="#22D3EE">BMad Method Vs GSD Core &#183; PART 1 OF 5</text>
+
+  <!-- title -->
+  <text x="70" y="364" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800" fill="#F8FAFC">Why This Matters Now</text>
+
+  <!-- divider -->
+  <rect x="70" y="392" width="90" height="6" rx="3" fill="url(#footerBar)"/>
+
+  <!-- footer bar -->
+  <rect x="0" y="606" width="1200" height="24" fill="url(#footerBar)"/>
+
+  <!-- site mark: small ABR bars logomark + wordmark -->
+  <g transform="translate(70, 540)">
+    <rect x="0" y="18" width="8" height="14" fill="#22D3EE"/>
+    <rect x="12" y="10" width="8" height="22" fill="#22D3EE"/>
+    <rect x="24" y="2" width="8" height="30" fill="#FB923C"/>
+    <text x="46" y="26" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">AskRyc</text>
+  </g>
+</svg>

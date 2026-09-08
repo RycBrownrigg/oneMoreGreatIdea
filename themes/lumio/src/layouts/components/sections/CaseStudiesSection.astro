@@ -1,0 +1,72 @@
+---
+import type { z } from "astro/zod";
+import config from ".astro/config.generated.json";
+import SectionBadge from "../global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { caseStudiesSectionSchema } from "@/sections.schema";
+import CaseStudyCard from "@/components/cards/CaseStudyCard.astro";
+import { getCollectionCTM, getEntryCTM } from "@/lib/contentParser.astro";
+import type { CollectionKey } from "astro:content";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+// Type
+type SectionType = z.infer<typeof caseStudiesSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "case-studies-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, badge, title, limit, cardLayout } = actualContent ?? {};
+
+if (!enable) return;
+
+let caseStudiesList = await getCollectionCTM(
+  config.settings.caseStudiesFolder as CollectionKey,
+  Astro.currentLocale,
+);
+caseStudiesList.sort((a, b) => (a.data.weight || 0) - (b.data.weight || 0));
+caseStudiesList = caseStudiesList.slice(0, limit);
+---
+
+<section class="pt-0">
+  <div class="section-spacing-vertical">
+    <div class="container">
+      <Reveal
+        class="mx-auto mb-15 max-w-5xl text-center"
+        animation="fade-up-sm">
+        {/* badge */}
+        {badge && <SectionBadge title={badge} />}
+
+        {/* Title */}
+        {title && <SectionTitle title={title} />}
+      </Reveal>
+
+      {
+        caseStudiesList && caseStudiesList.length > 0 && (
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {caseStudiesList.map((caseStudy, index) => {
+              return (
+                <CaseStudyCard
+                  content={caseStudy}
+                  options={{ layout: cardLayout }}
+                  index={index}
+                />
+              );
+            })}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

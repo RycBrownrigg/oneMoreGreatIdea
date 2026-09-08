@@ -1,0 +1,101 @@
+---
+import dateFormat from "@/lib/utils/dateFormat";
+import type { Category } from "@/types";
+import { getLocaleUrlCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import { markdownify } from "@/lib/utils/textConverter";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import Button from "../Button.astro";
+import type { CollectionEntry } from "astro:content";
+const t = await useTranslations(Astro.currentLocale as string);
+
+interface Props {
+  data: {
+    categoriesWithSlugs: Category[];
+    date?: Date | string;
+    comments?: number | string;
+    authorEntry?: CollectionEntry<"author">["data"] | Record<string, never>;
+    title?: string;
+    readTime?: string;
+  };
+}
+
+const { categoriesWithSlugs, date, comments, title, authorEntry, readTime } =
+  Astro.props.data;
+---
+
+<!-- Blog Header Section -->
+<section class="text-center" id="blogDetailHeader">
+  <div class="container">
+    <div class="mx-auto max-w-5xl">
+      {
+        categoriesWithSlugs && categoriesWithSlugs.length > 0 && (
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            {categoriesWithSlugs.map((cat: Category) => (
+              <Button
+                tag="a"
+                variant="fill"
+                url={getLocaleUrlCTM(cat.slug as string, Astro.currentLocale)}
+                aria-label={cat.name}
+                label={cat.name}
+                class="px-6 py-1"
+              />
+            ))}
+          </div>
+        )
+      }
+
+      <div
+        class="my-6 flex flex-wrap items-end justify-center gap-2.5 text-lg lg:my-8">
+        {date && <span>{dateFormat(date, "dd MMMM, yyyy")}</span>}
+        {date && comments !== undefined && <span>&middot;</span>}
+        {
+          comments !== undefined && (
+            <span>
+              {t("blog.comments")} ({comments})
+            </span>
+          )
+        }
+      </div>
+
+      {
+        title && (
+          <h1
+            class="text-h3 lg:text-h2 xl:text-h1 font-bold"
+            set:html={title}
+          />
+        )
+      }
+
+      {
+        authorEntry && authorEntry.title && (
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-5 md:mt-8">
+            {authorEntry.image && (
+              <OptimizedImage
+                width={70}
+                height={70}
+                src={authorEntry.image}
+                alt={authorEntry.title || "author image"}
+                class="size-17.5 rounded-full"
+              />
+            )}
+            <div class="flex flex-wrap items-center gap-5 text-left md:gap-8">
+              <div>
+                <span class="text-text-default/80">Written by</span>
+                <p
+                  class="text-lg font-semibold"
+                  set:html={markdownify(authorEntry.title)}
+                />
+              </div>
+              {readTime && (
+                <div>
+                  <span class="text-text-default/80">Viewed</span>
+                  <p class="text-lg font-semibold">{readTime}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

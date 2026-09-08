@@ -1,0 +1,208 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntrySlugCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import Icons from "@/helpers/Icons.astro";
+import type { CollectionEntry } from "astro:content";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+interface Props {
+  content: CollectionEntry<"services">;
+  options?: {
+    card?: {
+      layout?: "horizontal" | "accordion" | "card";
+    };
+  };
+  index?: number;
+  class?: string;
+}
+
+let { content, options, index = 0, class: className, ...rest } = Astro.props;
+
+const layout = options?.card?.layout || "card";
+
+let { title, description, icon, image, image3, imagePosition } =
+  content.data || {};
+
+// Resolve URL from content id/collection
+let slug =
+  content.id && content.collection
+    ? getEntrySlugCTM(content, Astro.currentLocale)
+    : undefined;
+
+const href = slug ?? "#";
+---
+
+{
+  /* ─── LAYOUT: horizontal ─── Used by OurServicesSection */
+  layout === "horizontal" ? (
+    <a
+      href={href}
+      class:list={[
+        "group flex flex-col items-center gap-3 py-5 transition-colors md:flex-row md:gap-6 lg:gap-10 lg:py-8 xl:gap-14.5 xl:py-[37.6px]",
+        className,
+      ]}
+      aria-label={`${t("button.readMore")} ${title}`}
+      data-aos="fade-up-sm"
+      data-aos-duration="700"
+      data-aos-delay={index * 80}
+      {...rest}>
+      {/* Number */}
+      <span class="text-text-default/70 shrink-0 text-lg font-medium">
+        {String(index + 1).padStart(3, "0")}
+      </span>
+
+      {/* Title */}
+      <h3 class="text-h3-sm lg:text-h3 font-semibold transition-colors md:text-2xl lg:min-w-100 xl:min-w-127.5">
+        {title}
+      </h3>
+
+      {/* Description */}
+      <p
+        class="text-text-default/70 line-clamp-2 w-full text-center md:w-80 md:text-left lg:w-98.25 lg:text-lg"
+        set:html={markdownify(description || "")}
+      />
+
+      {/* Arrow button */}
+      <div class="flex grow justify-end">
+        <span class="border-border-dark/15 group-hover:border-primary max-md:bg-primary md:group-hover:bg-primary flex h-10 w-15 shrink-0 items-center justify-center border transition-all group-hover:text-white max-md:text-white">
+          <Icons icon="ArrowRight" class="h-5 w-5" />
+        </span>
+      </div>
+    </a>
+  ) : layout === "accordion" ? (
+    /* ─── LAYOUT: accordion ─── Used by OurServicesSectionTwo */
+    <div
+      class="group border-border-dark/15 relative cursor-pointer border-b py-6 transition-colors lg:py-9"
+      data-aos="fade-up"
+      data-aos-delay={index * 80}
+      data-aos-duration="600"
+      {...rest}>
+      <div class="flex flex-col gap-4 md:flex-row md:items-start lg:gap-10 xl:gap-14">
+        {/* Number */}
+        <div class="text-text-default/70 w-auto shrink-0 pt-2 font-medium lg:pt-4 lg:text-lg">
+          {String(index + 1).padStart(3, "0")}
+        </div>
+
+        {/* Title & Desc Container */}
+        <div class="relative z-10 flex flex-1 flex-col justify-center">
+          <h3 class="text-h3-sm md:text-h3 font-bold transition-colors">
+            {title}
+          </h3>
+
+          {/* Description - expands on hover */}
+          <div
+            class:list={[
+              "grid transition-[grid-template-rows] duration-500 ease-in-out",
+              index === 0
+                ? "grid-rows-[1fr] lg:group-hover:grid-rows-[1fr]! lg:group-hover/list:grid-rows-[0fr]"
+                : "grid-rows-[0fr] max-lg:grid-rows-[1fr] lg:group-hover:grid-rows-[1fr]",
+            ]}>
+            <div class="overflow-hidden">
+              <p
+                class="text-text-default/70 pt-4 pb-5 lg:max-w-110 lg:pt-6.5 lg:text-lg xl:max-w-140 xl:leading-7"
+                set:html={markdownify(description || "")}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Arrow */}
+        <div class="relative z-10 mt-2 flex shrink-0 lg:mt-2.5">
+          <a
+            href={href}
+            aria-label={`${t("button.readMore")} ${title}`}
+            class:list={[
+              "flex h-10 w-15 items-center justify-center rounded-sm border transition-all duration-300",
+              index === 0
+                ? "border-primary bg-primary lg:group-hover/list:border-border-dark/20 lg:group-hover/list:text-dark lg:group-hover:border-primary! lg:group-hover:bg-primary! text-white lg:group-hover:text-white! lg:group-hover/list:bg-transparent"
+                : "border-border-dark/20 text-dark max-lg:border-primary max-lg:bg-primary lg:group-hover:border-primary lg:group-hover:bg-primary max-lg:text-white lg:group-hover:text-white",
+            ]}>
+            <Icons icon="ArrowRight" class="stroke-1.5 h-5 w-5" />
+          </a>
+        </div>
+      </div>
+
+      {(image || image3) && (
+        <div
+          class:list={[
+            "pointer-events-none absolute right-28 z-20 hidden w-80 transform overflow-hidden rounded-xl shadow-2xl transition-all duration-600 lg:block xl:right-41 xl:h-115.75 xl:w-97.5",
+            {
+              "top-8.5": imagePosition === "top" || !imagePosition,
+              "bottom-8.5": imagePosition === "bottom",
+              "top-1/2 -translate-y-1/2": imagePosition === "center",
+            },
+            index === 0
+              ? "scale-100 opacity-100 group-hover:scale-100! group-hover:opacity-100! group-hover/list:scale-95 group-hover/list:opacity-0"
+              : "scale-95 opacity-0 delay-75 group-hover:scale-100 group-hover:opacity-100",
+          ]}>
+          <OptimizedImage
+            src={image || image3 || ""}
+            alt={title}
+            width={350}
+            height={437}
+            class="h-full w-full object-cover"
+          />
+        </div>
+      )}
+    </div>
+  ) : layout === "card" ? (
+    /* ─── LAYOUT: card ─── Used by OurServicesSectionThree */
+    <div
+      class:list={[
+        "group bg-theme-light hover:border-border-dark relative overflow-hidden rounded-2xl border border-transparent p-4 duration-300 hover:border-dashed xl:p-5",
+        className,
+      ]}
+      data-aos="fade-up"
+      data-aos-delay={index * 120}
+      data-aos-duration="600"
+      {...rest}>
+      {(image3 || image) && (
+        <div class="relative">
+          <OptimizedImage
+            src={image3 || image || ""}
+            alt={title}
+            width={380}
+            height={259}
+            class="w-full rounded-2xl object-cover transition-transform duration-500 group-hover:scale-105 xl:h-64.75"
+          />
+
+          {icon && (
+            <div class="group-hover:bg-primary bg-theme-light group-hover:text-text-inverse absolute -bottom-12.5 left-1/2 z-10 flex size-25 -translate-x-1/2 items-center justify-center rounded-full transition-colors duration-300 xl:-bottom-15 xl:size-30">
+              <OptimizedImage
+                src={icon}
+                width={60}
+                height={60}
+                inlineSvg={true}
+                class="text-text-default group-hover:text-text-inverse size-1/2 transition-colors duration-300"
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      <div class="pt-16 text-center xl:pt-20 2xl:pt-23">
+        <h3 class="text-h4-sm xl:text-h4 mb-6 font-semibold xl:mb-8.5">
+          {title}
+        </h3>
+        <p
+          class="text-text-default/60 mb-6 text-base md:text-lg xl:mb-8.5 xl:leading-relaxed"
+          set:html={markdownify(description || "")}
+        />
+
+        <a
+          href={href}
+          aria-label={`${t("button.readMore")} ${title}`}
+          class="border-text-default/60 relative inline-flex min-h-10 items-center rounded-full border text-base font-medium transition-colors lg:text-lg">
+          <span class="py-2 pr-12 pl-6 font-semibold transition-all duration-500 group-hover:pr-6 group-hover:pl-12">
+            {t("button.readMore")} <span class="sr-only">{title}</span>
+          </span>
+          <div class="border-text-default/60 absolute -right-px flex size-11 items-center justify-center rounded-full border transition-all duration-500 group-hover:right-[calc(100%-2.75rem+1px)]">
+            <div class="bg-text-default size-2 rounded-full" />
+          </div>
+        </a>
+      </div>
+    </div>
+  ) : null
+}

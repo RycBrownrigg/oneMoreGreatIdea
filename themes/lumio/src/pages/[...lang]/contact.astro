@@ -1,0 +1,32 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import handleDraftPage from "@/lib/utils/handleDraftPage";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import OfficeLocations from "@/components/sections/OfficeLocations.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import ContactMap from "@/components/sections/ContactMap.astro";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const pageIndex = await getEntryCTM("contact", "-index", Astro.currentLocale);
+
+// Remove drafts pages in production
+const response = handleDraftPage(pageIndex?.data);
+if (response) return response;
+---
+
+<Base {...pageIndex?.data}>
+  <PageHeader
+    title={pageIndex.data.title}
+    breadcrumbTitle={pageIndex?.data?.breadcrumbTitle}
+  />
+  <OfficeLocations />
+  <ContactSection />
+  <ContactMap hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

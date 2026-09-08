@@ -1,0 +1,177 @@
+/* ====================================================== */
+/* Button Style */
+/* ====================================================== */
+.btn-wrapper {
+  @apply relative inline-block;
+}
+
+@utility btn {
+  @apply relative inline-block overflow-hidden rounded-md px-8 py-3.5 leading-tight font-normal whitespace-nowrap duration-300 disabled:cursor-not-allowed;
+}
+@utility btn-sm {
+  @apply px-10 py-3;
+}
+@utility btn-md {
+  @apply px-10 py-4 md:text-lg xl:px-12;
+}
+
+@utility btn-primary {
+  @apply bg-primary hover:bg-theme-dark gap-3 rounded-sm px-4! py-3.5 text-white xl:px-5!;
+}
+@utility btn-black {
+  @apply text-light bg-black;
+}
+@utility btn-white {
+  @apply bg-theme-light text-text-default;
+}
+
+/* Button Text Variant */
+@utility btn-text {
+  @apply text-text-default hover:text-text-default border-b-border-light inline-block rounded-none p-0 hover:border-b-black/50;
+}
+
+/* Button Outline Variant */
+@utility btn-outline {
+  @apply text-text-default shadow-button border;
+}
+@utility btn-outline-white {
+  @apply text-text-default border bg-white;
+}
+.btn-outline .gradient-shape {
+  @apply text-text-default opacity-30;
+}
+
+.has-icon {
+  @apply inline-flex items-center gap-3;
+
+  /* Icon box — small square on the left, matching the reference design */
+  /* .icon-box {
+    @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/20 text-base;
+  } */
+}
+
+/* Button Animation */
+.magnetic-hover-anim:not(:disabled):not([aria-disabled="true"]) {
+  transition: transform 0.2s ease;
+  will-change: transform;
+}
+.creative-hover-anim:not(:disabled):not([aria-disabled="true"]) {
+  @apply relative isolate overflow-hidden delay-100;
+
+  .hover-bg {
+    @apply pointer-events-none absolute z-0 block h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full;
+    top: var(--creative-hover-top, 50%);
+    left: var(--creative-hover-left, 50%);
+    transition:
+      width 0.7s ease,
+      height 0.7s ease;
+  }
+
+  > :not(.hover-bg) {
+    @apply relative z-10;
+  }
+
+  &:hover .hover-bg {
+    width: 56.25rem;
+    height: 56.25rem;
+  }
+
+  &.btn-primary .hover-bg {
+    @apply bg-theme-dark;
+  }
+  &.btn-outline .hover-bg {
+    background: var(--color-primary);
+  }
+  &.btn-white .hover-bg {
+    @apply bg-black/10;
+  }
+  &:hover {
+    &.btn-outline {
+      color: var(--color-white) !important;
+    }
+  }
+}
+.text-flip-hover-anim {
+  .text-flip-inner {
+    @apply relative overflow-hidden normal-case;
+    display: inline-grid;
+    line-height: inherit;
+    vertical-align: bottom;
+  }
+
+  .text-flip-line {
+    @apply pointer-events-none col-start-1 row-start-1 block text-center transition-all duration-300 ease-in-out;
+  }
+
+  .text-flip-line-current {
+    transform: translateY(0);
+  }
+
+  .text-flip-line-next {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+
+  &[disabled],
+  &[aria-disabled="true"] {
+    .text-flip-line {
+      transition: none;
+    }
+  }
+}
+
+.text-flip-hover-anim:not([disabled]):not([aria-disabled="true"]):hover
+  .text-flip-line-current,
+.text-flip-hover-anim:not([disabled]):not([aria-disabled="true"]):focus-visible
+  .text-flip-line-current {
+  opacity: 0;
+  transform: translateY(-110%);
+}
+
+.text-flip-hover-anim:not([disabled]):not([aria-disabled="true"]):hover
+  .text-flip-line-next,
+.text-flip-hover-anim:not([disabled]):not([aria-disabled="true"]):focus-visible
+  .text-flip-line-next {
+  opacity: 1;
+  transform: translateY(0);
+}
+.has-icon-moving-animation {
+  /* @apply overflow-hidden; */
+  &:hover .icon,
+  .btn-wrapper:hover & .icon {
+    &.icon-before {
+      top: -100%;
+      bottom: 100%;
+    }
+
+    &.icon-after {
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  .icons-wrapper {
+    @apply relative overflow-hidden;
+  }
+
+  .icon {
+    transition:
+      top 0.2s ease-in,
+      bottom 0.2s ease-in;
+
+    &.icon-before,
+    &.icon-after {
+      @apply absolute inset-0 size-full;
+    }
+
+    &.icon-before {
+      top: 0;
+      bottom: 0;
+    }
+
+    &.icon-after {
+      top: 100%;
+      bottom: -100%;
+    }
+  }
+}

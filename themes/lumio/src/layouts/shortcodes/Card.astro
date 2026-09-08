@@ -1,0 +1,93 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import Icons from "@/helpers/Icons.astro";
+import type { IconName as SupportedIconName } from "../../lib/iconNames.ts";
+
+type Card = {
+  icon?: string;
+  title?: string;
+  value?: string;
+  description?: string;
+  appendValue?: string;
+  prependValue?: string;
+};
+
+type Props = Card & {
+  class?:
+    | string
+    | Record<string, boolean>
+    | (string | Record<string, boolean>)[];
+  content?: Card;
+};
+
+let {
+  icon,
+  title,
+  value,
+  content,
+  description,
+  appendValue,
+  prependValue,
+  class: className,
+} = Astro.props;
+
+const mergeObjects = (objOne?: Card, objTwo?: Card): Card => {
+  const mergedObj = {} as Record<keyof Card, unknown>;
+  for (const key of new Set([
+    ...Object.keys(objOne || {}),
+    ...Object.keys(objTwo || {}),
+  ])) {
+    const k = key as keyof Card;
+    const value1 = objOne ? objOne[k] : undefined;
+    const value2 = objTwo ? objTwo[k] : undefined;
+    if (value2 !== undefined && value2 !== null && value2 !== "")
+      mergedObj[k] = value2;
+    else if (value1 !== undefined && value1 !== null && value1 !== "")
+      mergedObj[k] = value1;
+  }
+  return mergedObj as Card;
+};
+
+let actualContent = mergeObjects(content, {
+  icon,
+  title,
+  value,
+  description,
+  prependValue,
+  appendValue,
+}) as Card;
+---
+
+{
+  (actualContent?.value || actualContent?.description) && (
+    <div
+      class:list={[
+        "flex flex-col gap-4 rounded-xl border bg-white p-5 md:p-8",
+        className,
+      ]}>
+      {actualContent?.icon && (
+        <Icons
+          class="text-text-default text-3xl"
+          icon={actualContent.icon as SupportedIconName}
+        />
+      )}
+      <div class="mt-2 space-y-3">
+        {actualContent.value && (
+          <Icons
+            class="text-h4-sm md:text-h4"
+            icon={actualContent.value as SupportedIconName}
+          />
+        )}
+        {actualContent.title && (
+          <h3 class="text-h5-sm md:text-h5" set:html={actualContent.title} />
+        )}
+        {actualContent?.description && (
+          <p
+            class="text-gray-700 opacity-80"
+            set:html={markdownify(actualContent?.description)}
+          />
+        )}
+      </div>
+    </div>
+  )
+}

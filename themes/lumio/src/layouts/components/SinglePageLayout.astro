@@ -1,0 +1,35 @@
+---
+import { render } from "astro:content";
+import TOC from "./widgets/TableOfContents.astro";
+
+interface Props {
+  content?: any;
+  innerPadding?: "sm";
+  [key: string]: any;
+}
+
+const { content = {}, innerPadding, ...rest } = Astro.props;
+const { Content } = await render(content);
+
+const { tocHeadings, tableOfContents } = content?.data || {};
+
+// Check if table of contents is enable
+const tocEnabled =
+  tableOfContents?.enable && tocHeadings && tocHeadings.length > 0;
+---
+
+<section class:list={[Astro.props.class]} {...rest}>
+  <div class="container space-y-16 pb-16 md:pb-32">
+    <slot name="content" />
+
+    {tocEnabled && tocHeadings && <TOC toc={tocHeadings} marker={false} />}
+
+    {
+      content && content.body && (
+        <div class="prose-styles content has-video-modal">
+          <Content />
+        </div>
+      )
+    }
+  </div>
+</section>

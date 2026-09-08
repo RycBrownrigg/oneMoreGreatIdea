@@ -1,0 +1,76 @@
+---
+import social from "@/config/social.json";
+import type { NavigationLink } from "@/types";
+import Button from "@/components/Button.astro";
+import TopbarMenu from "./TopbarMenu.astro";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import { markdownify } from "@/lib/utils/textConverter";
+
+interface Props {
+  menu?: NavigationLink[];
+  announcement?: string;
+  socialLabels?: string[];
+  class?: string;
+}
+
+const {
+  menu = [],
+  announcement,
+  socialLabels = ["facebook", "twitter", "linkedin"],
+  class: className,
+} = Astro.props as Props;
+
+const normalizedSocialLabels = socialLabels.map((label) => label.toLowerCase());
+const socialLinks = (social.main || [])
+  .filter((item) => item.enable !== false && item.url)
+  .filter((item) => normalizedSocialLabels.includes(item.label.toLowerCase()));
+---
+
+<div class:list={["border-border-light/70 border-b", className]}>
+  <div
+    class="container-2xl flex flex-col flex-wrap items-center justify-center gap-4 py-3 text-sm md:flex-row lg:flex-nowrap lg:justify-between xl:text-base">
+    <TopbarMenu
+      items={menu}
+      class="text-text-default"
+      linkClass="hover:text-primary pb-0 transition-colors"
+      separatorClass="text-text-default/40"
+    />
+
+    {
+      announcement && (
+        <div
+          class="prose-a:underline hover:prose-a:no-underline inline-flex flex-wrap items-center justify-center gap-2 text-center"
+          set:html={markdownify(announcement)}
+        />
+      )
+    }
+
+    {
+      socialLinks.length > 0 && (
+        <div class="flex items-center gap-3 xl:gap-5">
+          {socialLinks.map((item, index) => (
+            <>
+              <Button
+                tag="a"
+                variant="text"
+                url={getLocaleUrlCTM(item.url as string, Astro.currentLocale)}
+                aria-label={item.label}
+                icon={{
+                  enable: true,
+                  name: item.label,
+                  position: "left",
+                  className: "size-4 min-w-4 inline-block pb-px",
+                }}
+                label={item.label}
+                class="text-text-default hover:text-primary flex! items-center gap-2 transition-colors"
+              />
+              {index < socialLinks.length - 1 && (
+                <span class="bg-border-dark/20 h-4 w-px" />
+              )}
+            </>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</div>

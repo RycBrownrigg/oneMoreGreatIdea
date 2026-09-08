@@ -1,0 +1,41 @@
+---
+import Button from "@/components/Button.astro";
+import type { NavigationLink } from "@/types";
+
+interface Props {
+  items?: NavigationLink[];
+  class?: string;
+  linkClass?: string;
+  separatorClass?: string;
+  separator?: string;
+}
+
+const {
+  items = [],
+  class: className,
+  linkClass = "",
+  separatorClass = "",
+  separator = "/",
+} = Astro.props as Props;
+---
+
+{
+  items.length > 0 && (
+    <div class:list={["flex items-center gap-2", className]}>
+      {items.map((item, index) => (
+        <>
+          <Button
+            tag="a"
+            variant="text"
+            url={item.url}
+            label={item.name}
+            class={linkClass}
+          />
+          {index < items.length - 1 && (
+            <span class={separatorClass}>{separator}</span>
+          )}
+        </>
+      ))}
+    </div>
+  )
+}

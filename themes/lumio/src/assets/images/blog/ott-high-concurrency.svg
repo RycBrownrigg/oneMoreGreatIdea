@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E27"/>
+      <stop offset="55%" stop-color="#0F1A3D"/>
+      <stop offset="100%" stop-color="#131B3A"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="footerBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- faint data-flow lines for texture -->
+  <g stroke="#2E3A5C" stroke-width="1.5" opacity="0.5">
+    <line x1="0" y1="560" x2="1200" y2="560"/>
+    <line x1="0" y1="580" x2="1200" y2="580"/>
+  </g>
+  <g fill="#22D3EE" opacity="0.6">
+    <circle cx="150" cy="560" r="2.5"/>
+    <circle cx="330" cy="560" r="2.5"/>
+    <circle cx="510" cy="560" r="2.5"/>
+    <circle cx="690" cy="580" r="2.5"/>
+    <circle cx="870" cy="580" r="2.5"/>
+    <circle cx="1050" cy="580" r="2.5"/>
+  </g>
+
+  <!-- glow behind concurrency icon -->
+  <circle cx="860" cy="300" r="260" fill="url(#glow)"/>
+
+  <!-- radiating lines to device nodes -->
+  <g stroke="#3B4A72" stroke-width="2">
+    <line x1="860" y1="300" x2="1040" y2="160"/>
+    <line x1="860" y1="300" x2="1090" y2="300"/>
+    <line x1="860" y1="300" x2="1040" y2="440"/>
+    <line x1="860" y1="300" x2="905" y2="490"/>
+    <line x1="860" y1="300" x2="735" y2="430"/>
+    <line x1="860" y1="300" x2="750" y2="170"/>
+  </g>
+
+  <!-- device nodes (representing simultaneous concurrent viewers) -->
+  <g>
+    <!-- TV -->
+    <rect x="1010" y="130" width="60" height="42" rx="5" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="1040" cy="151" r="5" fill="#FB923C"/>
+    <!-- phone -->
+    <rect x="1075" y="272" width="30" height="56" rx="6" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="1090" cy="300" r="4.5" fill="#22D3EE"/>
+    <!-- laptop -->
+    <rect x="1008" y="415" width="64" height="40" rx="5" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="1040" cy="435" r="5" fill="#22D3EE"/>
+    <!-- tablet -->
+    <rect x="878" y="466" width="46" height="46" rx="6" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="901" cy="489" r="4.5" fill="#FB923C"/>
+    <!-- smart display -->
+    <rect x="705" y="400" width="58" height="40" rx="5" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="734" cy="420" r="5" fill="#22D3EE"/>
+    <!-- desktop -->
+    <rect x="720" y="145" width="60" height="42" rx="5" fill="#1B2547" stroke="#3B4A72" stroke-width="2"/>
+    <circle cx="750" cy="166" r="5" fill="#FB923C"/>
+  </g>
+
+  <!-- concentric broadcast rings -->
+  <circle cx="860" cy="300" r="95" fill="none" stroke="#22D3EE" stroke-width="2.5" opacity="0.55"/>
+  <circle cx="860" cy="300" r="130" fill="none" stroke="#22D3EE" stroke-width="2" opacity="0.35"/>
+  <circle cx="860" cy="300" r="165" fill="none" stroke="#22D3EE" stroke-width="1.5" opacity="0.2"/>
+
+  <!-- central play node -->
+  <circle cx="860" cy="300" r="55" fill="#FB923C"/>
+  <path d="M 845 278 L 845 322 L 882 300 Z" fill="#0A0E27"/>
+
+  <!-- kicker -->
+  <text x="70" y="150" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4" fill="#22D3EE">OTT / STREAMING ARCHITECTURE</text>
+
+  <!-- title -->
+  <text x="70" y="248" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="800" fill="#F8FAFC">The Architecture Behind</text>
+  <text x="70" y="306" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="800" fill="#F8FAFC">High-Concurrency</text>
+  <text x="70" y="364" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="800" fill="#F8FAFC">OTT Streaming</text>
+
+  <!-- divider -->
+  <rect x="70" y="392" width="90" height="6" rx="3" fill="url(#footerBar)"/>
+
+  <!-- footer bar -->
+  <rect x="0" y="606" width="1200" height="24" fill="url(#footerBar)"/>
+
+  <!-- site mark: small ABR bars logomark + wordmark -->
+  <g transform="translate(70, 540)">
+    <rect x="0" y="18" width="8" height="14" fill="#22D3EE"/>
+    <rect x="12" y="10" width="8" height="22" fill="#22D3EE"/>
+    <rect x="24" y="2" width="8" height="30" fill="#FB923C"/>
+    <text x="46" y="26" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">AskRyc</text>
+  </g>
+</svg>

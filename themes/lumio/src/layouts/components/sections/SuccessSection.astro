@@ -1,0 +1,96 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { successSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import ProgressBar from "@/components/widgets/ProgressBar.astro";
+
+type SectionType = Section & NonNullable<z.infer<typeof successSectionSchema>>;
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+let defaultContent = (
+  await getEntryCTM("sections", "success-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  title,
+  description,
+  image,
+  progressBars,
+} = actualContent;
+
+const { hasSectionSpacing = true } = Astro.props;
+
+if (!enable) return;
+---
+
+<section
+  class:list={["relative overflow-hidden", !hasSectionSpacing && "pt-0"]}>
+  <div class="container">
+    {/* ── Left column: Text & Progress Bars ── */}
+    <div
+      class="section-spacing-vertical relative flex w-full flex-col justify-center lg:w-1/2 lg:pr-20 xl:pr-25">
+      {/* Header content */}
+      <div class="flex flex-col gap-6 md:gap-8">
+        {title && <SectionTitle title={title} />}
+        {
+          description && (
+            <p
+              class="text-text-default/60 leading-relaxed xl:text-lg"
+              data-aos="fade-up"
+              data-aos-delay="200"
+              data-aos-duration="600"
+              set:html={markdownify(description)}
+            />
+          )
+        }
+      </div>
+
+      {/* Progress Bars */}
+      {
+        progressBars && progressBars.length > 0 && (
+          <div class="mt-10 flex flex-col gap-6 xl:mt-15 xl:gap-8">
+            {progressBars.map((bar, i) => (
+              <ProgressBar
+                label={bar.label}
+                percentage={bar.percentage}
+                index={i}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    {/* ── Right column: Full-height image ── */}
+    {
+      image && (
+        <div
+          class="top-0 right-0 w-full min-w-[50%] overflow-hidden md:w-auto lg:absolute lg:h-full"
+          data-aos="fade-left"
+          data-aos-duration="800">
+          <OptimizedImage
+            src={image}
+            alt={title || "Success Section Image"}
+            width={910}
+            height={1020}
+            class="inset-0 size-full object-cover lg:absolute"
+          />
+        </div>
+      )
+    }
+  </div>
+</section>

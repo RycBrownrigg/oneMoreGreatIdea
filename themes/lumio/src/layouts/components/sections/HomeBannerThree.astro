@@ -1,0 +1,384 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { heroSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "@/components/widgets/AnimatedText.astro";
+import Button from "@/components/Button.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import VideoModal from "@/components/widgets/VideoModal.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Icons from "@/helpers/Icons.astro";
+
+type SectionType = Section & NonNullable<z.infer<typeof heroSectionSchema>>;
+type Props = { content?: SectionType };
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+let defaultContent = (
+  await getEntryCTM("sections", "home-banner-three", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { subtitle, title, button, slides, video } = actualContent ?? {};
+
+type SlideType = {
+  image: string;
+  alt?: string;
+  subtitle?: string;
+  title?: string;
+  button?: SectionType["button"];
+};
+
+const slidesList = slides ?? [];
+const hasSlides = slidesList.length > 0;
+const totalSlides = slidesList.length;
+---
+
+<section
+  class="has-video-modal relative z-0 pt-0"
+  id="home-banner-three-slider">
+  <div
+    class="relative flex w-full flex-col items-center justify-center overflow-hidden md:flex-row">
+    {
+      hasSlides && (
+        <div class="swiper home-banner-three-bg absolute! inset-0 z-0 h-full w-full overflow-hidden rounded-2xl">
+          <div class="swiper-wrapper h-full">
+            {slidesList.map((slide: SlideType) => (
+              <div class="swiper-slide relative h-full">
+                <OptimizedImage
+                  src={slide.image}
+                  alt={slide.alt || "Banner slide"}
+                  width={1920}
+                  height={850}
+                  class="absolute inset-0 h-full w-full object-cover object-center"
+                />
+                <div class="bg-theme-dark/70 absolute inset-0 z-1" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    <div
+      class="relative z-10 container flex h-full flex-col items-start justify-start gap-10 pt-15 pb-25 md:py-25 md:pe-32 xl:py-36 2xl:py-45">
+      {
+        hasSlides && (
+          <div class="swiper home-banner-three-content h-full w-full">
+            <div class="swiper-wrapper h-full items-center!">
+              {slidesList.map((slide: SlideType) => {
+                const slideSubtitle = slide.subtitle ?? subtitle;
+                const slideTitle = slide.title ?? title;
+                const slideButton = slide.button ?? button;
+
+                return (
+                  <div class="swiper-slide">
+                    <div class="relative z-10">
+                      {slideSubtitle && (
+                        <div
+                          class="banner-three-anim mb-5"
+                          style="transition-delay: 120ms;">
+                          <span class="text-text-inverse text-base font-semibold tracking-wide md:text-xl">
+                            {slideSubtitle}
+                          </span>
+                        </div>
+                      )}
+
+                      {slideTitle && (
+                        <div
+                          class="banner-three-anim mb-6"
+                          style="transition-delay: 220ms;">
+                          <AnimatedText
+                            tag="h1"
+                            duration={0.8}
+                            stagger={0.05}
+                            delay={0.2}
+                            content={markdownify(slideTitle)}
+                            class="lg:text-display-3 md:text-display-4 text-light text-5xl leading-tight font-black uppercase max-lg:[&_br]:block!"
+                          />
+                        </div>
+                      )}
+
+                      {slideButton && (
+                        <div
+                          class="banner-three-anim flex"
+                          style="transition-delay: 360ms;">
+                          <Button
+                            {...slideButton}
+                            class="btn-primary rounded-full xl:py-4.5!"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )
+      }
+      {
+        video && video.src && (
+          <div
+            class="md:translate-y-centered z-10 flex md:absolute md:right-4"
+            data-aos="fade-left-sm"
+            data-aos-delay="500"
+            data-aos-duration="700">
+            <Button
+              tag="button"
+              variant="outline"
+              label=""
+              class="video-modal-toggle group video-wave flex size-15 items-center justify-center rounded-full bg-white p-0! shadow-xl transition-transform duration-300 hover:scale-110 md:size-20 lg:size-25 xl:size-30 2xl:size-37.5"
+              hoverEffect="text-flip"
+              icon={{
+                enable: true,
+                name: "Play",
+                position: "right",
+                className: "fill-dark size-7! xl:size-8!",
+              }}
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              aria-controls={video.id}
+              data-hs-overlay={video.id ? `#${video.id}` : undefined}
+              data-hs-overlay-options={
+                video.id ? '{"emulateScrollbarSpace": true}' : undefined
+              }
+              title={t("aria.aboutCompany")}
+              aria-label={t("aria.aboutCompany")}
+              type="button"
+            />
+          </div>
+        )
+      }
+    </div>
+
+    {
+      hasSlides && totalSlides > 1 && (
+        <div
+          class="right-0 bottom-0 z-10 -mb-px flex flex-wrap items-center gap-6 rounded-t-2xl bg-white p-4 md:absolute md:p-6 lg:gap-12 xl:p-10"
+          data-aos="fade-up-sm"
+          data-aos-delay="650"
+          data-aos-duration="700">
+          <div class="flex items-center gap-3 md:gap-5">
+            <div class="flex items-center gap-2">
+              <button
+                id="banner-three-prev"
+                class="border-border-dark/5 text-text-default/70 hover:border-primary hover:text-primary flex size-10 items-center justify-center rounded-full border transition-colors"
+                aria-label={t("aria.prevSlide")}>
+                <Icons icon="ChevronLeft" class="block h-5 w-5 opacity-50" />
+              </button>
+              <button
+                id="banner-three-next"
+                class="border-border-dark/5 text-text-default/70 hover:border-primary hover:text-primary flex size-10 items-center justify-center rounded-full border transition-colors"
+                aria-label={t("aria.nextSlide")}>
+                <Icons icon="ChevronRight" class="block h-5 w-5 opacity-50" />
+              </button>
+            </div>
+            <span
+              id="banner-three-current"
+              class="text-lg font-bold tabular-nums">
+              01
+            </span>
+            <div class="bg-border-dark relative h-0.5 w-20 xl:w-22.25">
+              <div
+                id="banner-three-progress"
+                class="bg-primary absolute top-0 left-0 h-full transition-all duration-500"
+                style={`width: ${100 / totalSlides}%`}
+              />
+            </div>
+            <span class="text-lg font-bold tabular-nums">
+              {String(totalSlides).padStart(2, "0")}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3 md:gap-3.5">
+            {slidesList.map((_: SlideType, i: number) => (
+              <button
+                class:list={[
+                  "banner-three-border flex size-5 items-center justify-center rounded-full border",
+                  i === 0 ? "border-primary" : "border-transparent",
+                ]}
+                data-dot={i}
+                aria-label={`Go to slide ${i + 1}`}>
+                <span
+                  class:list={[
+                    "banner-three-dot border-primary flex size-2.25! rounded-full border md:size-2.5!",
+                    i === 0 ? "bg-primary" : "bg-transparent",
+                  ]}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <script>
+    import "swiper/css";
+    import "swiper/css/effect-fade";
+    import Swiper from "swiper";
+    import { Autoplay, EffectFade, Controller } from "swiper/modules";
+
+    const initSwiper = () => {
+      const bgSlider = document.querySelector(".home-banner-three-bg");
+      const contentSlider = document.querySelector(
+        ".home-banner-three-content",
+      );
+      if (!bgSlider || !contentSlider) return;
+      if ((bgSlider as any).swiper || (contentSlider as any).swiper) return;
+
+      const slides = bgSlider.querySelectorAll<HTMLElement>(".swiper-slide");
+      if (slides.length <= 1) return;
+
+      const dotButtons = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "#home-banner-three-slider .banner-three-border",
+        ),
+      );
+      const dots = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "#home-banner-three-slider .banner-three-dot",
+        ),
+      );
+      const currentEl = document.getElementById("banner-three-current");
+      const progressEl = document.getElementById("banner-three-progress");
+      const total = slides.length;
+
+      const bgSwiper = new Swiper(bgSlider as HTMLElement, {
+        modules: [Autoplay, EffectFade, Controller],
+        effect: "fade",
+        fadeEffect: { crossFade: true },
+        speed: 900,
+        loop: true,
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        allowTouchMove: true,
+        preventInteractionOnTransition: false,
+      });
+
+      const contentSwiper = new Swiper(contentSlider as HTMLElement, {
+        modules: [EffectFade, Controller],
+        effect: "fade",
+        fadeEffect: { crossFade: true },
+        speed: 900,
+        loop: true,
+        allowTouchMove: false,
+        preventInteractionOnTransition: false,
+      });
+
+      (bgSwiper.controller as any).control = contentSwiper;
+      (contentSwiper.controller as any).control = bgSwiper;
+
+      const updateUI = () => {
+        const index = bgSwiper.realIndex;
+
+        dotButtons.forEach((btn, i) => {
+          btn.classList.toggle("border-primary", i === index);
+          btn.classList.toggle("border-transparent", i !== index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("bg-primary", i === index);
+          dot.classList.toggle("bg-transparent", i !== index);
+        });
+
+        if (currentEl) {
+          currentEl.textContent = String(index + 1).padStart(2, "0");
+        }
+        if (progressEl) {
+          progressEl.style.width = `${((index + 1) / total) * 100}%`;
+        }
+      };
+
+      dotButtons.forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+          if (bgSwiper.params.loop) {
+            bgSwiper.slideToLoop(i);
+          } else {
+            bgSwiper.slideTo(i);
+          }
+        });
+      });
+
+      document
+        .getElementById("banner-three-prev")
+        ?.addEventListener("click", () => {
+          bgSwiper.slidePrev();
+        });
+      document
+        .getElementById("banner-three-next")
+        ?.addEventListener("click", () => {
+          bgSwiper.slideNext();
+        });
+
+      bgSwiper.on("slideChange", updateUI);
+      bgSwiper.on("slideChangeTransitionStart", updateUI);
+      updateUI();
+    };
+
+    document.addEventListener("DOMContentLoaded", initSwiper);
+    initSwiper();
+  </script>
+
+  <style is:global>
+    #home-banner-three-slider .video-wave {
+      position: relative;
+      isolation: isolate;
+    }
+
+    #home-banner-three-slider .video-wave::before,
+    #home-banner-three-slider .video-wave::after {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: 9999px;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      opacity: 0;
+      transform: scale(0.6);
+      animation: banner-three-wave 2.4s ease-out infinite;
+      z-index: -1;
+    }
+
+    #home-banner-three-slider .video-wave::after {
+      inset: -20px;
+      animation-delay: 1.2s;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes banner-three-wave {
+      0% {
+        opacity: 0.75;
+        transform: scale(0.6);
+      }
+      70% {
+        opacity: 0;
+        transform: scale(1.4);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.4);
+      }
+    }
+
+    #home-banner-three-slider .banner-three-anim {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+      will-change: opacity, transform;
+    }
+
+    #home-banner-three-slider .swiper-slide-active .banner-three-anim {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</section>
+{video && video.src && <VideoModal video={video} />}

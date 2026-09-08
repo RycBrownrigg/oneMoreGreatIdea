@@ -1,0 +1,91 @@
+---
+import type { z } from "astro/zod";
+import type { FAQItem, Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { faqSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import AccordionList from "@/components/widgets/AccordionList.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+type SectionType = Section & NonNullable<z.infer<typeof faqSectionSchema>>;
+type Props = {
+  content?: SectionType;
+};
+
+let defaultContent = (
+  await getEntryCTM("sections", "faq-two", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, title, description, image } = actualContent;
+if (!enable) return;
+
+// Type for this section data
+type PageType = Section & {
+  list?: FAQItem[];
+};
+let pageData = (await getEntryCTM("faq", "-index", Astro.currentLocale))
+  ?.data as PageType;
+const faqs = pageData?.list?.splice(0, 3);
+---
+
+<section class:list={["bg-theme-light relative overflow-hidden pt-0"]}>
+  <div class="container flex flex-col justify-end lg:flex-row">
+    {/* ── Left column: Full-height Image ── */}
+    {
+      image && (
+        <div
+          class="top-0 left-0 order-2 w-full min-w-[50%] overflow-hidden md:w-auto lg:absolute lg:order-1 lg:h-full"
+          data-aos="fade-right"
+          data-aos-duration="800">
+          <OptimizedImage
+            src={image}
+            alt={title || "FAQ section image"}
+            width={910}
+            height={1020}
+            class="inset-0 size-full object-cover lg:absolute"
+          />
+        </div>
+      )
+    }
+
+    {/* ── Right column: Text & FAQ Accordion ── */}
+    <div
+      class="section-spacing-vertical relative order-1 flex w-full flex-col justify-center gap-8 lg:order-2 lg:w-1/2 lg:ps-20 xl:gap-12 xl:ps-25">
+      {/* Header content */}
+      <div class="flex flex-col gap-6 xl:gap-8">
+        {title && <SectionTitle title={title} />}
+        {
+          description && (
+            <p
+              class="text-text-default/60 leading-relaxed md:text-lg"
+              data-aos="fade-up"
+              data-aos-delay="200"
+              data-aos-duration="600"
+              set:html={markdownify(description)}
+            />
+          )
+        }
+      </div>
+
+      {/* Accordion FAQ */}
+      {
+        faqs && faqs.length > 0 && (
+          <div
+            class="block lg:min-h-125 xl:min-h-108"
+            data-aos="fade-up"
+            data-aos-delay="300"
+            data-aos-duration="600">
+            <AccordionList content={faqs} bgColor="transparent" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,77 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { joinOurCommunitySectionSchema } from "@/sections.schema";
+import Button from "@/components/Button.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import SectionBadge from "../global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+// Type
+type SectionType = z.infer<typeof joinOurCommunitySectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "join-our-community", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, badge, title, button, bgImage } = actualContent ?? {};
+const { hasSectionSpacing = true } = Astro.props;
+
+if (!enable) return;
+---
+
+<section class:list={[!hasSectionSpacing && "pt-0"]}>
+  <div
+    class="relative z-10 container"
+    data-aos="fade-up-sm"
+    data-aos-duration="700">
+    <div
+      class="bg-primary section-spacing-vertical relative flex flex-col items-center justify-center overflow-hidden rounded-xl px-4 md:px-6">
+      {
+        bgImage && (
+          <div class="pointer-events-none absolute inset-x-0 top-0 bottom-0">
+            <OptimizedImage
+              src={bgImage}
+              width={1320}
+              height={429}
+              class="size-full object-cover"
+            />
+          </div>
+        )
+      }
+
+      <div class="relative z-10 mx-auto flex flex-col items-center text-center">
+        {/* badge */}
+        {badge && <SectionBadge title={badge} className="text-text-inverse" />}
+
+        {/* Title */}
+        {
+          title && (
+            <div class="mb-9">
+              <SectionTitle title={title} variant="dark" />
+            </div>
+          )
+        }
+
+        {/* Action Button */}
+        {
+          button && button.enable && (
+            <Button {...button} class="border-none px-4! font-bold" />
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

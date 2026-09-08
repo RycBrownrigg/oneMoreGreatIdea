@@ -1,0 +1,48 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import FAQSection from "@/components/sections/FAQSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import RecentBlogsSectionThree from "@/components/sections/RecentBlogsSectionThree.astro";
+import HomeBannerThree from "@/components/sections/HomeBannerThree.astro";
+import AboutCompanySectionThree from "@/components/sections/AboutCompanySectionThree.astro";
+import OurServicesSectionThree from "@/components/sections/OurServicesSectionThree.astro";
+import TrustSection from "@/components/sections/TrustSection.astro";
+import TestimonialSectionThree from "@/components/sections/TestimonialSectionThree.astro";
+import ExperienceSection from "@/components/sections/ExperienceSection.astro";
+import OurTeamSection from "@/components/sections/OurTeamSection.astro";
+import CaseStudiesSection from "@/components/sections/CaseStudiesSection.astro";
+import PricingSection from "@/components/sections/PricingSection.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const homepage = await getEntryCTM(
+  "homepage",
+  "home-three",
+  Astro.currentLocale,
+);
+---
+
+<Base
+  {...homepage.data}
+  homepage={true}
+  hasGradientShape={false}
+  header="three">
+  <HomeBannerThree />
+  <CustomersSection hasSectionSpacing={false} />
+  <AboutCompanySectionThree hasSectionSpacing={false} />
+  <OurServicesSectionThree />
+  <TrustSection />
+  <TestimonialSectionThree />
+  <ExperienceSection />
+  <OurTeamSection />
+  <PricingSection />
+  <CaseStudiesSection />
+  <FAQSection hasSectionSpacing={false} hasLightBackground={true} />
+  <RecentBlogsSectionThree />
+  <MarqueeSection variant="light" hasSectionSpacing={false} />
+</Base>

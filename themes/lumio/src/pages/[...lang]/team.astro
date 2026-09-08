@@ -1,0 +1,31 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import FactSection from "@/components/sections/FactSection.astro";
+import TestimonialSection from "@/components/sections/TestimonialSection.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import TeamSection from "@/components/sections/TeamSection.astro";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const team = await getEntryCTM("team", "-index", Astro.currentLocale);
+---
+
+<Base {...team.data}>
+  <PageHeader
+    title={team.data.title}
+    breadcrumbTitle={team?.data?.breadcrumbTitle}
+  />
+  <TeamSection />
+  <TestimonialSection />
+  <FactSection />
+  <CustomersSection hasSectionSpacing={false} />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

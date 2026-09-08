@@ -1,0 +1,116 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import SectionTitle from "../global/SectionTitle.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { featuresSplitSectionSchema } from "@/sections.schema";
+import VerticalLabel from "@/components/widgets/VerticalLabel.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+
+// Type
+type SectionType = z.infer<typeof featuresSplitSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "features-split", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  title,
+  image,
+  imageAlt,
+  badge,
+  list,
+} = actualContent ?? {};
+
+if (!enable) return;
+---
+
+<section class="border-border-dark/15 relative overflow-hidden border-b pt-0">
+  <div class="container">
+    {
+      badge && (
+        <VerticalLabel
+          text={badge}
+          scrambleDelay={Math.max(((list?.length || 1) - 1) * 100, 100) + 200}
+          class="text-center"
+        />
+      )
+    }
+    <div class="has-vertical-text-left lg:max-w-[calc(100%-400px)]">
+      <div
+        class="section-spacing-vertical relative order-2 flex flex-col justify-center md:order-1">
+        {/* Title */}
+        {
+          title && (
+            <div class="mb-6 md:mb-14">
+              <SectionTitle title={title} />
+            </div>
+          )
+        }
+
+        {/* Feature list */}
+        {
+          list && list.length > 0 && (
+            <div>
+              {list.map((item, index) => (
+                <div
+                  class="group border-border-dark/15 border-t py-6 last:border-b"
+                  data-aos="fade-up-sm"
+                  data-aos-duration="700"
+                  data-aos-delay={index * 100}>
+                  <div class="flex items-start">
+                    {/* Number */}
+                    <span class="md:text-display-6 shrink-0 text-4xl leading-none font-medium">
+                      {index + 1}.
+                    </span>
+
+                    {/* Content */}
+                    <div class="flex flex-col gap-3 pl-5 md:gap-5 md:pl-6 2xl:px-10">
+                      <h3 class="text-h5-sm md:text-h5 font-semibold">
+                        {item.title}
+                      </h3>
+                      <p
+                        class="text-text-default/70 text-lg"
+                        set:html={markdownify(item.description)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      {
+        image && (
+          <div
+            class="top-0 right-0 order-1 mx-auto h-180 w-full min-w-[calc(50%-200px)] overflow-hidden md:order-2 md:w-auto md:pt-0 md:pb-20 lg:absolute lg:mx-0 lg:h-full lg:pb-0 xl:min-w-[calc(50%-400px)]"
+            data-aos="fade-left-sm"
+            data-aos-duration="900"
+            data-aos-delay="100">
+            <OptimizedImage
+              src={image}
+              alt={imageAlt}
+              width={910}
+              height={1020}
+              class="inset-0 size-full object-cover lg:absolute"
+            />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

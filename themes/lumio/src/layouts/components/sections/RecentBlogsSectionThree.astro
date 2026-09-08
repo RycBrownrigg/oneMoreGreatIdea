@@ -1,0 +1,70 @@
+---
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import config from ".astro/config.generated.json";
+import type { z } from "astro/zod";
+import type { blogSectionSchema } from "@/sections.schema";
+import { getEntryCTM, getCollectionCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import BlogCard from "@/components/cards/BlogCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+type SectionType = z.infer<typeof blogSectionSchema>;
+
+type Props = {
+  content?: SectionType;
+  class?: string;
+};
+
+// Fetching the default content for this section
+let defaultContent = (
+  await getEntryCTM("sections", "recent-blog-three", Astro.currentLocale)
+)?.data as unknown as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, badge, title, limit, cardLayout } = actualContent ?? {};
+
+const { class: className } = Astro.props;
+
+if (!enable) return;
+
+let posts = await getCollectionCTM(
+  config.settings.blogFolder as "blog",
+  Astro.currentLocale,
+);
+// Sort posts by date descending
+posts = sortByDate(posts);
+// Limit to the configured number of blog posts
+const displayList = limit ? posts.slice(0, limit) : posts;
+---
+
+<section class:list={[className]}>
+  <div class="container">
+    <Reveal
+      class="mx-auto mb-8 flex flex-col gap-4 text-center md:mb-15 lg:gap-6 xl:max-w-3xl"
+      animation="fade-up-sm">
+      {badge && <SectionBadge title={badge} />}
+      {title && <SectionTitle title={title} />}
+    </Reveal>
+
+    {
+      displayList && displayList.length > 0 && (
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          {displayList.map((post, i) => (
+            <BlogCard
+              content={post}
+              options={{ card: { layout: cardLayout } }}
+              index={i}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

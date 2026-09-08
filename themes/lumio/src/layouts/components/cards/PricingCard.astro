@@ -1,0 +1,107 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedNumber from "@/components/widgets/AnimatedNumber.astro";
+import type { pricingSectionSchema } from "@/sections.schema";
+import type { z } from "astro/zod";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import Button from "../Button.astro";
+
+type PricingSectionType = z.infer<typeof pricingSectionSchema>;
+type PlanType = NonNullable<PricingSectionType>["list"][number];
+
+type Props = {
+  content: PlanType & {
+    index: number;
+  };
+  class?: string;
+};
+
+const {
+  class: className,
+  content: { enable, name, description, price, features, button },
+  ...rest
+} = Astro.props;
+
+if (!enable) return;
+
+const displayPrice = price && price.length > 0 ? price[0] : null;
+---
+
+<div
+  class:list={[
+    "group bg-theme-light flex h-full flex-col rounded-2xl p-5 transition-all duration-300 xl:p-6 2xl:px-8.5 2xl:py-11.25",
+    className,
+  ]}
+  {...rest}
+  data-aos="zoom-in"
+  data-aos-duration="800">
+  <div class="mb-5 block 2xl:mb-8">
+    {
+      name && (
+        <h3
+          class="text-h5-sm md:text-h5 mb-5 font-medium 2xl:mb-7"
+          set:html={markdownify(name)}
+        />
+      )
+    }
+    {
+      description && (
+        <p
+          class="text-text-default/60 text-lg leading-relaxed"
+          set:html={markdownify(description)}
+        />
+      )
+    }
+  </div>
+
+  <div class="mb-5 flex items-baseline gap-1 2xl:mb-8">
+    {
+      displayPrice && (
+        <>
+          <span class="text-5xl leading-none font-semibold tracking-tight 2xl:text-7xl">
+            <AnimatedNumber
+              class="leading-none"
+              animateOn="click"
+              transitionTime="1.2s"
+              content={displayPrice}
+            />
+          </span>
+          {displayPrice.appendValue && (
+            <span class="text-5xl leading-none font-semibold tracking-tight 2xl:text-7xl">
+              {displayPrice.appendValue}
+            </span>
+          )}
+          <span class="text-xl font-medium">/ month</span>
+        </>
+      )
+    }
+  </div>
+
+  <div class="bg-theme-light mb-5 grow rounded-sm p-5 xl:p-7.5 2xl:mb-7.5">
+    {
+      features && features.length > 0 && (
+        <ul class="space-y-3 xl:space-y-4">
+          {features.map((feature) => (
+            <li class="text-text-default/60 flex items-start gap-6">
+              <span class="bg-text-default mt-1.5 flex size-2 rounded-full" />
+              <span set:html={markdownify(feature)} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+
+  <Button
+    variant="fill"
+    url={getLocaleUrlCTM(button?.url || "#", Astro.currentLocale)}
+    icon={{
+      enable: true,
+      name: "ArrowUpRight",
+      position: "left",
+    }}
+    label={button?.label || "Start My Project Now"}
+    class="btn-primary bg-text-default hover:bg-primary! w-full justify-center"
+    {...button}
+  />
+</div>

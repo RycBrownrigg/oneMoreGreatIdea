@@ -1,0 +1,40 @@
+---
+import Icons from "@/helpers/Icons.astro";
+import Social from "@/components/social/Social.astro";
+import TopbarMenu from "./TopbarMenu.astro";
+import config from ".astro/config.generated.json";
+
+const { menu } = Astro.props;
+---
+
+<div
+  class="bg-theme-dark text-text-inverse overflow-x-hidden overflow-y-visible! text-center sm:text-start">
+  <div class="container-2xl">
+    <div
+      class="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-4 py-3 lg:flex-nowrap lg:justify-between lg:py-0">
+      <div
+        class="flex w-full flex-wrap items-center gap-x-5 gap-y-2 text-sm max-lg:justify-center sm:flex-nowrap lg:py-2 lg:pe-4 xl:gap-x-8 xl:py-3">
+        <div class="flex flex-none items-center gap-3.5">
+          <Icons icon="Phone" class="text-primary h-5 min-w-5" />
+          <span>{config.contact.phone}</span>
+        </div>
+        <div class="flex items-center gap-3.5">
+          <Icons icon="MailOpen" class="text-primary h-5 min-w-5" />
+          <span>{config.contact.email}</span>
+        </div>
+      </div>
+
+      <div
+        class="lg:after:bg-primary relative z-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 after:pointer-events-none after:absolute after:left-0 after:-z-10 after:h-full after:w-screen after:select-none lg:flex-nowrap lg:py-2 lg:ps-6 xl:gap-10">
+        <TopbarMenu
+          items={menu}
+          class="flex gap-2 text-xs xl:text-base"
+          linkClass="text-text-inverse hover:text-text-inverse/60"
+          separatorClass="hidden lg:inline-block"
+        />
+
+        <Social layout="topbar" size="sm" tone="dark" />
+      </div>
+    </div>
+  </div>
+</div>

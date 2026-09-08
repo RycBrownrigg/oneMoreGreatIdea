@@ -1,0 +1,91 @@
+---
+import type { z } from "astro/zod";
+import config from ".astro/config.generated.json";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { blogSectionSchema } from "@/sections.schema";
+import BlogCard from "@/layouts/components/cards/BlogCard.astro";
+import Button from "@/components/Button.astro";
+import SectionBadge from "../global/SectionBadge.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import SectionTitle from "../global/SectionTitle.astro";
+
+// Type
+type SectionType = z.infer<typeof blogSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "recent-blog-two", Astro.currentLocale)
+)?.data as unknown as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  title,
+  badge,
+  button,
+  limit,
+  cardLayout,
+} = actualContent ?? {};
+
+if (!enable) return;
+
+let posts = await getCollectionCTM(
+  config.settings.blogFolder as "blog",
+  Astro.currentLocale,
+);
+// Sort posts by date descending
+posts = sortByDate(posts);
+
+// Apply limit for homepage Two (show only recent N posts)
+const displayList = limit ? posts.slice(0, limit) : posts;
+---
+
+<section class="section-spacing-top overflow-hidden">
+  <div class="container">
+    <div
+      class="mb-10 flex flex-col items-start justify-between gap-6 md:mb-15 md:flex-row md:items-end"
+      data-aos="fade-up-sm"
+      data-aos-duration="700">
+      {/* badge & Title */}
+      <div class="max-w-3xl">
+        {badge && <SectionBadge title={badge} />}
+        {title && <SectionTitle title={title} />}
+      </div>
+
+      {/* Button */}
+      {
+        button && (
+          <div class="shrink-0" data-aos="fade-left" data-aos-duration="600">
+            <Button {...button} class="btn-primary md:py-4.5" />
+          </div>
+        )
+      }
+    </div>
+
+    {
+      displayList && displayList.length > 0 && (
+        <div class="grid grid-cols-1 gap-7.5 md:grid-cols-2">
+          {displayList.map((post, index) => (
+            <BlogCard
+              content={post}
+              options={{ card: { layout: cardLayout } }}
+              data-aos="fade-up-sm"
+              data-aos-duration="700"
+              data-aos-delay={index * 100}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

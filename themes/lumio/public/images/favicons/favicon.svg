@@ -1,0 +1,12 @@
+<svg aria-labelledby="rb-logo-title" viewBox="0 0 256 256" height="256" width="256" xmlns="http://www.w3.org/2000/svg">
+  <title id="rb-logo-title">RB — Ryc Brownrigg</title>
+  
+  
+  <circle fill="#2529ff" r="120" cy="128" cx="128"></circle>
+  
+  
+  <circle stroke-width="8" stroke="#14B8A6" fill="none" r="105" cy="128" cx="128"></circle>
+  
+  
+  <text letter-spacing="-4" text-anchor="middle" fill="#F8FAFC" font-weight="800" font-size="92" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Helvetica, Arial, sans-serif" y="160" x="128">RB</text>
+</svg>

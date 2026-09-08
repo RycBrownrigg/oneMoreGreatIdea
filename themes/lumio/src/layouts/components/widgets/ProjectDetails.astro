@@ -1,0 +1,50 @@
+---
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import Social from "../social/Social.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+interface ProjectDetail {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  projectDetails?: ProjectDetail[];
+  title: string;
+}
+
+const { projectDetails, title } = Astro.props;
+---
+
+<div
+  class="bg-theme-light mb-10 w-full p-6 lg:float-right lg:mb-8 lg:ml-10 lg:w-70 xl:ml-15 xl:w-99.5 xl:p-8.5">
+  <h4 class="pb-6 text-xl font-semibold lg:pb-8.5 xl:text-2xl text-center">
+    {t("common.projectDetails")}
+  </h4>
+  <div class="divide-border-dark/10 border-border-dark/10 divide-y border-t">
+    {
+      projectDetails?.length &&
+        projectDetails?.map((item) => (
+          <div class="flex justify-between py-3 lg:py-4">
+            <span class="text-lg font-semibold xl:text-xl">{item.label}</span>
+            <span class="text-text-default/60 text-right">{item.value}</span>
+          </div>
+        ))
+    }
+    <div class="flex justify-between pt-3 lg:pt-4">
+      <span class="text-lg font-semibold xl:text-xl">
+        {t("common.share")}:
+      </span>
+      <div class="flex items-center gap-3 xl:gap-6">
+        <Social
+          linkType="share-project"
+          title={title}
+          layout="classic"
+          size="md"
+          class="mb-0"
+        />
+      </div>
+    </div>
+  </div>
+</div>

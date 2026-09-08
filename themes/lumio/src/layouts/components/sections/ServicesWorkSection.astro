@@ -1,0 +1,89 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Button from "@/components/Button.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import { serviceWorkSectionSchema } from "@/sections.schema";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+// Type
+export type SectionType = z.infer<typeof serviceWorkSectionSchema>;
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "service-work-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let {
+  enable = true,
+  title,
+  image,
+  imageAlt,
+  description,
+  decorativeImage,
+  button,
+} = (actualContent as SectionType) || {};
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden">
+  <div class="relative container flex flex-col items-end md:flex-row">
+    <div class="w-full lg:w-200 xl:w-240">
+      {
+        image && (
+          <Reveal animation="reveal-anim-right" duration="900">
+            <OptimizedImage
+              src={image}
+              alt={imageAlt}
+              width={960}
+              height={782}
+              class="w-full rounded-3xl object-cover"
+            />
+          </Reveal>
+        )
+      }
+    </div>
+    <Reveal
+      class="right-0 bottom-0 flex w-full flex-col items-start md:absolute lg:w-180 xl:w-204.25"
+      animation="fade-left-sm"
+      delay="150">
+      <div
+        class="rounded-t-2xl bg-white pt-5 md:ml-30 md:p-8 lg:p-10 xl:p-15 2xl:pr-0">
+        {title && <SectionTitle title={title} />}
+      </div>
+      <div
+        class="rounded-tl-2xl bg-white pt-5 md:p-8 md:pb-10 lg:p-10 lg:pb-20 xl:p-15 xl:pb-34 2xl:pr-0">
+        <p
+          class="text-text-default/60 mb-5 text-base leading-relaxed lg:mb-8 lg:text-lg">
+          {description}
+        </p>
+        {
+          button && (
+            <Button {...button} class="btn-primary rounded-full xl:py-4.5!" />
+          )
+        }
+        {
+          decorativeImage && (
+            <div class="absolute right-5 bottom-2.5 size-15 rotate-90 md:right-10 md:bottom-5 md:size-20 lg:size-30 xl:right-5 xl:size-43.75">
+              <OptimizedImage
+                src={decorativeImage}
+                alt="Decorative"
+                width={96}
+                height={96}
+                class="size-full object-contain opacity-30"
+              />
+            </div>
+          )
+        }
+      </div>
+    </Reveal>
+  </div>
+</section>

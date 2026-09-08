@@ -1,0 +1,66 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { factSectionSchema } from "@/sections.schema";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedNumber from "../widgets/AnimatedNumber.astro";
+
+type SectionType = Section & NonNullable<z.infer<typeof factSectionSchema>>;
+type Props = { content?: SectionType; hasSectionSpacing?: boolean };
+
+let defaultContent = (
+  await getEntryCTM("sections", "fact", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, facts } = actualContent ?? {};
+
+if (!enable) return;
+
+const { hasSectionSpacing = true } = Astro.props;
+---
+
+<section class:list={["overflow-hidden", !hasSectionSpacing && "pt-0"]}>
+  <div class="container">
+    {
+      facts && facts.length > 0 && (
+        <div class="flex flex-col items-center justify-center gap-5 md:flex-row md:gap-0">
+          {facts.map((fact, i) => {
+            const isOdd = i % 2 !== 0; // 0-based index: 0 is even, 1 is odd
+            return (
+              <div
+                class:list={[
+                  "relative flex size-60 flex-col items-center justify-center rounded-full p-5 text-center md:size-52 md:p-10 lg:size-60 lg:p-0 xl:size-80 2xl:size-90",
+                  isOdd
+                    ? "border-text-default border bg-transparent"
+                    : "bg-theme-light",
+                  { "md:-ml-6 lg:-ml-8 xl:-ml-10": i > 0 },
+                ]}
+                style={{ zIndex: facts.length - i }}>
+                <AnimatedNumber
+                  class="text-h2-sm md:text-display-4"
+                  content={{
+                    type: "number",
+                    value: fact.number,
+                    prependValue: "",
+                    appendValue: fact.appendValue || "",
+                  }}
+                />
+                <p
+                  class="mt-4 text-xl leading-tight"
+                  set:html={markdownify(fact.label)}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+</section>

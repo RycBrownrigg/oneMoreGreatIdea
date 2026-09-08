@@ -1,0 +1,70 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { marqueeTickerSchema } from "@/sections.schema";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import Marquee from "@/components/widgets/Marquee.astro";
+
+// Type
+type SectionType = z.infer<typeof marqueeTickerSchema>;
+type Props = {
+  content?: SectionType;
+  variant?: "blue" | "black";
+  hasSectionSpacing?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "marquee-ticker", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, items = [], marquee } = actualContent ?? {};
+const { variant = "blue", hasSectionSpacing = true } = Astro.props;
+
+if (!enable) return;
+
+// Duplicate items for seamless loop
+const loopItems = [...items, ...items];
+---
+
+<section class:list={["overflow-hidden", { "pt-0": !hasSectionSpacing }]}>
+  <div
+    class:list={[
+      "py-10",
+      variant === "black" ? "bg-theme-dark" : "bg-primary",
+    ]}>
+    <Marquee
+      marqueeElements={loopItems.length}
+      marqueePauseOnHover={marquee?.pauseOnHover}
+      marqueeReverse={marquee?.reverse}
+      marqueeDuration={marquee?.duration ?? "30s"}
+      marqueeElementWidth={marquee?.elementWidth ?? ""}
+      marqueeElementWidthAuto={marquee?.elementWidthAuto ?? true}
+      marqueeElementWidthResponsive={marquee?.elementWidthInSmallDevices ?? ""}
+      class="gap-4 md:gap-9">
+      {
+        loopItems.map((item) => (
+          <span class="marquee-item text-text-inverse text-h4 md:text-h3 flex shrink-0 items-center gap-4 leading-none font-semibold uppercase md:gap-9">
+            {item}
+            <span class="text-white">
+              <OptimizedImage
+                src="/assets/images/icons/svg/sparkles.svg"
+                width={41}
+                height={41}
+                class="size-8"
+                inlineSvg={true}
+              />
+            </span>
+          </span>
+        ))
+      }
+    </Marquee>
+  </div>
+</section>

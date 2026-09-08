@@ -1,0 +1,320 @@
+---
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import { slugifyyy } from "@/lib/utils/textConverter";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import bgOptimizedImage from "@/lib/utils/bgOptimizedImage";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { generateCategorySlugs } from "@/lib/taxonomyParser.astro";
+import config from ".astro/config.generated.json";
+import { getEntrySlugCTM, useTranslations } from "@/lib/utils/i18nUtils.ts";
+import Button from "../Button.astro";
+import Icons from "@/helpers/Icons.astro";
+
+interface Props {
+  class?: string;
+  blogCardLayout?: string;
+}
+
+const currentLocale = Astro.currentLocale;
+
+const blogFolder = config.settings.blogFolder as "blog";
+const postIndex = await getEntryCTM(
+  blogFolder as "blog",
+  "-index",
+  currentLocale,
+);
+
+const blogCardLayout =
+  Astro.props.blogCardLayout ||
+  postIndex?.data.settings?.card?.layout ||
+  "classic";
+
+let posts = await getCollectionCTM(blogFolder as "blog", currentLocale);
+posts = await processPosts(posts);
+
+const postJson = sortByDate(posts).map((item) => {
+  return {
+    title: item.data.title,
+    slug: getEntrySlugCTM(item, currentLocale),
+    date: item.data.date,
+    author: item.data.author,
+    authorImage: item.data.authorImage,
+    image: item.data.image,
+    description: item.data.description,
+    categories: generateCategorySlugs(
+      item.data.categories,
+      currentLocale as string,
+      blogFolder,
+    ),
+  };
+});
+
+async function processPosts(sortedPosts: any) {
+  sortedPosts = await Promise.all(
+    sortedPosts.map(async (post: any) => {
+      const authorEntry = await getEntryCTM(
+        "author",
+        slugifyyy(post.data.author || ""),
+        currentLocale,
+      );
+
+      return {
+        ...post,
+        data: {
+          ...post.data,
+          image: await bgOptimizedImage(post.data.image),
+          author: authorEntry?.data.title,
+          authorImage: authorEntry?.data.image
+            ? await bgOptimizedImage(authorEntry.data.image)
+            : undefined,
+        },
+      };
+    }),
+  );
+
+  return sortedPosts;
+}
+
+const baseURL = Astro.url.origin;
+const t = await useTranslations(Astro.currentLocale as string);
+const learnMoreI18n = t("common.learnMoreAbout");
+const btnLabelReadMoreI18n = t("common.readMore");
+
+const notFoundImage = await bgOptimizedImage("/images/404.svg");
+---
+
+<div class="bg-theme-light p-5 xl:p-8.5">
+  <!-- <h2 class="text-h5 border-border-light/50 mb-4 border-b pb-4">
+    {t("widgets.postSearchTitle")}
+  </h2> -->
+  <div>
+    <form method="post" class="relative" id="search">
+      <input
+        type="search"
+        placeholder={t("widgets.postSearchFormPlaceholder")}
+        class="border-border-light focus:ring-primary focus:border-border-light placeholder-text-default/60 size-full border-none bg-white p-3 shadow-none ring-0 outline-none focus:ring-1 focus:outline-none xl:py-5 xl:pl-5"
+      />
+      <div class="absolute top-0 right-0 flex items-center gap-2">
+        <span id="searchClose" class="hidden cursor-pointer">
+          <Icons icon="X" class="size-5" />
+        </span>
+        <Button
+          tag="button"
+          variant="fill"
+          label=""
+          icon={{
+            enable: true,
+            name: "Search",
+            position: "left",
+            className: "size-5",
+          }}
+          aria-label={t("aria.search")}
+          class="flex size-11 items-center justify-center rounded-none px-2 transition-colors xl:size-15"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+
+<script
+  is:inline
+  define:vars={{
+    baseURL,
+    notFoundImage,
+    postJson,
+    blogFolder,
+    blogCardLayout,
+    learnMoreI18n,
+    btnLabelReadMoreI18n,
+    trailingSlash: config.site.trailingSlash,
+  }}
+>
+  const posts = postJson;
+  let searchResults = document.querySelector(".blog-search-results");
+
+  // On load, hide search results explicitly
+  if (searchResults) {
+    searchResults.classList.add("hidden", "flex", "flex-col"); // Ensure it has a flex list layout for the cards
+  }
+
+  document.querySelector("#search").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const searchTerm = e.target[0].value;
+
+    const pagination = document.querySelector("#pagination");
+    searchResults = document.querySelector(".blog-search-results");
+    const blogDetails = document.querySelector(".blog-details");
+    const blogDetailHeader = document.querySelector("#blogDetailHeader");
+    const searchClose = document.querySelector("#searchClose");
+
+    const filteredPosts = posts.filter((post) => {
+      return post.title.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    if (searchTerm === "") {
+      if (searchResults) {
+        searchResults.innerHTML = "";
+        searchResults.classList.add("hidden");
+      }
+      if (blogDetails) blogDetails.classList.remove("hidden");
+      if (blogDetailHeader) blogDetailHeader.classList.remove("hidden");
+      if (searchClose) searchClose.classList.add("hidden");
+
+      // Hide or show pagination based on filter
+      pagination?.classList.remove("hidden");
+    } else {
+      if (blogDetails) blogDetails.classList.add("hidden");
+      if (blogDetailHeader) blogDetailHeader.classList.add("hidden");
+      if (searchResults) searchResults.classList.remove("hidden");
+      if (searchClose) searchClose.classList.remove("hidden");
+      pagination?.classList.add("hidden");
+
+      if (!searchResults) return;
+      searchResults.innerHTML = "";
+
+      // If no posts found, display 404 image with text
+      if (filteredPosts.length === 0) {
+        // HTML template For Not found
+        const notFoundHTML = `
+            <div class="text-center space-y-10 w-full col-span-2 py-20">
+              <img class="w-96 mx-auto" src=${notFoundImage} alt="404" />
+              <p class="text-h6">
+                No Posts Found For <span class="text-primary">"${searchTerm}"</span>
+              </p>
+            </div>
+            `;
+        searchResults.innerHTML = notFoundHTML;
+
+        return;
+      }
+
+      filteredPosts.forEach((post) => {
+        renderBlogPost(post);
+      });
+    }
+  });
+
+  // Function to render a blog post dynamically mimicking the horizontal BlogCard layout
+  function renderBlogPost(post) {
+    // Function to format a date in "17 Jun, 2222" format
+    const dateFormat = (date, pattern = "dd MMM, yyyy") => {
+      const dateObj = new Date(date);
+
+      if (pattern === "dd MMM, yyyy") {
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+        return formatter.format(dateObj);
+      } else if (pattern === "dd MMMM, yyyy") {
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+        return formatter.format(dateObj);
+      }
+
+      throw new Error(`Unsupported pattern: ${pattern}`);
+    };
+
+    const categoriesHTML =
+      post.categories && post.categories.length > 0
+        ? post.categories
+            .map(
+              (category, index) => `
+          <span class="text-inherit">${category.name}</span>
+          ${index !== post.categories.length - 1 ? '<span class="bg-primary inline-block h-0.75 w-0.75 rounded-full"></span>' : ""}
+        `,
+            )
+            .join("")
+        : "";
+
+    const dateHTML = post.date
+      ? `<span>${dateFormat(post.date, "dd MMMM, yyyy")}</span>`
+      : "";
+    const dotHTML = categoriesHTML && dateHTML ? "<span>.</span>" : "";
+
+    const metaHTML =
+      categoriesHTML || dateHTML
+        ? `
+      <p class="text-text-default/50 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
+        ${categoriesHTML}
+        ${dotHTML}
+        ${dateHTML}
+      </p>
+    `
+        : "";
+
+    const imageHTML = post.image
+      ? `
+      <div class="order-1 shrink-0 overflow-hidden rounded-sm md:order-2">
+        <img
+          src="${post.image}"
+          alt="${post.title}"
+          class="w-full object-cover transition-transform duration-500 group-hover:scale-105 md:w-50 lg:w-60 xl:w-75 h-37"
+          width="300"
+          height="148"
+          loading="lazy"
+        />
+      </div>
+    `
+      : "";
+
+    const readTimeHTML = post.readTime
+      ? `
+      <span class="text-text-default/50 font-medium">${post.readTime}</span>
+    `
+      : "";
+
+    const horizontalLayoutHTML = `
+      <a
+        href="${post.slug}"
+        class="group flex flex-col items-center justify-between gap-6 py-6 border-b border-border-dark last:border-none first:pt-0 last:pb-0 transition-colors md:flex-row md:gap-8 md:py-10 border-border-dark/20"
+        aria-label="View ${post.title}"
+      >
+        <div class="order-2 min-w-0 flex-1 space-y-2 md:order-1">
+          ${metaHTML}
+          <h3 class="decoration-dark text-h4-sm md:text-h5 lg:text-h4 leading-snug font-semibold underline-offset-4 transition-all max-md:underline group-hover:underline">
+            ${post.title}
+          </h3>
+        </div>
+
+        ${imageHTML}
+
+        <div class="order-3 flex shrink-0 items-center gap-4 md:flex-col lg:flex-row">
+          ${readTimeHTML}
+          <span class="bg-theme-dark max-md:bg-primary group-hover:bg-primary flex size-10 items-center justify-center rounded-full text-white transition-all duration-300 lg:size-15">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right h-6 w-6"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </span>
+        </div>
+      </a>
+    `;
+    // Append to the blog container
+    const container = searchResults;
+    container.innerHTML += horizontalLayoutHTML;
+  }
+
+  // Support clearing search via input change
+  document.querySelector("#search input").addEventListener("input", (e) => {
+    const searchClose = document.querySelector("#searchClose");
+    if (e.target.value.trim() === "") {
+      if (searchClose) searchClose.classList.add("hidden");
+      document
+        .querySelector("#search")
+        .dispatchEvent(new Event("submit", { cancelable: true }));
+    } else {
+      if (searchClose) searchClose.classList.remove("hidden");
+    }
+  });
+
+  document.querySelector("#searchClose").addEventListener("click", () => {
+    const searchInput = document.querySelector("#search input");
+    searchInput.value = "";
+    document.querySelector("#searchClose")?.classList.add("hidden");
+    document
+      .querySelector("#search")
+      .dispatchEvent(new Event("submit", { cancelable: true }));
+  });
+</script>

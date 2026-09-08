@@ -1,0 +1,277 @@
+---
+import dateFormat from "@/lib/utils/dateFormat";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import {
+  humanize,
+  markdownify,
+  plainify,
+  slugifyyy,
+} from "@/lib/utils/textConverter";
+import { getEntrySlugCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import Icons from "@/helpers/Icons.astro";
+import type { CollectionEntry } from "astro:content";
+
+const t = await useTranslations(Astro.currentLocale as string);
+interface Props {
+  content: CollectionEntry<"blog">;
+  options?: {
+    card?: {
+      layout?: "horizontal" | "card" | "rounded" | "compact";
+      theme?: "light" | "dark";
+    };
+  };
+  index?: number;
+  class?: string;
+}
+
+let { content, options, index = 0, class: className, ...rest } = Astro.props;
+// Set default layout
+const layout = options?.card?.layout || "horizontal";
+const theme = options?.card?.theme || "dark";
+
+// Destructure content
+let { title, description, image, date, categories, comments, readTime } =
+  content.data || {};
+
+// Format categories
+const categoriesArray = categories?.map((category: string) => ({
+  name: category,
+  slug: slugifyyy(category),
+}));
+
+// Resolve slug from content id/collection
+let slug =
+  content.id && content.collection
+    ? getEntrySlugCTM(content, Astro.currentLocale)
+    : undefined;
+
+const href = slug ?? "#";
+---
+
+{/* ─── LAYOUT: horizontal ─── Used by RecentBlogsSection, BlogSection */}
+{
+  layout === "horizontal" ? (
+    <a
+      href={href}
+      class:list={[
+        "group flex flex-col items-center justify-between gap-6 py-6 transition-colors md:flex-row md:gap-8 md:py-6 xl:gap-25 2xl:gap-44",
+        className,
+      ]}
+      aria-label={`${t("button.view")} ${title}`}
+      {...rest}>
+      <div class="order-2 min-w-0 flex-1 space-y-3 md:order-1">
+        {(categories || date) && (
+          <p class="text-text-default/80 flex items-center justify-center gap-2 text-xs font-semibold tracking-widest uppercase lg:justify-start">
+            {categoriesArray &&
+              categoriesArray.map((category, index) => (
+                <>
+                  <span class="text-inherit">{humanize(category.name)}</span>
+                  {index !== categoriesArray.length - 1 && (
+                    <span class="bg-primary inline-block h-0.75 w-0.75 rounded-full" />
+                  )}
+                </>
+              ))}
+            {categoriesArray && date && <span>.</span>}
+            {date && <span>{dateFormat(date, "dd MMMM, yyyy")}</span>}
+          </p>
+        )}
+
+        <h3
+          class="decoration-dark text-h4-sm md:text-h5 lg:text-h4 leading-snug font-semibold underline-offset-4 transition-all group-hover:underline max-md:underline"
+          set:html={markdownify(title)}
+        />
+      </div>
+
+      {image && (
+        <div class="order-1 shrink-0 overflow-hidden rounded-sm md:order-2">
+          <OptimizedImage
+            src={image}
+            alt={title}
+            width={376}
+            height={186}
+            widths={[240, 376, 480, 640]}
+            sizes="(min-width: 1536px) 376px, (min-width: 1280px) 300px, (min-width: 768px) 200px, 100vw"
+            quality={50}
+            class="w-full object-cover transition-transform duration-500 group-hover:scale-105 md:w-50 lg:w-75 xl:w-94"
+          />
+        </div>
+      )}
+
+      <div class="order-3 flex shrink-0 items-center gap-4 md:flex-col lg:flex-row">
+        {readTime && (
+          <span class="text-text-default/80 font-medium">{readTime}</span>
+        )}
+
+        <span
+          class:list={[
+            "bg-theme-dark max-md:bg-primary group-hover:bg-primary flex size-10 items-center justify-center rounded-full text-white transition-all duration-300 lg:size-15",
+          ]}>
+          <Icons icon="ArrowUpRight" />
+        </span>
+      </div>
+    </a>
+  ) : layout === "card" ? (
+    /* ─── LAYOUT: card ─── Used by RecentBlogsSectionTwo */
+    <a
+      href={href}
+      class:list={[
+        "group bg-theme-light flex transform flex-col overflow-hidden rounded-xl p-5 transition-all duration-300 lg:p-8.5",
+        className,
+      ]}
+      aria-label={`${t("button.view")} ${title}`}
+      {...rest}>
+      {image && (
+        <div class="relative aspect-16/10 w-full overflow-hidden rounded-xl">
+          <OptimizedImage
+            src={image}
+            alt={title || "Blog Image"}
+            width={600}
+            height={400}
+            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        </div>
+      )}
+
+      <div class="flex flex-1 flex-col pt-5 lg:pt-8.5">
+        {(categories || date) && (
+          <div class="text-text-dark/71 flex items-center gap-2 uppercase">
+            {categoriesArray &&
+              categoriesArray.map((category, index) => (
+                <>
+                  <span class="text-inherit">{humanize(category.name)}</span>
+                  {index !== categoriesArray.length - 1 && (
+                    <span class="bg-primary inline-block h-0.75 w-0.75 rounded-full" />
+                  )}
+                </>
+              ))}
+            {categoriesArray && date && (
+              <span class="bg-text-dark/71 inline-block h-1 w-1 rounded-full" />
+            )}
+            {date && <span>{dateFormat(date, "dd MMMM, yyyy")}</span>}
+          </div>
+        )}
+
+        <h3
+          class="text-text-default text-h4-sm md:text-h4 my-5 min-h-18.5 font-semibold transition-colors lg:my-8.5"
+          set:html={markdownify(title)}
+        />
+
+        <div class="bg-border-dark mb-5 h-px w-full lg:mb-8.5" />
+
+        <div class="flex flex-col items-center justify-between gap-2 text-xs uppercase sm:flex-row sm:gap-0 lg:text-sm xl:text-base">
+          <span class="group-hover:text-primary font-bold">
+            {t("button.readMore")}
+          </span>
+
+          <div class="text-text-default/80 flex items-center gap-1.5 text-xs md:gap-3 lg:text-sm xl:text-base">
+            <div class="flex items-center gap-1">
+              <Icons icon="MessageCircle" class="size-4" />
+              {comments ? (
+                <span>
+                  {comments}&nbsp;{t("blog.comments")}
+                </span>
+              ) : (
+                <span>{t("blog.noComments")}</span>
+              )}
+            </div>
+
+            <span>/</span>
+
+            {readTime && <span>{readTime}</span>}
+          </div>
+        </div>
+      </div>
+    </a>
+  ) : layout === "rounded" ? (
+    /* ─── LAYOUT: rounded ─── Used by RecentBlogsSectionThree */
+    <a
+      href={href}
+      class="group mb-4 overflow-hidden rounded-xl bg-white drop-shadow-2xl drop-shadow-black/5 transition-shadow duration-300"
+      data-aos="fade-up"
+      data-aos-delay={index * 120}
+      data-aos-duration="600">
+      <div class="p-5 xl:p-7.5">
+        {date && (
+          <span class="border-text-default mb-6 inline-block rounded-full border px-4 py-1.5 leading-tight font-medium uppercase">
+            {dateFormat(date, "dd MMMM, yyyy")}
+          </span>
+        )}
+
+        <h3 class="text-h5-sm md:text-h5 mb-6 font-semibold">{title}</h3>
+
+        {image && (
+          <div class="mb-6 overflow-hidden rounded-xl">
+            <OptimizedImage
+              src={image}
+              alt={title}
+              width={400}
+              height={280}
+              class="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105 xl:h-70"
+            />
+          </div>
+        )}
+
+        {description && (
+          <p
+            class="text-text-default/80 mb-6 text-lg leading-normal"
+            set:html={markdownify(description)}
+          />
+        )}
+
+        <button
+          aria-label={`${t("button.readMore")} ${title}`}
+          class="border-text-default/60 relative inline-flex min-h-10 items-center rounded-full border text-lg font-medium transition-colors">
+          <span class="py-2 pr-12 pl-6 font-semibold transition-all duration-500 group-hover:pr-6 group-hover:pl-12">
+            {t("button.readMore")} <span class="sr-only">{title}</span>
+          </span>
+          <div class="border-text-default/60 absolute -right-px flex size-11 items-center justify-center rounded-full border transition-all duration-500 group-hover:right-[calc(100%-2.75rem+1px)]">
+            <div class="bg-text-default size-2 rounded-full" />
+          </div>
+        </button>
+      </div>
+    </a>
+  ) : layout === "compact" ? (
+    /* ─── LAYOUT: compact ─── Used by FooterTwo */
+    <a
+      href={href}
+      class:list={[
+        "group flex gap-4.5 pb-4.5 transition-colors last:pb-0",
+        theme === "light"
+          ? "border-text-default/15 border-b last:border-0"
+          : "text-text-inverse",
+        className,
+      ]}
+      aria-label={`${t("button.view")} ${title}`}
+      {...rest}>
+      {image && (
+        <div
+          class:list={[
+            "shrink-0 overflow-hidden",
+            theme === "light" ? "rounded-full" : "rounded-md",
+          ]}>
+          <OptimizedImage
+            src={image}
+            alt={title || "Blog image"}
+            width={90}
+            height={90}
+            class="size-20 object-cover transition-transform duration-300 group-hover:scale-110 xl:size-22.5"
+          />
+        </div>
+      )}
+      <div class="flex flex-col gap-1">
+        {date && (
+          <span class="text-light/50 text-xs mix-blend-difference">
+            {dateFormat(date, "dd MMMM, yyyy")}
+          </span>
+        )}
+        <span
+          class:list={[
+            "line-clamp-2 font-medium transition-colors",
+            theme === "light" && "text-xl leading-5.5",
+          ]}
+          set:html={plainify(title)}
+        />
+      </div>
+    </a>
+  ) : null
+}

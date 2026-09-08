@@ -1,0 +1,95 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { marqueeSectionSchema } from "@/sections.schema";
+import Marquee from "@/components/widgets/Marquee.astro";
+
+type SectionType = z.infer<typeof marqueeSectionSchema>;
+type Props = {
+  content?: SectionType;
+  hasBgPattern?: boolean;
+  variant?: "dark" | "light";
+  hasSectionSpacing?: boolean;
+};
+
+let defaultContent = (
+  await getEntryCTM("sections", "marquee-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, marquee } = actualContent ?? {};
+
+if (!enable) return;
+
+const textItem = marquee?.text || "";
+const loopCount = 12;
+const loopItems = Array.from({ length: loopCount }, () => textItem);
+const { variant = "light", hasSectionSpacing = true } = Astro.props;
+const isLight = variant === "light";
+
+// Helper to generate the exact requested outline style depending on the theme.
+// Light mode: white fill + black shadow = black outline
+// Dark mode: black fill + white shadow = white outline
+const getStyle = (isOutline: boolean, isLightMode: boolean) => {
+  const fillColor = isLightMode ? "white" : "black";
+  const shadowColor = isLightMode ? "#000" : "#fff";
+  const shadow = `-webkit-background-clip: text; text-shadow: -1px -1px 0 ${shadowColor}, 1px -1px 0 ${shadowColor}, -1px 1px 0 ${shadowColor}, 1px 1px 0 ${shadowColor}; `;
+  return shadow + (isOutline ? "" : `color: ${fillColor};`);
+};
+---
+
+<section class:list={["relative", !hasSectionSpacing && "pt-0"]}>
+  <div
+    class:list={[
+      "section-spacing-vertical",
+      isLight ? "bg-white" : "bg-black",
+    ]}>
+    <div class="relative">
+      <div
+        class="relative flex items-center overflow-hidden mask-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgb(0,0,0)_10%,rgb(0,0,0)_90%,rgba(0,0,0,0)_100%)]">
+        <Marquee
+          marqueeElements={loopItems.length}
+          marqueePauseOnHover={marquee?.pauseOnHover}
+          marqueeReverse={marquee?.reverse}
+          marqueeDuration={marquee?.duration}
+          marqueeElementWidth={marquee?.elementWidth ?? ""}
+          marqueeElementWidthAuto={marquee?.elementWidthAuto}
+          marqueeElementWidthResponsive={marquee?.elementWidthInSmallDevices ??
+            ""}
+          class="gap-6 md:gap-12">
+          {
+            loopItems.map((item, index) => {
+              const isOutline = index % 2 !== 0;
+              return (
+                <span
+                  class:list={[
+                    "marquee-item flex shrink-0 items-center gap-6 text-2xl leading-none font-bold tracking-wider uppercase md:gap-12 md:text-4xl lg:text-5xl xl:text-6xl",
+                    isOutline
+                      ? isLight
+                        ? "text-text-default"
+                        : "text-text-inverse"
+                      : "",
+                  ]}
+                  style={getStyle(isOutline, isLight)}>
+                  {item}
+                  <span
+                    class:list={[
+                      "size-4 shrink-0 rounded-full border-2 md:size-6",
+                      isLight ? "border-text-default" : "border-text-inverse",
+                    ]}
+                    style="color: initial; text-shadow: none; -webkit-background-clip: border-box;"
+                  />
+                </span>
+              );
+            })
+          }
+        </Marquee>
+      </div>
+    </div>
+  </div>
+</section>

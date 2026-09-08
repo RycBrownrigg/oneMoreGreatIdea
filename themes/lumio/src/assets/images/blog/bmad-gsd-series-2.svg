@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E27"/>
+      <stop offset="55%" stop-color="#0F1A3D"/>
+      <stop offset="100%" stop-color="#131B3A"/>
+    </linearGradient>
+    <linearGradient id="footerBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <g stroke="#2E3A5C" stroke-width="1.5" opacity="0.5">
+    <line x1="0" y1="560" x2="1200" y2="560"/>
+    <line x1="0" y1="580" x2="1200" y2="580"/>
+  </g>
+  <g fill="#22D3EE" opacity="0.6">
+    <circle cx="150" cy="560" r="2.5"/>
+    <circle cx="330" cy="560" r="2.5"/>
+    <circle cx="510" cy="560" r="2.5"/>
+    <circle cx="690" cy="580" r="2.5"/>
+    <circle cx="870" cy="580" r="2.5"/>
+    <circle cx="1050" cy="580" r="2.5"/>
+  </g>
+
+  <line x1="880" y1="110" x2="880" y2="510" stroke="#3B4A72" stroke-width="2"/>
+
+  <!-- left: BMad specialist-agent hub (orange) -->
+  <g stroke="#7A4A2E" stroke-width="2">
+    <line x1="760" y1="240" x2="700" y2="170"/>
+    <line x1="760" y1="240" x2="820" y2="170"/>
+    <line x1="760" y1="240" x2="700" y2="330"/>
+    <line x1="760" y1="240" x2="820" y2="330"/>
+  </g>
+  <circle cx="760" cy="240" r="26" fill="#FB923C"/>
+  <circle cx="700" cy="170" r="15" fill="#FB923C" opacity="0.8"/>
+  <circle cx="820" cy="170" r="15" fill="#FB923C" opacity="0.8"/>
+  <circle cx="700" cy="330" r="15" fill="#FB923C" opacity="0.8"/>
+  <circle cx="820" cy="330" r="15" fill="#FB923C" opacity="0.8"/>
+  <text x="760" y="410" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#FDBA74">BMAD TEAM</text>
+
+  <!-- right: GSD staged pipeline (cyan) -->
+  <g fill="#22D3EE">
+    <rect x="960" y="140" width="50" height="30" rx="6"/>
+    <rect x="960" y="205" width="50" height="30" rx="6" opacity="0.88"/>
+    <rect x="960" y="270" width="50" height="30" rx="6" opacity="0.76"/>
+    <rect x="960" y="335" width="50" height="30" rx="6" opacity="0.64"/>
+    <rect x="960" y="400" width="50" height="30" rx="6" opacity="0.52"/>
+  </g>
+  <g fill="#67E8F9">
+    <path d="M 977 176 L 993 176 L 985 190 Z"/>
+    <path d="M 977 241 L 993 241 L 985 255 Z"/>
+    <path d="M 977 306 L 993 306 L 985 320 Z"/>
+    <path d="M 977 371 L 993 371 L 985 385 Z"/>
+  </g>
+  <text x="985" y="460" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#67E8F9">GSD LOOP</text>
+
+  <!-- center: under-the-hood gear -->
+  <g transform="translate(880,300)">
+    <g fill="#8B98C4">
+      <rect x="-5" y="-38" width="10" height="16"/>
+      <rect x="-5" y="22" width="10" height="16"/>
+      <rect x="-5" y="-38" width="10" height="16" transform="rotate(45)"/>
+      <rect x="-5" y="22" width="10" height="16" transform="rotate(45)"/>
+      <rect x="-5" y="-38" width="10" height="16" transform="rotate(90)"/>
+      <rect x="-5" y="22" width="10" height="16" transform="rotate(90)"/>
+      <rect x="-5" y="-38" width="10" height="16" transform="rotate(135)"/>
+      <rect x="-5" y="22" width="10" height="16" transform="rotate(135)"/>
+    </g>
+    <circle r="30" fill="#131B3A" stroke="#8B98C4" stroke-width="3"/>
+    <circle r="11" fill="none" stroke="#8B98C4" stroke-width="3"/>
+  </g>
+
+  <!-- kicker -->
+  <text x="70" y="150" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4" fill="#22D3EE">BMad Method Vs GSD Core &#183; PART 2 OF 5</text>
+
+  <!-- title -->
+  <text x="70" y="306" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800" fill="#F8FAFC">What BMad Method and</text>
+  <text x="70" y="364" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800" fill="#F8FAFC">GSD Core Actually Are</text>
+
+  <!-- divider -->
+  <rect x="70" y="392" width="90" height="6" rx="3" fill="url(#footerBar)"/>
+
+  <!-- footer bar -->
+  <rect x="0" y="606" width="1200" height="24" fill="url(#footerBar)"/>
+
+  <g transform="translate(70, 540)">
+    <rect x="0" y="18" width="8" height="14" fill="#22D3EE"/>
+    <rect x="12" y="10" width="8" height="22" fill="#22D3EE"/>
+    <rect x="24" y="2" width="8" height="30" fill="#FB923C"/>
+    <text x="46" y="26" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">AskRyc</text>
+  </g>
+</svg>

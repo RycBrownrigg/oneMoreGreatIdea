@@ -1,0 +1,38 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import handleDraftPage from "@/lib/utils/handleDraftPage";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import PageHeader from "@/layouts/components/widgets/PageHeader.astro";
+import FAQSection from "@/components/sections/FAQSection.astro";
+import BusinessService from "@/components/sections/BusinessService.astro";
+import TestimonialSection from "@/components/sections/TestimonialSection.astro";
+import FactSection from "@/components/sections/FactSection.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const entry = await getEntryCTM("faq", "-index", Astro.currentLocale);
+
+// Remove drafts pages in production
+const response = handleDraftPage(entry?.data);
+if (response) return response;
+---
+
+<Base {...entry?.data}>
+  <PageHeader
+    title={entry.data.title}
+    breadcrumbTitle={entry?.data?.breadcrumbTitle}
+  />
+  <FAQSection variant="onlyCard" hasLightBackground={false} />
+  <BusinessService />
+  <TestimonialSection hasSectionSpacing={false} />
+  <FactSection />
+  <CustomersSection hasSectionSpacing={false} />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+</Base>

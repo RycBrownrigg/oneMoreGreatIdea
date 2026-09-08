@@ -1,0 +1,83 @@
+---
+import type { z } from "astro/zod";
+import config from ".astro/config.generated.json";
+import { getEntryCTM, getCollectionCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import BlogCard from "@/components/cards/BlogCard.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+
+import type { blogSectionSchema } from "@/sections.schema";
+import SectionTitle from "../global/SectionTitle.astro";
+import VerticalLabel from "@/components/widgets/VerticalLabel.astro";
+
+// Type
+type SectionType = z.infer<typeof blogSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "recent-blog", Astro.currentLocale)
+)?.data as unknown as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, badge, title, limit, cardLayout } = actualContent ?? {};
+
+if (!enable) return;
+
+let posts = await getCollectionCTM(
+  config.settings.blogFolder as "blog",
+  Astro.currentLocale,
+);
+// Sort posts by date descending
+posts = sortByDate(posts);
+// Apply limit for homepage (show only recent N posts)
+const displayList = limit ? posts.slice(0, limit) : posts;
+---
+
+<section>
+  <div class="relative container">
+    {
+      badge && (
+        <VerticalLabel
+          text={badge}
+          scrambleDelay={((displayList.length || 1) - 1) * 80 + 200}
+          class="text-center"
+        />
+      )
+    }
+    <div class="has-vertical-text-left z-1">
+      {
+        title && (
+          <div class="mx-auto mb-6 text-center md:mb-14">
+            <SectionTitle title={title} />
+          </div>
+        )
+      }
+
+      {
+        displayList && displayList.length > 0 && (
+          <ul class="divide-dark/50 border-dark/50 divide-y border-t text-center md:text-left">
+            {displayList.map((post, index) => (
+              <li>
+                <BlogCard
+                  content={post}
+                  options={{ card: { layout: cardLayout } }}
+                  data-aos="fade-up-sm"
+                  data-aos-duration="600"
+                  data-aos-delay={index * 80}
+                />
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>

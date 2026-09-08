@@ -1,0 +1,108 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { supportedLanguages } from "@/lib/utils/i18nUtils.ts";
+import { slugifyyy, titleify } from "@/lib/utils/textConverter";
+import config from ".astro/config.generated.json";
+import BlogListSection from "@/components/sections/BlogListSection.astro";
+import removeEmptyKeys from "@/lib/utils/removeEmptyKeys";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const {
+        blogFolder: blogFolder,
+        multilingual: { defaultLanguage, showDefaultLangInUrl },
+      } = config.settings;
+
+      const postIndex = await getEntryCTM(
+        blogFolder as "blog",
+        "-index",
+        lang.languageCode,
+      );
+      const categories = await getTaxonomy(
+        blogFolder as "blog",
+        "categories",
+        lang.languageCode,
+      );
+
+      const paths = categories.flatMap((category) => {
+        const canonicalSlug = slugifyyy(category.slug);
+        const aliasSlugs = (category.aliases || []).map((alias: string) =>
+          slugifyyy(alias),
+        );
+
+        return [canonicalSlug, ...aliasSlugs].map((resolvedSlug) => ({
+          params: {
+            category: resolvedSlug,
+            lang:
+              lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+                ? undefined
+                : lang.languageCode,
+          },
+          props: {
+            category,
+            currentCategory: canonicalSlug,
+            blogFolder,
+            postIndex,
+          },
+        }));
+      });
+
+      // If draft true in index.md file frontmatter don't include any page related to this page collection in production
+      if (postIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      return paths;
+    }),
+  );
+
+  return paths.flat();
+}
+
+const {
+  category,
+  blogFolder,
+  currentCategory = slugifyyy(category.slug),
+  postIndex,
+} = Astro.props;
+
+let post = await getEntryCTM(
+  blogFolder as "blog",
+  "post-1",
+  Astro.currentLocale,
+);
+
+let title = titleify(`${category.name} posts`);
+const description = post?.data.description || postIndex?.data.description;
+const currentPage = 1;
+---
+
+<Base
+  {...postIndex?.data}
+  title={title}
+  description={description}
+  disableTagline={true}>
+  <PageHeader title={postIndex.data.title} breadcrumbTitle={category?.name} />
+  <BlogListSection
+    content={{
+      ...removeEmptyKeys(postIndex.data),
+    }}
+    listPage={true}
+    pagination={{
+      enable: true,
+      currentPage,
+    }}
+    currentCategory={currentCategory}
+  />
+  <CustomersSection hasSectionSpacing={false} />
+  <ContactSection hasSectionSpacing={false} />
+  <MarqueeSection hasSectionSpacing={false} />
+  <!-- <CallToAction sectionSpaceTop={false} /> -->
+</Base>

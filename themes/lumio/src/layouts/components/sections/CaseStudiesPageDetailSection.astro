@@ -1,0 +1,110 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { getEntrySlugCTM, useTranslations } from "@/lib/utils/i18nUtils";
+import Icons from "@/helpers/Icons.astro";
+import type { CollectionEntry, CollectionKey } from "astro:content";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import ProjectDetailCard from "../widgets/ProjectDetails.astro";
+import Reveal from "@/components/widgets/Reveal.astro";
+const t = await useTranslations(Astro.currentLocale as string);
+
+type CaseStudyData = {
+  title?: string;
+  imageBanner?: string;
+  projectDetails?: { label: string; value: string }[];
+};
+type CaseStudyEntry = CollectionEntry<CollectionKey> & { data: CaseStudyData };
+
+interface Props {
+  content: CaseStudyEntry;
+  Content: AstroComponentFactory;
+  list: CaseStudyEntry[];
+}
+
+const { content, Content, list } = Astro.props;
+const { title, imageBanner, projectDetails } = content.data;
+
+const currentIndex = list.findIndex((p: CaseStudyEntry) => p.id === content.id);
+const prevPost = currentIndex < list.length - 1 ? list[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? list[currentIndex - 1] : null;
+
+const prevSlug = prevPost
+  ? getEntrySlugCTM(prevPost, Astro.currentLocale)
+  : null;
+const nextSlug = nextPost
+  ? getEntrySlugCTM(nextPost, Astro.currentLocale)
+  : null;
+---
+
+<section class="relative overflow-hidden">
+  <div class="container">
+    {
+      imageBanner && (
+        <Reveal animation="reveal-anim-up" duration="900">
+          <OptimizedImage
+            src={imageBanner}
+            alt="Service Detail"
+            width={1320}
+            height={600}
+            class="h-auto w-full object-cover object-center md:h-100 lg:h-150 rounded-2xl"
+          />
+        </Reveal>
+      )
+    }
+    <div class="mb-10 flow-root lg:mb-15">
+      <Reveal animation="fade-left-sm" delay="100">
+        <ProjectDetailCard projectDetails={projectDetails} title={title} />
+      </Reveal>
+
+      <Reveal class="space-y-8" animation="fade-up-sm" delay="150">
+        <h2 class="xl:text-h4 mb-6 text-2xl font-medium lg:text-3xl">
+          {title}
+        </h2>
+        {
+          Content && (
+            <div class="prose-styles content has-video-modal">
+              <Content components={{ img: OptimizedImage }} />
+            </div>
+          )
+        }
+      </Reveal>
+    </div>
+
+    <!-- Previous / Next item -->
+    <Reveal
+      class="bg-theme-light/25 flex items-center justify-between *:sm:px-6 *:sm:py-4 *:sm:text-base"
+      animation="fade-up-sm"
+      delay="200">
+      {
+        prevSlug ? (
+          <a
+            href={prevSlug}
+            class="hover:text-primary bg-theme-light flex items-center gap-2.5 p-4 text-sm leading-none font-bold transition md:text-lg">
+            <Icons
+              icon="ArrowDownLeft"
+              class="size-8 transition-transform group-hover:-translate-x-1"
+            />
+            {t("blog.previousPost")}
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        nextSlug ? (
+          <a
+            href={nextSlug}
+            class="hover:text-primary bg-theme-light flex items-center gap-2.5 leading-none font-bold transition md:text-lg">
+            {t("blog.nextPost")}
+            <Icons
+              icon="ArrowUpRight"
+              class="size-8 transition-transform group-hover:translate-x-1"
+            />
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </Reveal>
+  </div>
+</section>

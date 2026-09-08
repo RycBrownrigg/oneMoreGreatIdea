@@ -1,0 +1,82 @@
+---
+import Sidebar from "./widgets/Sidebar.astro";
+import { slugifyyy } from "@/lib/utils/textConverter";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import config from ".astro/config.generated.json";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import type { Category } from "@/types";
+import BlogHeadSection from "./widgets/BlogHeadSection.astro";
+import BlogDetailSection from "./widgets/BlogDetails.astro";
+import type { CollectionEntry } from "astro:content";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+interface Props {
+  content: CollectionEntry<"blog">;
+  Content: AstroComponentFactory;
+  authorEntry: CollectionEntry<"author">["data"] | Record<string, never>;
+}
+
+const { content, Content, authorEntry } = Astro.props;
+
+const { title, categories, readTime, comments, date } = content.data;
+
+// Get all posts for prev/next navigation
+let allPosts = await getCollectionCTM(
+  config.settings.blogFolder as "blog",
+  Astro.currentLocale,
+);
+allPosts = sortByDate(allPosts);
+
+// Format categories with slugs
+const categoriesWithSlugs = categories?.map((cat: string) => ({
+  name: cat,
+  slug: getLocaleUrlCTM(
+    slugifyyy(cat),
+    Astro.currentLocale,
+    `/${config.settings.blogFolder}/category`,
+  ),
+})) as Category[];
+---
+
+<BlogHeadSection
+  data={{ categoriesWithSlugs, date, comments, title, authorEntry, readTime }}
+/>
+
+<!-- Blog Content + Sidebar Section -->
+<section class="overflow-hidden">
+  <div
+    class="container grid grid-cols-1 gap-x-9 gap-y-10 pb-15 md:gap-y-16 md:pb-16.5 lg:grid-cols-12 lg:pb-20 xl:pb-25">
+    <BlogDetailSection
+      content={content}
+      Content={Content}
+      categoriesWithSlugs={categoriesWithSlugs}
+      allPosts={allPosts}
+    />
+
+    <Sidebar
+      content={{
+        widgets: ["Search", "Categories", "RecentPosts"],
+        boxShadow: false,
+        sticky: true,
+        widgetsContent: {
+          search: {
+            blogCardLayout: "compact",
+          },
+        },
+      }}
+    />
+  </div>
+</section>
+
+<script>
+  import { stickySidebar } from "@/plugins/sticky-sidebar.js";
+
+  const sidebar = document.querySelector(".sticky-sidebar");
+  if (sidebar) {
+    new stickySidebar(sidebar, {
+      offsetTop: 132,
+      offsetBottom: 20,
+    });
+  }
+</script>

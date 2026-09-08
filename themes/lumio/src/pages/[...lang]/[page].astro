@@ -1,0 +1,42 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getEntryRouteParam, supportedLanguages } from "@/lib/utils/i18nUtils";
+import config from ".astro/config.generated.json";
+import SinglePageLayout from "@/components/SinglePageLayout.astro";
+import PageHeader from "@/components/widgets/PageHeader.astro";
+
+// get static paths for all pages
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      let pages = await getCollectionCTM("pages", lang.languageCode);
+
+      return pages.map((page) => ({
+        params: {
+          lang:
+            lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+              ? undefined
+              : lang.languageCode,
+          page: getEntryRouteParam(page),
+        },
+        props: {
+          page,
+        },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { page } = Astro.props;
+---
+
+<Base {...page.data}>
+  {page.data.title && <PageHeader title={page.data.title} />}
+  <SinglePageLayout content={page} />
+</Base>

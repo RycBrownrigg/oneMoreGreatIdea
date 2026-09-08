@@ -1,0 +1,112 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { numbersSectionSchema } from "@/sections.schema";
+import AnimatedNumber from "@/components/widgets/AnimatedNumber.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import VerticalLabel from "@/components/widgets/VerticalLabel.astro";
+
+// Type
+type SectionType = z.infer<typeof numbersSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "numbers-stats", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  title,
+  image,
+  imageAlt,
+  badge,
+  list,
+} = actualContent ?? {};
+
+type SectionData = NonNullable<SectionType>;
+type ListItem = SectionData["list"][number];
+
+if (!enable) return;
+---
+
+<section class="border-border-dark/15 relative border-t pt-0">
+  <div class="container">
+    {
+      image && (
+        <div
+          class="top-0 left-0 mx-auto h-150 overflow-hidden md:w-auto lg:absolute lg:mx-0 lg:h-full lg:min-w-[calc(50%-200px)] lg:pt-20 xl:min-w-[calc(50%-250px)]"
+          data-aos="fade-right-sm"
+          data-aos-duration="800">
+          <OptimizedImage
+            src={image}
+            alt={imageAlt}
+            width={878}
+            height={1037}
+            class="inset-0 size-full object-cover object-top-left lg:absolute"
+          />
+        </div>
+      )
+    }
+
+    <div
+      class="section-spacing-vertical has-vertical-text-right relative ml-auto flex w-full flex-col justify-center gap-6 md:gap-14 lg:max-w-[calc(100%-400px)] xl:max-w-[calc(100%-500px)]">
+      {/* Title */}
+      {title && <SectionTitle title={title} />}
+
+      {/* Stats list */}
+      {
+        list && list.length > 0 && (
+          <div>
+            {list.map((item: ListItem, index: number) => (
+              <div
+                class="flex flex-col items-center gap-6 pb-6 text-center last:pb-0 md:flex-row md:gap-10 md:pb-10 md:text-left xl:gap-18 xl:pb-15"
+                data-aos="fade-up-sm"
+                data-aos-duration="700"
+                data-aos-delay={index * 100}>
+                {/* Animated number */}
+                <div class="shrink-0">
+                  <AnimatedNumber
+                    class="xl:text-display-1 md:text-display-3 text-6xl leading-none font-semibold"
+                    content={{
+                      type: "number",
+                      value: item.value,
+                      prependValue: "",
+                      appendValue: "",
+                    }}
+                  />
+                </div>
+
+                {/* Description */}
+                <p
+                  class="text-lg font-medium"
+                  set:html={markdownify(item.description)}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
+      {
+        badge && (
+          <VerticalLabel
+            text={badge}
+            scrambleDelay={((list?.length || 1) - 1) * 100 + 200}
+            class="text-text-default/7 2xl:text-display-1 md:text-display-4 top-1/2 right-0 -z-1 -translate-y-1/2 text-center lg:rotate-180"
+          />
+        )
+      }
+    </div>
+  </div>
+</section>

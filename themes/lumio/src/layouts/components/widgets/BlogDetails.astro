@@ -1,0 +1,136 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import {
+  getEntrySlugCTM,
+  getLocaleUrlCTM,
+  useTranslations,
+} from "@/lib/utils/i18nUtils";
+import Icons from "@/helpers/Icons.astro";
+import type { Category } from "@/types";
+import type { CollectionEntry } from "astro:content";
+import Social from "@/components/social/Social.astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+interface Props {
+  content: CollectionEntry<"blog">;
+  Content: AstroComponentFactory;
+  categoriesWithSlugs: Category[];
+  allPosts: CollectionEntry<"blog">[];
+}
+
+const t = await useTranslations(Astro.currentLocale as string);
+
+const { content, Content, categoriesWithSlugs, allPosts } = Astro.props;
+const { title, image } = content.data;
+
+const currentIndex = allPosts.findIndex((p) => p.id === content.id);
+const prevPost =
+  currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+const prevSlug = prevPost
+  ? getEntrySlugCTM(prevPost, Astro.currentLocale)
+  : null;
+const nextSlug = nextPost
+  ? getEntrySlugCTM(nextPost, Astro.currentLocale)
+  : null;
+---
+
+<div class="blog-details has-video-modal space-y-8 lg:order-1 lg:col-span-8">
+  <!-- Post Image -->
+  {
+    image && (
+      <OptimizedImage
+        src={image as string}
+        width={870}
+        height={500}
+        alt={title}
+        class="w-full object-cover"
+      />
+    )
+  }
+
+  <div class="mb-10 w-full space-y-8 lg:mb-15">
+    <!-- Table of Contents -->
+    <!-- {tocEnabled && tocHeadings && <TOC toc={tocHeadings} marker={false} />} -->
+
+    <!-- Main Content -->
+    {
+      Content && (
+        <div class="prose-styles prose-lg [&_p]:text-[22px] [&_li]:text-[22px] [&_a]:text-primary [&_a]:font-semibold [&_a]:underline [&_a]:underline-offset-2 content has-video-modal">
+          <Content components={{ img: OptimizedImage }} />
+        </div>
+      )
+    }
+  </div>
+
+  <!-- Social Row -->
+  <div
+    class="border-border-dark/15 flex flex-wrap items-center justify-between gap-4 border-y py-6">
+    <!-- Tags / Categories at bottom -->
+    {
+      categoriesWithSlugs && categoriesWithSlugs.length > 0 && (
+        <div class="flex flex-wrap items-center gap-3.5">
+          {categoriesWithSlugs.map((cat: Category) => (
+            <a
+              href={cat.slug}
+              class="bg-theme-light hover:bg-primary text-text-default/80 px-5 py-2.5 leading-none transition-colors hover:text-white">
+              {cat.name}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <!-- Right Side: Social Share & Copy Link -->
+    <div class="flex items-center gap-3.5">
+      <Social
+        slug={getLocaleUrlCTM(Astro.url.href, Astro.currentLocale)}
+        linkType="share"
+        title={title}
+        layout="classic"
+        size="md"
+        class="mb-0"
+      />
+    </div>
+  </div>
+
+  <!-- Previous / Next Post -->
+  <div class="flex items-center justify-between pt-2">
+    {
+      prevSlug ? (
+        <a
+          href={prevSlug}
+          class="group hover:text-primary flex items-center gap-2 font-medium transition-colors">
+          <Icons
+            icon="MoveLeft"
+            class="size-4 transition-transform group-hover:-translate-x-1"
+          />
+          {t("blog.previousPost")}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      nextSlug ? (
+        <a
+          href={nextSlug}
+          class="group hover:text-primary flex items-center gap-2 font-medium transition-colors">
+          {t("blog.nextPost")}
+          <Icons
+            icon="MoveRight"
+            class="size-4 transition-transform group-hover:translate-x-1"
+          />
+        </a>
+      ) : (
+        <span />
+      )
+    }
+  </div>
+
+  <!-- <div class="mt-10 lg:mt-24">
+    <BlogCommentSection />
+  </div> -->
+</div>
+<div class="blog-search-results hidden lg:order-1 lg:col-span-8"></div>

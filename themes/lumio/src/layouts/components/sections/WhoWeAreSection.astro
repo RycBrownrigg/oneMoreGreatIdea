@@ -1,0 +1,156 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { whoWeAreSectionSchema } from "@/sections.schema";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import AnimatedNumber from "@/components/widgets/AnimatedNumber.astro";
+import SectionBadge from "../global/SectionBadge.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+
+// Type
+type SectionType = z.infer<typeof whoWeAreSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "who-we-are", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const {
+  enable = true,
+  image,
+  imageAlt,
+  progressBars,
+  badge,
+  title,
+  list,
+} = actualContent ?? {};
+
+type ProgressBarItem = NonNullable<SectionType["progressBars"]>[number];
+type ListItem = NonNullable<SectionType["list"]>[number];
+
+if (!enable) return;
+---
+
+<section class="bg-theme-light relative overflow-hidden pt-0">
+  <div class="container lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-32">
+    <div class="lg:order-2 lg:col-start-2">
+      <div
+        class="min-h-full lg:grid lg:grid-rows-2 lg:place-items-end"
+        data-aos="fade-right-sm"
+        data-aos-duration="800">
+      </div>
+      {
+        image && (
+          <div class="lg:absolute lg:top-0 lg:left-[calc(50%+2rem)] lg:h-1/2 lg:w-1/2 xl:left-[calc(50%+4rem)]">
+            <OptimizedImage
+              src={image}
+              alt={imageAlt || "Who we are image"}
+              width={878}
+              height={600}
+              class="h-full w-full object-cover"
+            />
+          </div>
+        )
+      }
+
+      {/* Bottom Blue Background with Floating Progress Bars Card */}
+      <div
+        class="bg-primary flex items-center p-5 max-lg:py-8 sm:p-10 lg:absolute lg:bottom-0 lg:left-[calc(50%+2rem)] lg:h-1/2 lg:w-1/2 lg:py-20 xl:left-[calc(50%+4rem)]">
+        {/* White floating card overlapping top boundary */}
+        {
+          progressBars && progressBars.length > 0 && (
+            <div class="bg-theme-light flex h-full w-full flex-col justify-center gap-4 rounded-xl p-6 md:gap-8.5 lg:ms-10 lg:me-20 xl:ms-10 xl:me-24 xl:p-15">
+              {progressBars.map((bar: ProgressBarItem) => (
+                <div>
+                  <div class="mb-3 flex items-center justify-between font-medium md:mb-6 xl:text-xl">
+                    <span class="text-text-dark">{bar.label}</span>
+                    <span class="text-text-dark">{bar.percentage}%</span>
+                  </div>
+                  <div class="bg-text-default/22 h-2.5 w-full overflow-hidden rounded-none">
+                    <div
+                      class="bg-primary h-full"
+                      style={`width: ${bar.percentage}%`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <div
+      class="section-spacing-vertical order-2 flex w-full flex-col justify-center lg:order-1 lg:col-start-1"
+      data-aos="fade-left-sm"
+      data-aos-duration="800">
+      {/* badge */}
+      {badge && <SectionBadge title={badge} />}
+
+      {/* Title */}
+      {
+        title && (
+          <div class="mb-8 md:mb-12 xl:mb-16">
+            <SectionTitle title={title} />
+          </div>
+        )
+      }
+
+      {/* Vertical List / Stats */}
+      {
+        list && list.length > 0 && (
+          <div class="flex flex-col">
+            {list.map((item: ListItem, index: number) => (
+              <div
+                class="border-border-dark/15 flex flex-col border-t py-6 last:pb-0 md:py-8.5"
+                data-aos="fade-up-sm"
+                data-aos-duration="700"
+                data-aos-delay={index * 100}>
+                {/* List Item Header (Bullet + Title) */}
+                <div class="flex items-center gap-3.5">
+                  <span class="bg-text-default inline-block size-2.5 shrink-0 rounded-full" />
+                  <p
+                    class="text-text-dark mb-0 text-xl"
+                    set:html={markdownify(item.title)}
+                  />
+                </div>
+
+                {/* Value / Number */}
+                <div class="my-6">
+                  <AnimatedNumber
+                    class="text-text-dark text-h2-sm md:text-h2 leading-none font-bold"
+                    content={{
+                      type: "number",
+                      value: item.value.replace(/[^0-9]/g, ""),
+                      prependValue: "",
+                      appendValue: item.value.replace(/[0-9]/g, ""),
+                    }}
+                  />
+                </div>
+
+                {/* Description */}
+                {item.description && (
+                  <p
+                    class="text-text-default text-lg leading-[1.4]"
+                    set:html={markdownify(item.description)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

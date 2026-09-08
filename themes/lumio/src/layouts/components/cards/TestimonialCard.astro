@@ -1,0 +1,163 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+interface Props {
+  content?: string;
+  customer?: {
+    name?: string;
+    role?: string;
+    avatar?: string;
+  };
+  options?: {
+    card?: {
+      layout?: "horizontal" | "card" | "featured";
+    };
+  };
+  index?: number;
+}
+
+const { content, customer, options, index = 0 } = Astro.props;
+const layout = options?.card?.layout || "card";
+---
+
+{
+  layout === "card" ? (
+    <div
+      data-aos="fade-up"
+      data-aos-delay={index * 120}
+      data-aos-duration="600">
+      <div class="bg-theme-light group hover:border-text-default/60 flex h-full flex-col justify-between gap-6 rounded-2xl border border-transparent p-6 transition-all duration-300 hover:border-dashed hover:bg-white xl:gap-8 xl:p-8 2xl:gap-20 2xl:p-10">
+        <div>
+          <OptimizedImage
+            src="/images/icons/svg/quote.svg"
+            width={40}
+            height={40}
+            class="h-10 w-10"
+          />
+        </div>
+
+        {content && (
+          <p
+            class="text-text-default text-base leading-relaxed xl:text-xl 2xl:text-2xl"
+            set:html={markdownify(content)}
+          />
+        )}
+
+        <div class="mt-auto flex items-center gap-4">
+          <div class="size-15 shrink-0 overflow-hidden rounded-full">
+            <OptimizedImage
+              src={
+                customer?.avatar ?? "/images/customers/avatar/devid-marko.png"
+              }
+              alt={customer?.name ?? "Customer"}
+              width={60}
+              height={60}
+              class="size-full object-cover"
+            />
+          </div>
+          <div>
+            {customer?.name && (
+              <p class="text-text-dark text-sm font-semibold lg:text-xl">
+                {customer.name}
+              </p>
+            )}
+            {customer?.role && (
+              <p class="text-text-default/60 mt-0.5">{customer.role}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : layout === "horizontal" ? (
+    <div class="bg-theme-light flex h-full flex-col items-center justify-between gap-9 rounded-xl p-6 lg:flex-row xl:p-9">
+      <div class="size-23.25 shrink-0 overflow-hidden rounded-full">
+        <OptimizedImage
+          src={customer?.avatar ?? "/images/testimonials/robart-alikson.jpg"}
+          alt={customer?.name ?? "Customer"}
+          width={93}
+          height={93}
+          class="size-full object-cover"
+        />
+      </div>
+      <div>
+        <div class="flex justify-center md:justify-start">
+          <OptimizedImage
+            src="/images/icons/svg/quote-new.svg"
+            width={46}
+            height={46}
+            class="text-primary size-11.5"
+          />
+        </div>
+        <div class="my-6 xl:my-9">
+          {content && (
+            <p
+              class="text-text-default lg:text-lg xl:text-xl xl:leading-7.5 xl:font-medium"
+              set:html={markdownify(content)}
+            />
+          )}
+        </div>
+        <div class="flex flex-col gap-1.5">
+          {customer?.name && (
+            <p class="text-text-default text-xl leading-none font-semibold">
+              {customer.name}
+            </p>
+          )}
+          {customer?.role && (
+            <p class="text-text-default/60 leading-none">{customer.role}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : layout === "featured" ? (
+    <div class="bg-theme-light mx-auto flex w-full max-w-200 flex-col items-start gap-4 rounded-[10px] p-6 md:flex-row md:gap-8 md:p-10 xl:max-w-283 xl:gap-15 xl:p-14">
+      <span class="text-text-default/70 text-lg font-medium">
+        {String(index + 1).padStart(3, "0")}
+      </span>
+
+      <div class="mx-auto hidden h-72 w-37.5 shrink-0 overflow-hidden rounded-[75px] md:mx-0 md:block">
+        <OptimizedImage
+          src={customer?.avatar ?? "/images/testimonials/robart-alikson.jpg"}
+          alt={customer?.name ?? "Customer"}
+          width={150}
+          height={291}
+          class="size-full object-cover"
+        />
+      </div>
+      <div class="mx-auto block size-37.5 shrink-0 overflow-hidden rounded-full md:mx-0 md:hidden">
+        <OptimizedImage
+          src={customer?.avatar ?? "/images/testimonials/robart-alikson.jpg"}
+          alt={customer?.name ?? "Customer"}
+          width={150}
+          height={150}
+          class="size-full object-cover object-top"
+        />
+      </div>
+
+      <div class="flex-1">
+        <OptimizedImage
+          src={"/images/icons/svg/quote.svg"}
+          alt={"Quote"}
+          width={47}
+          height={47}
+          class="size-11.75 object-contain"
+        />
+
+        {content && (
+          <p
+            class="my-4 h-26 overflow-hidden text-lg font-semibold md:h-42 md:text-xl xl:my-7 xl:h-31 xl:text-2xl xl:leading-7.75"
+            set:html={markdownify(content)}
+          />
+        )}
+
+        {customer?.name && (
+          <p class="text-2xl font-semibold xl:text-3xl">{customer.name}</p>
+        )}
+
+        {customer?.role && (
+          <p class="text-text-default/70 mt-1 text-base">{customer.role}</p>
+        )}
+      </div>
+    </div>
+  ) : null
+}

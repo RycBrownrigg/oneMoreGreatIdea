@@ -1,0 +1,38 @@
+---
+interface Props {
+  label: string;
+  percentage: number;
+  index?: number;
+}
+
+const { label, percentage, index = 0 } = Astro.props;
+---
+
+<div
+  class="w-full"
+  data-aos="fade-up"
+  data-aos-delay={300 + index * 150}
+  data-aos-duration="600">
+  <div class="relative mb-6 flex items-center">
+    <span class="font-medium lg:text-lg xl:text-xl">
+      {label}
+    </span>
+    <span
+      class="absolute font-medium lg:text-lg xl:text-xl"
+      style={{
+        left: `${percentage}%`,
+        transform: "translateX(-50%)",
+      }}>
+      {percentage}%
+    </span>
+  </div>
+  <div class="bg-border-dark/22 h-2.5 w-full overflow-hidden">
+    <div
+      class="bg-primary h-full transition-all duration-1000"
+      style={{ width: `${percentage}%` }}
+      data-aos="slide-right"
+      data-aos-delay={300 + index * 150}
+      data-aos-duration="1000">
+    </div>
+  </div>
+</div>

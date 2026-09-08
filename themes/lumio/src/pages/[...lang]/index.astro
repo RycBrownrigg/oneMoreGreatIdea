@@ -1,0 +1,57 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import HomeBanner from "@/components/sections/HomeBanner.astro";
+import AboutCompanySection from "@/components/sections/AboutCompanySection.astro";
+import MarqueeTickerSection from "@/components/sections/MarqueeTickerSection.astro";
+import OurServicesSection from "@/components/sections/OurServicesSection.astro";
+import NumbersStatsSection from "@/components/sections/NumbersStatsSection.astro";
+import TestimonialSection from "@/components/sections/TestimonialSection.astro";
+import FeaturesSplitSection from "@/components/sections/FeaturesSplitSection.astro";
+import CaseStudiesPrimarySection from "@/components/sections/CaseStudies.astro";
+import CustomersSection from "@/components/sections/CustomersSection.astro";
+import GetInTouchSection from "@/components/sections/GetInTouchSection.astro";
+import RecentBlogsSection from "@/components/sections/RecentBlogsSection.astro";
+import ContactSection from "@/components/sections/ContactSection.astro";
+import MarqueeSection from "@/components/sections/MarqueeSection.astro";
+import bgOptimizedImage from "@/lib/utils/bgOptimizedImage";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const homepage = await getEntryCTM("homepage", "-index", Astro.currentLocale);
+const homeBanner = await getEntryCTM(
+  "sections",
+  "home-banner",
+  Astro.currentLocale,
+);
+
+const lcpImage = homeBanner?.data?.slides?.[0]?.image as string | undefined;
+const lcpImageUrl = lcpImage
+  ? lcpImage.startsWith("http")
+    ? lcpImage
+    : await bgOptimizedImage(lcpImage)
+  : "";
+---
+
+<Base
+  {...homepage.data}
+  homepage={true}
+  preloadImages={lcpImageUrl ? [lcpImageUrl] : []}
+  footer="one">
+  <HomeBanner />
+  <AboutCompanySection />
+  <MarqueeTickerSection />
+  <OurServicesSection />
+  <NumbersStatsSection />
+  <TestimonialSection hasSectionSpacing={false} />
+  <FeaturesSplitSection />
+  <CaseStudiesPrimarySection />
+  <CustomersSection hasSectionSpacing={false} />
+  <GetInTouchSection />
+  <RecentBlogsSection />
+  <ContactSection />
+  <MarqueeSection hasSectionSpacing={false} variant="dark" />
+</Base>

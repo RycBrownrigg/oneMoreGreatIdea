@@ -1,0 +1,88 @@
+---
+import type { z } from "astro/zod";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { pricingSectionSchema } from "@/sections.schema";
+import PricingCard from "@/layouts/components/cards/PricingCard.astro";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+export type SectionType = Section & z.infer<typeof pricingSectionSchema>;
+
+type Props = {
+  content?: SectionType;
+  class?: string;
+  variant?: "default" | "onlyCard";
+  hasSectionSpacing?: boolean;
+};
+
+// Fetching the default content for this section
+let defaultContent = (
+  await getEntryCTM("sections", "pricing-section", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, badge, title, list } = actualContent as SectionType;
+const {
+  class: className,
+  hasSectionSpacing = true,
+  variant = "default",
+} = Astro.props;
+
+if (!enable) return;
+---
+
+{
+  variant === "default" ? (
+    <section
+      class:list={["overflow-hidden", className, !hasSectionSpacing && "pt-0"]}>
+      <div class="bg-primary section-spacing-vertical relative rounded-xl">
+        <div class="pointer-events-none absolute inset-0 z-1 size-full overflow-hidden rounded-2xl opacity-75">
+          <OptimizedImage
+            class="size-full object-cover"
+            src="/images/pricing-blob.png"
+            role="presentation"
+          />
+        </div>
+
+        <div class="relative z-10 container">
+          <Reveal
+            class="mb-8 flex flex-col gap-4 text-center md:mb-15 lg:gap-6"
+            animation="fade-up-sm">
+            {badge && <SectionBadge title={badge} variant="dark" />}
+            {title && <SectionTitle title={title} variant="dark" />}
+          </Reveal>
+
+          {list && list.length > 0 && (
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+              {list.map((item, index) => (
+                <PricingCard content={{ ...item, index }} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section
+      class:list={["overflow-hidden", className, !hasSectionSpacing && "pt-0"]}>
+      <div class="relative container">
+        {list && list.length > 0 && (
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+            {list.map((item, index) => (
+              <PricingCard content={{ ...item, index }} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,58 @@
+---
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { testimonialSectionSchema } from "@/sections.schema";
+import SectionBadge from "@/components/global/SectionBadge.astro";
+import TestimonialCard from "@/components/cards/TestimonialCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+export type SectionType = z.infer<typeof testimonialSectionSchema>;
+type Props = { content?: SectionType };
+
+let defaultContent = (
+  await getEntryCTM(
+    "sections",
+    "testimonial-section-three",
+    Astro.currentLocale,
+  )
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let { enable = true, badge, title } = (actualContent as SectionType) || {};
+
+let pageData = (await getEntryCTM("testimonial", "-index", Astro.currentLocale))
+  ?.data;
+const items = pageData.listHome3?.filter((item) => item.enable !== false) ?? [];
+if (!enable) return;
+---
+
+<section class="relative">
+  <div class="container">
+    <Reveal
+      class="mx-auto mb-8 flex max-w-4xl flex-col gap-4 text-center md:mb-15 lg:gap-6"
+      animation="fade-up-sm">
+      {badge && <SectionBadge title={badge} />}
+      {title && <SectionTitle title={title} />}
+    </Reveal>
+
+    {
+      items.length > 0 && (
+        <div class="grid grid-cols-1 gap-5 pb-4 md:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+          {items.map((testimonial, i) => (
+            <TestimonialCard
+              content={testimonial.content}
+              customer={testimonial.customer}
+              index={i}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

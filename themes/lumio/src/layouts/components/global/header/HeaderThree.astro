@@ -1,0 +1,130 @@
+---
+import type { NavigationLink } from "@/types";
+import Logo from "@/components/global/Logo.astro";
+import { sortByWeight } from "@/lib/utils/sortFunctions";
+import { filteredEnabled } from "@/lib/utils/filteredEnabled";
+import config from ".astro/config.generated.json";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import NavToggleBtn from "@/components/global/header/NavbarToggler.astro";
+import NavMenuItem from "@/layouts/components/global/header/MenuItem.astro";
+import LanguageSwitcher from "@/layouts/components/global/header/LanguageSwitcher.astro";
+import TopbarTwo from "./TopbarTwo.astro";
+import Button from "@/components/Button.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+let main = t("main") as NavigationLink[];
+let topbarMenu = t("topbar") as NavigationLink[];
+topbarMenu = filteredEnabled(topbarMenu);
+main = filteredEnabled(main);
+
+// Sort menus by weight
+main = sortByWeight(main) as NavigationLink[];
+
+const { stickyHeader, navigationButton, announcementBar } = config.settings;
+const announcementEnabled = announcementBar?.enable !== false;
+const announcement = announcementBar?.label || t("header.announcement");
+---
+
+<!-- Topbar -->
+<TopbarTwo
+  menu={topbarMenu}
+  announcement={announcementEnabled ? announcement : ""}
+/>
+<header
+  class:list={[
+    "header header-three group/header",
+    { "sticky-header": stickyHeader },
+  ]}>
+  <div class="container-2xl">
+    <nav
+      class="hs-dropdown relative flex items-center justify-between py-2 [--auto-close:inside] [--gpu-acceleration:false] [--strategy:absolute] lg:py-0 lg:[--strategy:static]">
+      <div class="py-2 lg:py-4 xl:py-5">
+        <Logo />
+      </div>
+
+      <ul
+        id="nav-menu"
+        class="navbar hs-dropdown-menu lg:hs-dropdown-open:flex flex-1 justify-center py-3 max-lg:absolute max-lg:top-full max-lg:left-0 max-lg:w-full max-lg:transform-none! lg:flex! lg:transform-none!">
+        {main.map((menu) => <NavMenuItem menu={menu} />)}
+
+        {
+          config.settings.multilingual.enable && (
+            <li class="max-lg:px-2 max-lg:py-2 lg:hidden" role="menuitem">
+              <LanguageSwitcher />
+            </li>
+          )
+        }
+        {
+          navigationButton.enable && (
+            <li class="max-lg:px-2 max-lg:py-2 lg:hidden" role="menuitem">
+              {navigationButton.enable && (
+                <Button
+                  variant="fill"
+                  {...navigationButton}
+                  icon={{
+                    enable: true,
+                    name: "ArrowUpRight",
+                    position: "left",
+                  }}
+                  label={t("button.getAQuote")}
+                  class="btn-primary"
+                />
+              )}
+            </li>
+          )
+        }
+      </ul>
+
+      <div class="hidden gap-3 lg:flex lg:items-center xl:gap-5">
+        {
+          navigationButton.enable && (
+            <Button
+              variant="fill"
+              {...navigationButton}
+              icon={{ enable: true, name: "ArrowUpRight", position: "right" }}
+              label={t("button.getAQuote")}
+              class="btn-primary rounded-4xl xl:px-5! xl:py-4.5!"
+            />
+          )
+        }
+
+        {config.settings.multilingual.enable && <LanguageSwitcher />}
+      </div>
+
+      <NavToggleBtn />
+    </nav>
+
+    <script>
+      import HSDropdown from "@preline/dropdown";
+
+      if (
+        [".hs-dropdown", "[data-hs-dropdown]"].some((selector) =>
+          document.querySelector(selector),
+        )
+      ) {
+        HSDropdown?.autoInit();
+      }
+
+      function updateMegaMenuOffset(): void {
+        const header = document.querySelector(
+          "header.header-three",
+        ) as HTMLElement | null;
+        if (!header) return;
+
+        const headerBottom = Math.round(header.getBoundingClientRect().bottom);
+        document.documentElement.style.setProperty(
+          "--header-bottom",
+          `${Math.max(headerBottom, 0)}px`,
+        );
+      }
+
+      updateMegaMenuOffset();
+      window.addEventListener("resize", updateMegaMenuOffset, {
+        passive: true,
+      });
+      window.addEventListener("scroll", updateMegaMenuOffset, {
+        passive: true,
+      });
+    </script>
+  </div>
+</header>

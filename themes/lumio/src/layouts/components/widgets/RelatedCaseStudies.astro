@@ -1,0 +1,56 @@
+---
+import Icons from "@/helpers/Icons.astro";
+import config from ".astro/config.generated.json";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { getEntrySlugCTM } from "@/lib/utils/i18nUtils.ts";
+import type { CollectionEntry, CollectionKey } from "astro:content";
+
+type CaseStudyEntry = CollectionEntry<CollectionKey>;
+
+interface Props {
+  currentCaseStudy: CaseStudyEntry;
+  class?: string;
+}
+
+const caseStudies = await getCollectionCTM(
+  config.settings.caseStudiesFolder as CollectionKey,
+  Astro.currentLocale,
+);
+
+const { currentCaseStudy } = Astro.props;
+
+const currentCaseStudySlug = getEntrySlugCTM(
+  currentCaseStudy,
+  Astro.currentLocale,
+);
+
+if (caseStudies.length === 0) return;
+---
+
+<div class="space-y-4">
+  <h2 class="text-h5 border-border-light/50 mb-4 border-b pb-4">
+    Other Case Studies
+  </h2>
+  <div class="space-y-2">
+    {
+      caseStudies.map((item) => {
+        const slug = getEntrySlugCTM(item, Astro.currentLocale);
+
+        return (
+          <a
+            href={slug}
+            class:list={[
+              "hover:bg-primary text-text-default flex items-center justify-between gap-4 border px-5 py-2.5 transition duration-300 hover:text-white",
+              {
+                "bg-primary text-white":
+                  currentCaseStudy && slug === currentCaseStudySlug,
+              },
+            ]}>
+            <span class="truncate">{item.data.title}</span>
+            <Icons icon="ChevronRight" class="text-xl" />
+          </a>
+        );
+      })
+    }
+  </div>
+</div>

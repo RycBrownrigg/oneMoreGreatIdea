@@ -1,0 +1,57 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Icons from "@/helpers/Icons.astro";
+
+interface Props {
+  avatars?: string[];
+  avatarAlt?: string;
+  count?: string;
+  label?: string;
+  leftAligned?: boolean;
+  class?: string;
+}
+
+const {
+  avatars,
+  avatarAlt,
+  count,
+  label,
+  leftAligned = false,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<div class:list={[className]} {...rest}>
+  <div class:list={["flex", !leftAligned && "items-center justify-center"]}>
+    {
+      avatars?.map((avatar: string, i: number) => (
+        <div
+          class:list={[
+            "size-12 overflow-hidden rounded-full border-2 border-white xl:size-15",
+            { "-ml-5 md:-ml-6.25": i > 0 },
+          ]}>
+          <OptimizedImage
+            src={avatar}
+            alt={avatarAlt}
+            width={60}
+            height={60}
+            class="size-full object-cover"
+          />
+        </div>
+      ))
+    }
+    <div
+      class="bg-theme-dark -ml-5 flex size-12 items-center justify-center rounded-full border-2 border-white text-4xl font-light text-white md:-ml-6.25 xl:size-15">
+      <Icons icon="Plus" class="stroke-3" />
+    </div>
+  </div>
+  <div
+    class:list={[
+      "flex w-full text-sm md:text-lg",
+      leftAligned ? "flex-col" : "gap-2 text-center",
+    ]}>
+    <span set:html={count} />
+    <span set:html={label} />
+  </div>
+</div>

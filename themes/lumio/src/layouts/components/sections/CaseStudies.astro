@@ -1,0 +1,68 @@
+---
+import type { z } from "astro/zod";
+import config from ".astro/config.generated.json";
+import { getEntryCTM, getCollectionCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { caseStudiesSectionSchema } from "@/sections.schema";
+import CaseStudyCard from "@/components/cards/CaseStudyCard.astro";
+import SectionTitle from "../global/SectionTitle.astro";
+import type { CollectionKey } from "astro:content";
+import Reveal from "@/components/widgets/Reveal.astro";
+
+// Type
+type SectionType = z.infer<typeof caseStudiesSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "case-studies-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Merge with prop overrides
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { enable = true, title, limit, cardLayout } = actualContent ?? {};
+
+if (!enable) return;
+
+let caseStudiesList = await getCollectionCTM(
+  config.settings.caseStudiesFolder as CollectionKey,
+  Astro.currentLocale,
+);
+caseStudiesList.sort((a, b) => (a.data.weight || 0) - (b.data.weight || 0));
+caseStudiesList = caseStudiesList.slice(0, limit);
+---
+
+<section class="relative overflow-hidden">
+  <div class="container">
+    {
+      title && (
+        <Reveal
+          class="mx-auto mb-6 max-w-6xl text-center md:mb-12"
+          animation="fade-up-sm">
+          <SectionTitle title={title} />
+        </Reveal>
+      )
+    }
+    {
+      caseStudiesList && caseStudiesList.length > 0 && (
+        <div class="grid gap-5 lg:grid-cols-3 lg:gap-7">
+          {caseStudiesList.map((caseStudy, index) => {
+            return (
+              <CaseStudyCard
+                content={caseStudy}
+                options={{ layout: cardLayout }}
+                index={index}
+              />
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+</section>

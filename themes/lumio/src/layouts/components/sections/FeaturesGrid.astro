@@ -1,0 +1,59 @@
+---
+import type { Section } from "@/types";
+import type { z } from "astro/zod";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { featuresSectionSchema } from "@/sections.schema";
+import Icons from "@/helpers/Icons.astro";
+import type { IconName as SupportedIconName } from "../../../lib/iconNames.ts";
+
+type SectionType = Section & NonNullable<z.infer<typeof featuresSectionSchema>>;
+type Props = { content?: SectionType };
+
+let defaultContent = (
+  await getEntryCTM("sections", "features-grid", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+const { features } = actualContent;
+---
+
+{
+  features && features.length > 0 && (
+    <div class="bg-primary z-10 ms-auto max-w-full max-lg:w-full lg:max-w-[85%] lg:rounded-bl-none xl:max-w-[76%]">
+      <div class="grid grid-cols-1 gap-4 p-8 md:grid-cols-3 lg:gap-10 lg:p-10 xl:gap-17 xl:px-18 xl:py-10.5">
+        {features.map((feature, i) => (
+          <div
+            class="text-center max-md:not-first:border-t md:border-t md:text-left"
+            data-aos="fade-up-sm"
+            data-aos-delay={i * 100}
+            data-aos-duration="600">
+            <div
+              class:list={[
+                "flex items-center justify-center gap-2 py-3 md:justify-start lg:pt-6 lg:pb-4",
+              ]}>
+              {feature.icon && (
+                <Icons
+                  icon={feature.icon as SupportedIconName}
+                  class="fill-text-inverse stroke-text-inverse size-5"
+                />
+              )}
+              <h2 class="text-text-inverse text-sm font-bold uppercase lg:text-base xl:text-lg">
+                {feature.title}
+              </h2>
+            </div>
+            <p
+              class="text-text-inverse text-sm lg:text-base"
+              set:html={markdownify(feature.description)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

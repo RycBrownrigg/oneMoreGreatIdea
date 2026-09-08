@@ -1,0 +1,157 @@
+---
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import FeaturesGrid from "./FeaturesGrid.astro";
+import type { z } from "astro/zod";
+import type { featuresSectionSchema } from "@/sections.schema";
+
+type Slide = {
+  image: string;
+  alt?: string;
+};
+
+type Props = {
+  slides?: Slide[];
+  featuresGridContent?: z.infer<typeof featuresSectionSchema>;
+};
+
+const { slides = [], featuresGridContent } = Astro.props as Props;
+const hasSlides = slides.length > 0;
+const t = await useTranslations(Astro.currentLocale as string);
+---
+
+{
+  hasSlides && (
+    <div class="relative flex flex-col" id="home-banner-slider">
+      <div
+        class="banner-slider-track relative h-175 w-full overflow-hidden rounded-2xl xl:h-180"
+        data-aos="reveal-anim-up"
+        data-aos-delay="250"
+        data-aos-duration="900"
+        aria-live="polite">
+        {slides.map((slide: Slide, i: number) => (
+          <div
+            class="banner-slide absolute inset-0 size-full px-4 transition-opacity duration-700 ease-in-out"
+            data-slide={i}
+            aria-hidden={i !== 0}
+            style={i === 0 ? "opacity:1; z-index:1;" : "opacity:0; z-index:0;"}>
+            {/** Prioritize the first slide for LCP, lazy-load the rest */}
+            <OptimizedImage
+              src={slide.image}
+              alt={slide.alt || "Banner slide"}
+              width={1920}
+              height={900}
+              widths={[640, 960, 1280, 1536]}
+              sizes="(min-width: 1536px) 1400px, (min-width: 1280px) 1200px, (min-width: 1024px) 960px, 100vw"
+              quality={60}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchpriority={i === 0 ? "high" : "auto"}
+              class="size-full object-cover object-top"
+            />
+          </div>
+        ))}
+        <div class="container-2xl relative flex size-full flex-col justify-end">
+          {slides.length > 1 && (
+            <button
+              id="banner-prev"
+              class="group translate-y-centered absolute left-8 z-20 flex h-14 w-14 -translate-y-25 items-center justify-center rounded-full border border-white bg-transparent text-white transition-all duration-200 hover:bg-white xl:h-17.5 xl:w-17.5"
+              data-aos="fade-right-sm"
+              data-aos-delay="550"
+              data-aos-duration="600"
+              aria-label={t("aria.prevSlide")}>
+              <OptimizedImage
+                src="/images/icons/svg/arrow-left-two.svg"
+                width={40}
+                height={16}
+                inlineSvg={true}
+              />
+            </button>
+          )}
+
+          {slides.length > 1 && (
+            <button
+              id="banner-next"
+              class="group translate-y-centered absolute right-8 z-20 flex h-14 w-14 -translate-y-25 items-center justify-center rounded-full border border-white bg-transparent text-white transition-all duration-200 hover:bg-white xl:h-17.5 xl:w-17.5"
+              data-aos="fade-left-sm"
+              data-aos-delay="550"
+              data-aos-duration="600"
+              aria-label={t("aria.nextSlide")}>
+              <OptimizedImage
+                src="/images/icons/svg/arrow-right-two.svg"
+                width={40}
+                height={16}
+                inlineSvg={true}
+              />
+            </button>
+          )}
+          <FeaturesGrid content={featuresGridContent} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  (function () {
+    const runIdle = (cb: () => void) => {
+      const w = window;
+      if ("requestIdleCallback" in w) {
+        // @ts-ignore - requestIdleCallback not in all TS libs
+        return w.requestIdleCallback(cb, { timeout: 2000 });
+      }
+      return setTimeout(cb, 0);
+    };
+
+    const init = () => {
+      const slider = document.getElementById("home-banner-slider");
+      if (!slider) return;
+
+      const slides = Array.from(
+        slider.querySelectorAll<HTMLElement>(".banner-slide"),
+      );
+      if (slides.length <= 1) return;
+
+      let current = 0;
+
+      function goTo(index: number) {
+        slides[current].style.opacity = "0";
+        slides[current].style.zIndex = "0";
+        slides[current].setAttribute("aria-hidden", "true");
+
+        current = (index + slides.length) % slides.length;
+        slides[current].style.opacity = "1";
+        slides[current].style.zIndex = "1";
+        slides[current].setAttribute("aria-hidden", "false");
+      }
+
+      let autoplayTimer = window.setInterval(() => goTo(current + 1), 5000);
+
+      function resetAutoplay() {
+        window.clearInterval(autoplayTimer);
+        autoplayTimer = window.setInterval(() => goTo(current + 1), 5000);
+      }
+
+      slider.addEventListener("mouseenter", () =>
+        window.clearInterval(autoplayTimer),
+      );
+      slider.addEventListener("mouseleave", () => resetAutoplay());
+
+      document.getElementById("banner-prev")?.addEventListener("click", () => {
+        goTo(current - 1);
+        resetAutoplay();
+      });
+
+      document.getElementById("banner-next")?.addEventListener("click", () => {
+        goTo(current + 1);
+        resetAutoplay();
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => runIdle(init));
+    } else {
+      runIdle(init);
+    }
+  })();
+</script>

@@ -1,0 +1,74 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { getEntryRouteParam, supportedLanguages } from "@/lib/utils/i18nUtils";
+import { slugifyyy } from "@/lib/utils/textConverter";
+import { render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BlogSinglePageLayout from "@/components/BlogSinglePageLayout.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { blogFolder } = config.settings;
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      const postIndex = await getEntryCTM(
+        blogFolder as "blog",
+        "-index",
+        lang.languageCode,
+      );
+
+      let posts = await getCollectionCTM(
+        blogFolder as "blog",
+        lang.languageCode,
+      );
+
+      // If draft true in index.md file frontmatter don't include any page related to this page collection in production
+      if (postIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      return posts.map((post) => ({
+        params: {
+          lang:
+            lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+              ? undefined
+              : lang.languageCode,
+          single: getEntryRouteParam(post),
+        },
+        props: {
+          post,
+          postIndex,
+        },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const { author } = post?.data || {};
+
+// Get Author Details
+let authorEntry: CollectionEntry<"author">["data"] | Record<string, never> = {};
+if (author) {
+  const slug = slugifyyy(author);
+  const entry = await getEntryCTM("author", slug, Astro.currentLocale);
+  authorEntry = entry?.data || {};
+}
+---
+
+<Base {...post.data}>
+  <BlogSinglePageLayout
+    content={post}
+    Content={Content}
+    authorEntry={authorEntry}
+  />
+</Base>
