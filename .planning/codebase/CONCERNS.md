@@ -24,11 +24,9 @@ All paths are relative to `themes/lumio/` unless noted.
 - Impact: Type errors in form validation/reset logic (a user-facing, business-critical path — the contact form) won't be caught at compile time.
 - Fix approach: Remove `@ts-nocheck` and add proper types for `window.HSSelect` (the likely reason it was disabled — a global from the Preline select plugin) via a `.d.ts` ambient declaration.
 
-**Draft content is built but not fully hidden:**
-- Issue: `draft: true` frontmatter (used on `case-study-5.mdx`, `case-study-6.mdx`) only removes pages from the sitemap post-build (`scripts/remove-draft-from-sitemap.mjs`); it does not appear to prevent the pages from being generated in `dist/` and reachable via direct URL.
-- Files: `src/content/case-studies/english/case-study-5.mdx`, `case-study-6.mdx`, `scripts/remove-draft-from-sitemap.mjs`
-- Impact: Placeholder/incomplete case studies are publicly accessible if the URL is known or guessed, even though they're excluded from the sitemap and presumably from listing pages.
-- Fix approach: If listing pages already filter on `draft`, this may be acceptable (security-through-obscurity for unfinished content); if stronger guarantees are wanted, add `noindex` robots meta to draft pages and/or exclude them from `getStaticPaths()` entirely until ready.
+**~~Draft content is built but not fully hidden~~ — CORRECTED 2026-09-08, not an issue:**
+- This was based on reading `scripts/remove-draft-from-sitemap.mjs` in isolation and missed `getCollectionCTM()` in `src/lib/contentParser.astro`, which filters `draft: true` entries out in production (`import.meta.env.PROD`) before `getStaticPaths()` ever sees them. Verified empirically: a production `npm run build` produces no route at all for `case-study-5`/`case-study-6` (`dist/case-studies/` contains only `vongo`, `ccrms`, `horizongo`, `inktix`). Draft pages are excluded from the build entirely, not merely hidden from the sitemap. See `.planning/phases/01-draft-placeholder-cleanup/01-VERIFICATION.md`.
+- Files (originally cited, now noted as `.md` post-migration): `src/content/case-studies/english/case-study-5.md`, `case-study-6.md`, `scripts/remove-draft-from-sitemap.mjs`
 
 **Unused deployment config files:**
 - Issue: `netlify.toml` and `wrangler.toml` exist at the project root but the actual deployment is a manual rsync of `dist/` to a VPS (135.148.61.99), not Netlify or Cloudflare Pages.

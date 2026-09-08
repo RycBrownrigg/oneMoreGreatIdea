@@ -17,7 +17,7 @@ Requirements for this milestone (finishing pre-launch/launch-quality work on the
 - [x] **TECHDEBT-01**: Legacy blog posts `post-1.mdx`–`post-9.mdx` are migrated to `.md` with no loss of content or shortcode functionality
 - [x] **TECHDEBT-02**: All six case studies (`case-study-1.mdx`–`case-study-6.mdx`) are migrated to `.md` with no loss of content or shortcode functionality
 - [x] **TECHDEBT-03**: `src/lib/utils/FormHandle.ts` has `@ts-nocheck` removed and passes `astro check`/TypeScript strict mode
-- [ ] **TECHDEBT-04**: The empty `case-study-5`/`case-study-6` placeholder stubs are not reachable by direct URL while still `draft: true`
+- [x] **TECHDEBT-04**: The empty `case-study-5`/`case-study-6` placeholder stubs are not reachable by direct URL while still `draft: true` — verified already satisfied by existing `draft`-filtering code, no change needed (see Phase 1 VERIFICATION.md)
 
 ## v2 Requirements
 
@@ -53,7 +53,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TECHDEBT-04 | Phase 1 | Pending |
+| TECHDEBT-04 | Phase 1 | Complete (already satisfied, no change) |
 | CONTENT-04 | Phase 2 | Pending |
 | CONTENT-05 | Phase 3 | Complete |
 | TECHDEBT-01 | Phase 3 | Complete |

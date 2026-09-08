@@ -13,9 +13,9 @@ This milestone closes out the remaining pre-launch/launch-quality punch list on 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Draft Placeholder Cleanup** - Stop the empty case-study-5/6 placeholder stubs from being reachable by direct URL
+- [x] **Phase 1: Draft Placeholder Cleanup** - Stop the empty case-study-5/6 placeholder stubs from being reachable by direct URL
 - [ ] **Phase 2: Social Sharing** - Add a proper OG image so shared links render correctly on social platforms
-- [ ] **Phase 3: Code & Content Hygiene** - Migrate legacy `.mdx` content to `.md`, remove dead French locale content, and fix the untyped FormHandle utility
+- [x] **Phase 3: Code & Content Hygiene** - Migrate legacy `.mdx` content to `.md`, remove dead French locale content, and fix the untyped FormHandle utility
 
 ## Phase Details
 
@@ -30,7 +30,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Requesting `/case-studies/case-study-6` (or its resolved slug) directly returns the same
   3. Neither page appears in the sitemap or any case-study listing (already true today — must remain true)
 
-**Plans**: TBD
+**Plans**: None needed — verified already satisfied by existing code (see `01-VERIFICATION.md`)
+
+**Outcome:** `getCollectionCTM()` in `themes/lumio/src/lib/contentParser.astro` already filters out `draft: true` entries in production builds, so `case-study-5`/`case-study-6` never get a static route generated at all. Confirmed empirically: `dist/case-studies/` contains only `vongo`, `ccrms`, `horizongo`, `inktix` after a production build. No code changes were needed. This corrects an earlier, inaccurate concern in `.planning/codebase/CONCERNS.md` that was based on reading `remove-draft-from-sitemap.mjs` in isolation.
 
 ### Phase 2: Social Sharing
 
@@ -70,6 +72,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Draft Placeholder Cleanup | 0/TBD | Not started | - |
+| 1. Draft Placeholder Cleanup | 0/0 (verified, no plans needed) | Complete | 2026-09-08 |
 | 2. Social Sharing | 0/TBD | Not started | - |
-| 3. Code & Content Hygiene | 3/3 | In Progress|  |
+| 3. Code & Content Hygiene | 3/3 | Complete | 2026-09-08 |
