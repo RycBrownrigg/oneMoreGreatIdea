@@ -65,7 +65,7 @@
   [settings.multilingual]
     enable               = true
     defaultLanguage      = "en"
-    disableLanguages     = ["fr"]
+    disableLanguages     = []
     showDefaultLangInUrl = false
 
   [settings.navigationButton]
