@@ -45,7 +45,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. `src/lib/utils/FormHandle.ts` has `@ts-nocheck` removed, passes `astro check`/TypeScript strict mode with zero errors, and the contact form still submits and resets correctly
   3. French locale content directories and any disabled-locale-only scripts/assets are removed from the repository
   4. `npm run build` completes with zero content-collection or type-checking errors/warnings
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Remove disabled French locale content, i18n/menu data, and locale-only tooling scripts (CONTENT-05)
+- [ ] 03-02-PLAN.md — Migrate 9 blog posts and 6 case studies from `.mdx` to `.md` with byte-identical rendered output (TECHDEBT-01, TECHDEBT-02)
+- [ ] 03-03-PLAN.md — Type `window.HSSelect` via an ambient declaration and remove the check suppression from FormHandle.ts (TECHDEBT-03)
 
 ## Progress
 
@@ -56,4 +61,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Draft Placeholder Cleanup | 0/TBD | Not started | - |
 | 2. Social Sharing | 0/TBD | Not started | - |
-| 3. Code & Content Hygiene | 0/TBD | Not started | - |
+| 3. Code & Content Hygiene | 0/3 | Planned | - |
