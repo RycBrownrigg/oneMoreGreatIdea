@@ -2,17 +2,17 @@
 gsd_state_version: 1.0
 current_phase: 3
 current_phase_name: Code & Content Hygiene
-status: executing
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-09-08T23:19:53.672Z"
+status: verifying
+stopped_at: Completed 03-03-PLAN.md (Phase 3 complete)
+last_updated: "2026-09-08T23:25:31.237Z"
 last_activity: 2026-09-08
 last_activity_desc: "Roadmap corrected after user feedback: domain canonicalization dropped (onemoregreatidea.com stays permanently separate from the askryc WordPress project), case-study-5/6 content and testimonials deferred to v2 (no content available). Roadmap collapsed from 4 phases to 3; user directed work to start on Phase 3 (Code & Content Hygiene) first."
-state_head: 3d2402eeca9ba9ba0ee612debe58ef68c2f118f5
+state_head: c46c7a2db121f5386c6e2efe89ae0e7d93e3ff1f
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 
 Phase: 3 of 3 (Code & Content Hygiene)
 Plan: 3 of 3 in current phase
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-09-08 — Roadmap corrected after user feedback: domain canonicalization dropped (onemoregreatidea.com stays permanently separate from the askryc WordPress project), case-study-5/6 content and testimonials deferred to v2 (no content available). Roadmap collapsed from 4 phases to 3; user directed work to start on Phase 3 (Code & Content Hygiene) first.
 
 Progress: [░░░░░░░░░░] 0%
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 |------|----------|-------|-------|
 | Phase 03 P01 | 13 min | 3 tasks | 91 files |
 | Phase 03 P02 | 93 min | 3 tasks | 15 files |
+| Phase 03 P03 | ~20 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,7 @@ Recent decisions affecting current work:
 - User directed work to proceed on Phase 3 (Code & Content Hygiene) immediately (2026-09-08 session)
 - [Phase 3]: Removed 86 tracked French-locale artifacts and 2 French-only tooling scripts from themes/lumio/; disableLanguages set to []; 45-route byte-parity proven before/after (CONTENT-05)
 - [Phase 3]: Migrated 9 blog posts and 6 case studies from .mdx to .md via git mv; accepted a documented zero-impact byte-parity exception for 4 pages (MDX-vs-Markdown serializer escaping differences: inline-code entity escaping and void-element self-closing style) rather than rewriting content or changing astro.config.mjs sitewide (TECHDEBT-01, TECHDEBT-02)
+- [Phase 3]: TECHDEBT-03 resolved: FormHandle.ts "@ts-nocheck" removed via a new ambient .d.ts typing window.HSSelect against the real @preline/select class; one pre-existing, out-of-scope as-any cast in netlifySubmit left untouched per plan operating rules
 
 ### Pending Todos
 
@@ -100,6 +102,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-08T23:19:34.860Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-09-08T23:25:31.222Z
+Stopped at: Completed 03-03-PLAN.md (Phase 3 complete)
 Resume file: None
