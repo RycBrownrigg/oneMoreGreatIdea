@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { markdownify } from "./textConverter";
 
 /**
@@ -17,13 +16,12 @@ export function formReset(form: HTMLFormElement) {
     tag.classList.remove("success", "error");
   });
 
-  const selectTags = form?.querySelectorAll(
+  const selectTags = form?.querySelectorAll<HTMLSelectElement>(
     "[input-wrapper]:not(.hidden) select[data-hs-select]",
   );
 
-  selectTags?.forEach((tag) => {
-    const selectElement = tag as HTMLSelectElement;
-    const select = window.HSSelect.getInstance(tag);
+  selectTags?.forEach((selectElement) => {
+    const select = window.HSSelect.getInstance(selectElement);
     selectElement.selectedIndex = 0;
 
     if (select) {
