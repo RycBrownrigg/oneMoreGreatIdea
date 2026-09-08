@@ -2,11 +2,11 @@
 
 ## What This Is
 
-Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. This GSD project covers finishing the remaining pre-launch/launch-quality work rather than building the site from scratch — the core site is already live.
+Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. This GSD project covers finishing the remaining pre-launch/launch-quality work rather than building the site from scratch — the core site is already live.
 
 ## Core Value
 
-The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads — if a prospective client can't find the right domain, doesn't trust the content (placeholder testimonials, broken case studies), or the contact form fails, nothing else about the site matters.
+The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads — if a visitor doesn't trust the content or stumbles onto broken/empty pages, or the contact form fails, nothing else about the site matters.
 
 ## Business Context
 
@@ -27,17 +27,17 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 
 ### Active
 
-- [ ] Decide the canonical primary domain across onemoregreatidea.com / askryc.com / askryc.mt / askryc.net, point the remaining domains at the site, and update `config.toml`'s `baseUrl` and any certs accordingly
-- [ ] Produce real project screenshots/architecture diagrams for Vongo's other two case-study slots (case-study-5, case-study-6), replacing the current `draft: true` placeholders
-- [ ] Replace the 5 placeholder testimonials with real client/colleague testimonials
 - [ ] Add a proper OG image for social sharing
 - [ ] Remove unused/disabled French locale content (`npm run remove-multilingual`)
 - [ ] Migrate legacy `.mdx` content to `.md`: blog posts `post-1.mdx`–`post-9.mdx` and all six case studies (`case-study-1.mdx`–`case-study-6.mdx`) — eliminates a known latent `UnknownContentCollectionError` risk in this Astro 6 setup
 - [ ] Remove `@ts-nocheck` from `src/lib/utils/FormHandle.ts` (contact form — the site's primary lead-gen path) and add proper types
-- [ ] Prevent draft case-study placeholders (case-study-5, case-study-6) from being reachable by direct URL, not just hidden from sitemap/listings
+- [ ] Prevent the empty case-study-5/case-study-6 placeholder stubs from being reachable by direct URL, not just hidden from sitemap/listings
 
 ### Out of Scope
 
+- Domain canonicalization across onemoregreatidea.com/askryc.com/.mt/.net — onemoregreatidea.com stays its own dedicated Astro site permanently; askryc.com/.net/.mt are being converted to a separate WordPress project (`/Users/ryc/projects/askryc`), not handled here
+- Filling case-study-5/case-study-6 with real content — confirmed with Ryc (2026-09-08): only 4 real case studies exist (InkTix, CCRMS, HorizonGo, Vongo), all already live; the two extra slots are unused stubs with nothing to migrate. Revisit only if/when a 5th project is identified (tracked as v2 CONTENT-01/02)
+- Replacing the 5 placeholder testimonials — no real testimonials available yet (tracked as v2 CONTENT-03)
 - Full redesign or theme change — Lumio theme is settled; changes are content/config/cleanup, not a re-theme
 - CI/CD pipeline (GitHub Actions, automated `astro check`/test runs) — deploy is manual rsync and works; not a current priority
 - General test-coverage expansion beyond the FormHandle typing fix — deferred; build-time failures are an acceptable safety net for now
@@ -58,17 +58,19 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - **Content format**: New blog posts must be `.md`, never `.mdx` — `.mdx` triggers `UnknownContentCollectionError` in this Astro 6 deferred-render setup (this is also *why* legacy `.mdx` content is being migrated, not just newly avoided)
 - **Tech stack**: Astro 6, Tailwind CSS v4, Preline UI, Node >=22.12.0 — no framework changes in scope
 - **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages despite their config files existing in the repo
-- **Domain**: `baseUrl` in `config.toml` can only hold one canonical value at a time, but the same static build is meant to serve onemoregreatidea.com, askryc.com, askryc.mt, and askryc.net — the domain decision blocks any final baseUrl/cert work
+- **Domain**: onemoregreatidea.com is permanently its own domain/site for this project — no shared `baseUrl` or cert coordination with askryc.com/.mt/.net is needed here
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Scope this GSD project around finishing existing launch items rather than new features | Site is already live; remaining work is domain finalization, content completeness, and known tech-debt cleanup | — Pending |
+| Scope this GSD project around finishing existing launch items rather than new features | Site is already live; remaining work is content completeness and known tech-debt cleanup | — Pending |
 | Initialize git at repo root (2026-09-08) | GSD's planning/execution workflow commits PLAN.md/PROJECT.md/etc.; site previously had no version control | — Pending |
 | Include `.mdx`→`.md` migration in scope | Codebase map found 15 files (9 blog posts + 6 case studies) still on the known-risky `.mdx` format, working "by accident" | — Pending |
-| Fix `@ts-nocheck` on FormHandle.ts and hide draft case studies from direct URL | Contact form is the primary lead-gen mechanism; draft placeholders shouldn't be publicly reachable | — Pending |
+| Fix `@ts-nocheck` on FormHandle.ts and hide empty case-study stubs from direct URL | Contact form is the primary lead-gen mechanism; empty placeholder pages shouldn't be publicly reachable | — Pending |
 | Defer CI/CD, general test coverage, and unused deploy-config cleanup | Not launch-blocking; manual rsync deploy works today | — Pending |
+| onemoregreatidea.com stays permanently separate from askryc.com/.net/.mt (2026-09-08) | Ryc will run two independent projects: this Astro site on its own domain, and a separate WordPress rebuild for the askryc domains (`/Users/ryc/projects/askryc`) | ✓ Good |
+| Defer case-study-5/6 real content and real testimonials to v2 (2026-09-08) | Confirmed with Ryc: no additional case-study content or real testimonials exist yet to fill these in | ✓ Good |
 
 ## Evolution
 
