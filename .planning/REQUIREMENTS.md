@@ -54,23 +54,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DOMAIN-01 | TBD | Pending |
-| DOMAIN-02 | TBD | Pending |
-| CONTENT-01 | TBD | Pending |
-| CONTENT-02 | TBD | Pending |
-| CONTENT-03 | TBD | Pending |
-| CONTENT-04 | TBD | Pending |
-| CONTENT-05 | TBD | Pending |
-| TECHDEBT-01 | TBD | Pending |
-| TECHDEBT-02 | TBD | Pending |
-| TECHDEBT-03 | TBD | Pending |
-| TECHDEBT-04 | TBD | Pending |
+| DOMAIN-01 | Phase 1 | Pending |
+| DOMAIN-02 | Phase 1 | Pending |
+| CONTENT-01 | Phase 2 | Pending |
+| CONTENT-02 | Phase 2 | Pending |
+| CONTENT-03 | Phase 3 | Pending |
+| CONTENT-04 | Phase 3 | Pending |
+| CONTENT-05 | Phase 4 | Pending |
+| TECHDEBT-01 | Phase 4 | Pending |
+| TECHDEBT-02 | Phase 4 | Pending |
+| TECHDEBT-03 | Phase 4 | Pending |
+| TECHDEBT-04 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 11 total
-- Mapped to phases: 0 (pending roadmap creation)
-- Unmapped: 11 ⚠️
+- Mapped to phases: 11
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-09-08*
-*Last updated: 2026-09-08 after initialization*
+*Last updated: 2026-09-08 after roadmap creation*
