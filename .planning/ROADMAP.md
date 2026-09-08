@@ -7,6 +7,7 @@ This milestone closes out the remaining pre-launch/launch-quality punch list on 
 ## Phases
 
 **Phase Numbering:**
+
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
@@ -19,36 +20,46 @@ Decimal phases appear between their surrounding integers in numeric order.
 ## Phase Details
 
 ### Phase 1: Draft Placeholder Cleanup
+
 **Goal**: The two empty, unfinished case-study placeholder pages cannot be reached by a visitor who guesses or is given their URL
 **Depends on**: Nothing (first phase)
 **Requirements**: TECHDEBT-04
 **Success Criteria** (what must be TRUE):
+
   1. Requesting `/case-studies/case-study-5` (or its resolved slug) directly returns a 404, or the route is excluded from the build entirely
   2. Requesting `/case-studies/case-study-6` (or its resolved slug) directly returns the same
   3. Neither page appears in the sitemap or any case-study listing (already true today — must remain true)
+
 **Plans**: TBD
 
 ### Phase 2: Social Sharing
+
 **Goal**: Sharing a link to the site on social platforms produces a correct, on-brand preview instead of a missing or default image
 **Depends on**: Nothing (independent of Phase 1)
 **Requirements**: CONTENT-04
 **Success Criteria** (what must be TRUE):
+
   1. Sharing any site URL on social platforms (e.g. Twitter/X, LinkedIn, Facebook) renders a custom, on-brand preview image
+
 **Plans**: TBD
 
 ### Phase 3: Code & Content Hygiene
+
 **Goal**: The codebase's content-format and type-safety debt is eliminated, and dead locale content is removed
 **Depends on**: Nothing (independent cleanup work)
 **Requirements**: CONTENT-05, TECHDEBT-01, TECHDEBT-02, TECHDEBT-03
 **Success Criteria** (what must be TRUE):
+
   1. No `.mdx` files remain in `src/content/blog/` or `src/content/case-studies/`; every migrated post and case study is `.md` and renders identically to its pre-migration output (same body content, same shortcode functionality, no content loss)
   2. `src/lib/utils/FormHandle.ts` has `@ts-nocheck` removed, passes `astro check`/TypeScript strict mode with zero errors, and the contact form still submits and resets correctly
   3. French locale content directories and any disabled-locale-only scripts/assets are removed from the repository
   4. `npm run build` completes with zero content-collection or type-checking errors/warnings
-**Plans**: 3 plans
+
+**Plans**: 1/3 plans executed
 
 Plans:
-- [ ] 03-01-PLAN.md — Remove disabled French locale content, i18n/menu data, and locale-only tooling scripts (CONTENT-05)
+
+- [x] 03-01-PLAN.md — Remove disabled French locale content, i18n/menu data, and locale-only tooling scripts (CONTENT-05)
 - [ ] 03-02-PLAN.md — Migrate 9 blog posts and 6 case studies from `.mdx` to `.md` with byte-identical rendered output (TECHDEBT-01, TECHDEBT-02)
 - [ ] 03-03-PLAN.md — Type `window.HSSelect` via an ambient declaration and remove the check suppression from FormHandle.ts (TECHDEBT-03)
 
@@ -61,4 +72,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Draft Placeholder Cleanup | 0/TBD | Not started | - |
 | 2. Social Sharing | 0/TBD | Not started | - |
-| 3. Code & Content Hygiene | 0/3 | Planned | - |
+| 3. Code & Content Hygiene | 1/3 | In Progress|  |

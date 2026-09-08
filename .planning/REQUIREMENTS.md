@@ -10,7 +10,7 @@ Requirements for this milestone (finishing pre-launch/launch-quality work on the
 ### Content
 
 - [ ] **CONTENT-04**: The site has a proper OG image so social shares render correctly
-- [ ] **CONTENT-05**: Disabled French locale content is removed from the codebase
+- [x] **CONTENT-05**: Disabled French locale content is removed from the codebase
 
 ### Tech Debt
 
@@ -55,12 +55,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | TECHDEBT-04 | Phase 1 | Pending |
 | CONTENT-04 | Phase 2 | Pending |
-| CONTENT-05 | Phase 3 | Pending |
+| CONTENT-05 | Phase 3 | Complete |
 | TECHDEBT-01 | Phase 3 | Pending |
 | TECHDEBT-02 | Phase 3 | Pending |
 | TECHDEBT-03 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 6 total
 - Mapped to phases: 6
 - Unmapped: 0 ✓
