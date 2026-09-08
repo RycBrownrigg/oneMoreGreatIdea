@@ -55,12 +55,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. French locale content directories and any disabled-locale-only scripts/assets are removed from the repository
   4. `npm run build` completes with zero content-collection or type-checking errors/warnings
 
-**Plans**: 1/3 plans executed
+**Plans**: 2/3 plans executed
 
 Plans:
 
 - [x] 03-01-PLAN.md — Remove disabled French locale content, i18n/menu data, and locale-only tooling scripts (CONTENT-05)
-- [ ] 03-02-PLAN.md — Migrate 9 blog posts and 6 case studies from `.mdx` to `.md` with byte-identical rendered output (TECHDEBT-01, TECHDEBT-02)
+- [x] 03-02-PLAN.md — Migrate 9 blog posts and 6 case studies from `.mdx` to `.md` with byte-identical rendered output (TECHDEBT-01, TECHDEBT-02)
 - [ ] 03-03-PLAN.md — Type `window.HSSelect` via an ambient declaration and remove the check suppression from FormHandle.ts (TECHDEBT-03)
 
 ## Progress
@@ -72,4 +72,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Draft Placeholder Cleanup | 0/TBD | Not started | - |
 | 2. Social Sharing | 0/TBD | Not started | - |
-| 3. Code & Content Hygiene | 1/3 | In Progress|  |
+| 3. Code & Content Hygiene | 2/3 | In Progress|  |
