@@ -9,7 +9,7 @@ items:
   - "Technical Due Diligence"
   - "XCM Cross-Chain"
   - "Fractional CTO"
-  - "Claude / GSD"
+  - "Claude/GSD Consultation"
   - "OTT Architecture"
   - "Polkadot / Substrate"
   - "DRM & Content Rights"
@@ -18,7 +18,7 @@ items:
   - "Technical Due Diligence"
   - "XCM Cross-Chain"
   - "Fractional CTO"
-  - "Claude / GSD"
+  - "Claude/GSD Consultation"
 marquee:
   elementWidthAuto: true
   pauseOnHover: true
