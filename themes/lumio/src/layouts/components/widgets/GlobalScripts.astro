@@ -261,6 +261,7 @@
         ).then((module) => {
           if (!module) return;
           const { default: HSSelect } = module;
+          window.HSSelect = HSSelect;
           HSSelect.autoInit();
         }),
       );
