@@ -79,11 +79,12 @@ Recent decisions affecting current work:
 - [Phase 1]: TECHDEBT-04 verified already satisfied — `getCollectionCTM()` in contentParser.astro filters `draft: true` entries in production before `getStaticPaths()` runs, so case-study-5/6 never get a route generated. Confirmed empirically against `dist/case-studies/` output. No code change made. Corrected an inaccurate CONCERNS.md entry that predated this check.
 - [Phase 2]: CONTENT-04 resolved — `og:image`/`twitter:image` meta-tag code already existed and worked (OpenGraph.astro + config.toml), the only gap was the missing image file itself. Generated a 1200x630 branded composite (RBrownrigg-Head-shot + name + "PRINCIPAL / OTT, WEB3 AND AI / ARCHITECT" tagline on the #2529ff brand background) via a sharp script, reviewed and approved by Ryc before placing at `themes/lumio/public/images/og-image.jpg`. Verified in production build.
 
+- [Phase 3, post-verification]: Contact form human check (2026-09-08) found a real pre-existing bug — `window.HSSelect` was never assigned anywhere in the codebase, so every successful submit threw inside `formReset()`, silently caught and displayed as a false "Oops!" error while the email actually sent fine (confirmed via curl). Fixed by assigning `window.HSSelect = HSSelect` in both `ContactForm.astro` and `GlobalScripts.astro` (commit `441ecab`). Live-confirmed: success message now displays correctly and the dropdown visually resets. Phase 3 VERIFICATION.md updated from `human_needed`/4-5 to `passed`/5-5.
+
 ### Pending Todos
 
 - Nothing done yet has been deployed to the live site (onemoregreatidea.com) — `themes/lumio/deploy.sh` (npm run build + rsync --delete) needs to be run by the user when ready; `--delete` correctly handles removed content (French pages) and unchanged routes (mdx→md rename didn't change any URLs)
-- Contact form manual browser check still outstanding (Phase 3, TECHDEBT-03) — dropdown, submission, and reset need human verification; no agent has browser access
-- All 3 v1 phases are now complete — consider a milestone close (`/gsd-complete-milestone`) once the user has done the contact-form check and deployed
+- All 3 v1 phases are now complete and fully verified (including the contact-form human check) — consider a milestone close (`/gsd-complete-milestone`) once the user deploys
 
 ### Blockers/Concerns
 

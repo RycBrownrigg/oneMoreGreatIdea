@@ -1,10 +1,11 @@
 ---
 phase: 03-code-content-hygiene
 verified: 2026-09-08T17:30:00Z
-status: human_needed
-score: 4/5 must-haves verified
-behavior_unverified: 1
+status: passed
+score: 5/5 must-haves verified
+behavior_unverified: 0
 overrides_applied: 0
+addendum: "2026-09-08T19:05:00Z — human verification completed; found and fixed a pre-existing window.HSSelect bug (commit 441ecab); status updated from human_needed to passed"
 behavior_unverified_items:
   - truth: "The contact form still submits and resets correctly (Phase 3 success criterion 2, second clause)"
     test: "Serve themes/lumio/dist (e.g. npx --no-install http-server dist -p 4399), open /contact/, fill all required fields including the Preline select dropdown, submit, and observe the result"
@@ -122,5 +123,20 @@ No gaps found. All four ROADMAP success criteria for Phase 3 are supported by in
 
 ---
 
+## Addendum: Human Verification Completed 2026-09-08 — real bug found and fixed
+
+The outstanding human verification item above was completed live with Ryc after this report was written. It did not simply confirm behavior — it **found a genuine pre-existing bug**:
+
+`window.HSSelect` was never assigned anywhere in the codebase (only ever imported as a local binding in `ContactForm.astro`/`GlobalScripts.astro`). Every successful contact-form submission threw `TypeError: Cannot read properties of undefined (reading 'getInstance')` inside `formReset()`, which `formSubmit()`'s `.catch()` silently swallowed and converted into a false "Oops! There was a problem submitting your form." message — overwriting the correct success message. Confirmed via direct `curl` calls to formsubmit.co's AJAX endpoint that submissions were genuinely being accepted the entire time; this was purely a UI false-negative, not a delivery failure.
+
+**Fix (commit `441ecab`):** added `window.HSSelect = HSSelect;` right after the dynamic import resolves, in both `ContactForm.astro` and `GlobalScripts.astro`. Rebuilt (`astro-check`: 0/0/0, `npm run build`: exit 0, 45 routes), and confirmed live: dropdown now visibly resets to its placeholder after a successful submit, and the correct success message displays.
+
+**Updated Truth #3:** ✓ VERIFIED (was ⚠️ PRESENT_BEHAVIOR_UNVERIFIED). **Updated Score: 5/5 truths verified.** **Updated Status: PASSED** (was `human_needed`).
+
+Full diagnostic narrative recorded in `03-03-SUMMARY.md`'s "Human Check — COMPLETED" section.
+
+---
+
 _Verified: 2026-09-08T17:30:00Z_
 _Verifier: Claude (gsd-verifier)_
+_Addendum: 2026-09-08T19:05:00Z — human verification completed, bug found and fixed, status updated to PASSED_

@@ -62,7 +62,23 @@ No auth gates, no bugs, no missing functionality encountered. `npm run astro-che
 
 None — this plan is a pure type-safety fix with no new UI surface, no new data source, and no placeholder values.
 
-## Human Check Required (not completed in this session)
+## Human Check — COMPLETED 2026-09-08, found and fixed a real pre-existing bug
+
+The human check below was performed live with Ryc after this plan's execution session. It caught a genuine, pre-existing runtime bug that static analysis alone had missed:
+
+**Bug found:** `window.HSSelect` was never assigned anywhere in the codebase — `@preline/select` was only ever imported as a local module binding in `ContactForm.astro` and `GlobalScripts.astro` (`const [{ default: HSSelect }, ...] = await Promise.all([import("@preline/select"), ...])`) and initialized via `HSSelect.autoInit()`, but never attached to `window`. This meant `FormHandle.ts`'s `formReset()` — which calls `window.HSSelect.getInstance(selectElement)` on every successful submit — always threw `TypeError: Cannot read properties of undefined (reading 'getInstance')`.
+
+**Why it went unnoticed:** `formSubmit()`'s `.catch()` block swallowed that thrown error silently (no `console.error`, just a generic user-facing message), and because the throw happened *after* the success message was already set, the catch handler's fallback `setMessage("Oops! There was a problem submitting your form.", ...)` overwrote it. The net effect: **every successful form submission was reported to the visitor as a failure**, and the dropdown never visually reset. Verified via `curl` directly against formsubmit.co's AJAX endpoint that submissions were genuinely being accepted and delivered the entire time — this was a false-negative in the UI, not a delivery problem.
+
+**Likely origin:** This is almost certainly the real reason `FormHandle.ts` originally had `@ts-nocheck` — silencing the type error on `window.HSSelect` instead of fixing the missing global assignment. Removing `@ts-nocheck` (this plan's actual task) surfaced the type error, we added an ambient declaration asserting the global *would* exist, but didn't verify at runtime that anything actually assigned it — which is exactly what the mandatory human-check step exists to catch.
+
+**Fix applied** (commit `441ecab`): added `window.HSSelect = HSSelect;` immediately after the dynamic import resolves, in both `ContactForm.astro` and `GlobalScripts.astro`. Rebuilt, `astro-check` still 0/0/0, and confirmed live in the browser: dropdown now correctly resets to its placeholder after a successful submit, and the real success message ("Thanks — I'll be in touch within one business day.") displays instead of the false "Oops!" error.
+
+**Diagnostic path (for future reference):** extension noise (Grammarly, a crypto wallet extension) cluttered the console on first checks; testing in Incognito with a filtered console surfaced nothing because the actual error was being swallowed without logging. Temporarily adding `console.error(error)` inside the `.catch()` block, rebuilding, and reproducing once more revealed the real exception and its stack trace, which pointed directly at `getInstance` being called on `undefined`.
+
+---
+
+### Original (pre-fix) human-check request, kept for record:
 
 The plan's Task 2 `<human-check>` block requires driving a real browser against the built site to confirm the contact form's end-to-end submit-and-reset cycle. **This was not performed in this execution session** — there was no interactive browser available to this agent, consistent with the orchestrator's explicit instruction that it could not drive a browser either. Everything programmatically verifiable was checked (see "What Was Built" and the verification table below); the following four items still require a human, in a real browser, before this plan should be considered fully trusted:
 
