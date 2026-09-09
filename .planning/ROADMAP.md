@@ -14,7 +14,7 @@ This milestone closes out the remaining pre-launch/launch-quality punch list on 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Draft Placeholder Cleanup** - Stop the empty case-study-5/6 placeholder stubs from being reachable by direct URL
-- [ ] **Phase 2: Social Sharing** - Add a proper OG image so shared links render correctly on social platforms
+- [x] **Phase 2: Social Sharing** - Add a proper OG image so shared links render correctly on social platforms
 - [x] **Phase 3: Code & Content Hygiene** - Migrate legacy `.mdx` content to `.md`, remove dead French locale content, and fix the untyped FormHandle utility
 
 ## Phase Details
@@ -43,7 +43,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
   1. Sharing any site URL on social platforms (e.g. Twitter/X, LinkedIn, Facebook) renders a custom, on-brand preview image
 
-**Plans**: TBD
+**Plans**: None needed — the `og:image`/`twitter:image` meta-tag plumbing (`OpenGraph.astro`, `config.toml`) already existed and worked correctly; the only gap was the missing `/images/og-image.jpg` file itself.
+
+**Outcome:** Generated a 1200×630 branded OG image (headshot + name + tagline on the brand blue background, matching the homepage hero copy) via a `sharp`-based composite script, reviewed and approved by Ryc, placed at `themes/lumio/public/images/og-image.jpg`. Verified in a production build: `og:image`/`twitter:image` meta tags render `https://onemoregreatidea.com/images/og-image.jpg`, and the file is present in `dist/images/`.
 
 ### Phase 3: Code & Content Hygiene
 
@@ -73,5 +75,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Draft Placeholder Cleanup | 0/0 (verified, no plans needed) | Complete | 2026-09-08 |
-| 2. Social Sharing | 0/TBD | Not started | - |
+| 2. Social Sharing | 0/0 (no plan needed) | Complete | 2026-09-08 |
 | 3. Code & Content Hygiene | 3/3 | Complete | 2026-09-08 |

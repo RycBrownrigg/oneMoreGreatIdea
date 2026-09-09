@@ -1,19 +1,19 @@
 ---
 gsd_state_version: 1.0
-current_phase: 2
-current_phase_name: Social Sharing
-status: planning
-stopped_at: Phase 1 verified complete (no code change needed); Phase 3 complete
-last_updated: "2026-09-08T23:40:00.000Z"
+current_phase: 3
+current_phase_name: Code & Content Hygiene
+status: complete
+stopped_at: All 3 phases complete
+last_updated: "2026-09-08T18:05:00.000Z"
 last_activity: 2026-09-08
-last_activity_desc: "Phase 1 (Draft Placeholder Cleanup) verified already satisfied by existing draft-filtering code — no plans/execution needed, confirmed empirically against dist/ build output. Phase 3 (Code & Content Hygiene) complete. Only Phase 2 (Social Sharing / OG image) remains unstarted."
+last_activity_desc: "Phase 2 (Social Sharing) complete: generated a branded 1200x630 OG image (headshot + name + tagline), reviewed and approved by Ryc, placed at themes/lumio/public/images/og-image.jpg, verified in a production build (og:image/twitter:image meta tags resolve correctly, file present in dist/). All 3 v1 phases now complete."
 state_head: c46c7a2db121f5386c6e2efe89ae0e7d93e3ff1f
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 3
   completed_plans: 3
-  percent: 67
+  percent: 100
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-09-08)
 
 **Core value:** The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads.
-**Current focus:** Phase 2 - Social Sharing
+**Current focus:** All v1 phases complete — milestone ready for review/deploy
 
 ## Current Position
 
-Phase: 2 of 3 (Social Sharing) — not yet planned
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-09-08 — Phase 1 verified already satisfied by existing code (no plans needed); Phase 3 complete and independently verified (one outstanding manual browser check of the contact form remains for the user). Only Phase 2 (OG image) is left unstarted.
+Phase: 3 of 3 — all phases complete
+Plan: N/A
+Status: Milestone complete, not yet deployed
+Last activity: 2026-09-08 — Phase 2 (OG image) completed and verified. All 3 roadmap phases (Draft Placeholder Cleanup, Social Sharing, Code & Content Hygiene) are now complete. Nothing has been deployed to the live site yet.
 
-Progress: [██████░░░░] 67%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -77,11 +77,13 @@ Recent decisions affecting current work:
 - [Phase 3]: Migrated 9 blog posts and 6 case studies from .mdx to .md via git mv; accepted a documented zero-impact byte-parity exception for 4 pages (MDX-vs-Markdown serializer escaping differences: inline-code entity escaping and void-element self-closing style) rather than rewriting content or changing astro.config.mjs sitewide (TECHDEBT-01, TECHDEBT-02)
 - [Phase 3]: TECHDEBT-03 resolved: FormHandle.ts "@ts-nocheck" removed via a new ambient .d.ts typing window.HSSelect against the real @preline/select class; one pre-existing, out-of-scope as-any cast in netlifySubmit left untouched per plan operating rules
 - [Phase 1]: TECHDEBT-04 verified already satisfied — `getCollectionCTM()` in contentParser.astro filters `draft: true` entries in production before `getStaticPaths()` runs, so case-study-5/6 never get a route generated. Confirmed empirically against `dist/case-studies/` output. No code change made. Corrected an inaccurate CONCERNS.md entry that predated this check.
+- [Phase 2]: CONTENT-04 resolved — `og:image`/`twitter:image` meta-tag code already existed and worked (OpenGraph.astro + config.toml), the only gap was the missing image file itself. Generated a 1200x630 branded composite (RBrownrigg-Head-shot + name + "PRINCIPAL / OTT, WEB3 AND AI / ARCHITECT" tagline on the #2529ff brand background) via a sharp script, reviewed and approved by Ryc before placing at `themes/lumio/public/images/og-image.jpg`. Verified in production build.
 
 ### Pending Todos
 
 - Nothing done yet has been deployed to the live site (onemoregreatidea.com) — `themes/lumio/deploy.sh` (npm run build + rsync --delete) needs to be run by the user when ready; `--delete` correctly handles removed content (French pages) and unchanged routes (mdx→md rename didn't change any URLs)
 - Contact form manual browser check still outstanding (Phase 3, TECHDEBT-03) — dropdown, submission, and reset need human verification; no agent has browser access
+- All 3 v1 phases are now complete — consider a milestone close (`/gsd-complete-milestone`) once the user has done the contact-form check and deployed
 
 ### Blockers/Concerns
 
@@ -103,6 +105,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-08T23:40:00.000Z
-Stopped at: Phase 1 verified complete (no execution needed); Phase 3 complete; Phase 2 (Social Sharing / OG image) not yet planned
+Last session: 2026-09-08T18:05:00.000Z
+Stopped at: All 3 phases complete (Phase 1 verified/no-change, Phase 2 OG image generated+approved+placed, Phase 3 executed). Milestone ready to close pending user's contact-form check and deploy.
 Resume file: None
