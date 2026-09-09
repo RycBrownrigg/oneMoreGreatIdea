@@ -83,8 +83,19 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Nothing done yet has been deployed to the live site (onemoregreatidea.com) — `themes/lumio/deploy.sh` (npm run build + rsync --delete) needs to be run by the user when ready; `--delete` correctly handles removed content (French pages) and unchanged routes (mdx→md rename didn't change any URLs)
-- All 3 v1 phases are now complete and fully verified (including the contact-form human check) — consider a milestone close (`/gsd-complete-milestone`) once the user deploys
+- Milestone complete and deployed — consider `/gsd-complete-milestone` to formally close it out
+
+### Deployed 2026-09-08
+
+All milestone work is now live at https://onemoregreatidea.com, confirmed via direct curl checks:
+- Homepage renders with the updated marquee ticker ("Claude/GSD Consultation")
+- New OG image live at `/images/og-image.jpg` (200)
+- Contact form dropdown includes "Claude/GSD Consultation" option
+- `/fr/` returns 404 (French content fully removed)
+- `/case-studies/case-study-5/` returns 404 (draft placeholder correctly unreachable)
+- `/case-studies/vongo/` (real case study) still renders correctly (200)
+
+Also fixed `deploy.sh` itself during this deploy: it had leftover instructional prose (from whenever it was authored) sitting as literal trailing lines in the script, which bash executed as garbage `chmod` commands, causing the script to always exit 1 even on a fully successful deploy. Removed; the actual build+rsync logic was never affected.
 
 ### Blockers/Concerns
 
