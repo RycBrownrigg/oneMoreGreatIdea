@@ -1,0 +1,28 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": null,
+  "phases": [
+    {
+      "number": "1",
+      "name": "Draft Placeholder Cleanup",
+      "status": "pending"
+    },
+    {
+      "number": "2",
+      "name": "Social Sharing",
+      "status": "pending"
+    },
+    {
+      "number": "3",
+      "name": "Code & Content Hygiene",
+      "status": "in_progress"
+    }
+  ],
+  "next": {
+    "command": "/gsd:progress --next",
+    "label": "Advance to the next step (verify)",
+    "reason": "Phase 3 of 3 · 0% · ready to verify"
+  },
+  "updated_at": "2026-09-08T23:25:30.510Z"
+}
