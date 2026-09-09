@@ -54,6 +54,9 @@ form:
           - label: "Fractional CTO / Advisory Retainer"
             value: "Fractional CTO Advisory"
             selected: false
+          - label: "Claude/GSD Consultation"
+            value: "Claude/GSD Consultation"
+            selected: false
           - label: "Other / Not Sure Yet"
             value: "Other"
             selected: false
