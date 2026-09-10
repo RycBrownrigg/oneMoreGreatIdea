@@ -6,7 +6,7 @@ customSlug: "bmad-vs-gsd-where-each-wins-and-breaks"
 author: "Ryc Brownrigg"
 categories:
   - "AI"
-date: 2026-09-10T12:00:00Z
+date: 2026-09-09T12:00:00Z
 readTime: "5 min read"
 comments: 0
 draft: false
