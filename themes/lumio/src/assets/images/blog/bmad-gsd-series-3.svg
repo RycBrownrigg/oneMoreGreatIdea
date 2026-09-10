@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0E27"/>
+      <stop offset="55%" stop-color="#0F1A3D"/>
+      <stop offset="100%" stop-color="#131B3A"/>
+    </linearGradient>
+    <linearGradient id="footerBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <g stroke="#2E3A5C" stroke-width="1.5" opacity="0.5">
+    <line x1="0" y1="560" x2="1200" y2="560"/>
+    <line x1="0" y1="580" x2="1200" y2="580"/>
+  </g>
+  <g fill="#22D3EE" opacity="0.6">
+    <circle cx="150" cy="560" r="2.5"/>
+    <circle cx="330" cy="560" r="2.5"/>
+    <circle cx="510" cy="560" r="2.5"/>
+    <circle cx="690" cy="580" r="2.5"/>
+    <circle cx="870" cy="580" r="2.5"/>
+    <circle cx="1050" cy="580" r="2.5"/>
+  </g>
+
+  <!-- balance scale -->
+  <line x1="880" y1="180" x2="880" y2="470" stroke="#8B98C4" stroke-width="4"/>
+  <path d="M 845 470 L 915 470 L 895 500 L 865 500 Z" fill="#3B4A72"/>
+  <line x1="760" y1="220" x2="1000" y2="220" stroke="#8B98C4" stroke-width="4"/>
+  <circle cx="880" cy="220" r="8" fill="#8B98C4"/>
+
+  <!-- left pan: BMad -->
+  <line x1="760" y1="220" x2="760" y2="290" stroke="#7A4A2E" stroke-width="2"/>
+  <ellipse cx="760" cy="308" rx="42" ry="18" fill="#FB923C"/>
+  <circle cx="705" cy="270" r="16" fill="#131B3A" stroke="#FDBA74" stroke-width="2.5"/>
+  <text x="705" y="277" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#FDBA74">+</text>
+  <circle cx="815" cy="270" r="16" fill="#131B3A" stroke="#FDBA74" stroke-width="2.5"/>
+  <text x="815" y="277" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#FDBA74">&#8722;</text>
+  <text x="760" y="345" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#FDBA74">BMAD</text>
+
+  <!-- right pan: GSD -->
+  <line x1="1000" y1="220" x2="1000" y2="290" stroke="#1B5E6B" stroke-width="2"/>
+  <ellipse cx="1000" cy="308" rx="42" ry="18" fill="#22D3EE"/>
+  <circle cx="945" cy="270" r="16" fill="#131B3A" stroke="#67E8F9" stroke-width="2.5"/>
+  <text x="945" y="277" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#67E8F9">+</text>
+  <circle cx="1055" cy="270" r="16" fill="#131B3A" stroke="#67E8F9" stroke-width="2.5"/>
+  <text x="1055" y="277" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#67E8F9">&#8722;</text>
+  <text x="1000" y="345" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="2" fill="#67E8F9">GSD</text>
+
+  <!-- kicker -->
+  <text x="70" y="150" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4" fill="#22D3EE">BMad Method Vs GSD Core &#183; PART 3 OF 5</text>
+
+  <!-- title -->
+  <text x="70" y="306" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800" fill="#F8FAFC">Where Each One Wins,</text>
+  <text x="70" y="364" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800" fill="#F8FAFC">and Where It Breaks</text>
+
+  <!-- divider -->
+  <rect x="70" y="392" width="90" height="6" rx="3" fill="url(#footerBar)"/>
+
+  <!-- footer bar -->
+  <rect x="0" y="606" width="1200" height="24" fill="url(#footerBar)"/>
+
+  <g transform="translate(70, 540)">
+    <rect x="0" y="18" width="8" height="14" fill="#22D3EE"/>
+    <rect x="12" y="10" width="8" height="22" fill="#22D3EE"/>
+    <rect x="24" y="2" width="8" height="30" fill="#FB923C"/>
+    <text x="46" y="26" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#F8FAFC">AskRyc</text>
+  </g>
+</svg>
