@@ -2,11 +2,20 @@
 
 ## What This Is
 
-Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. This GSD project covers finishing the remaining pre-launch/launch-quality work rather than building the site from scratch — the core site is already live.
+Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. v1.0 closed out the remaining pre-launch/launch-quality punch list (draft-placeholder safety, social sharing, and legacy tech-debt cleanup) on the already-live site.
 
 ## Core Value
 
 The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads — if a visitor doesn't trust the content or stumbles onto broken/empty pages, or the contact form fails, nothing else about the site matters.
+
+## Current State (as of v1.0, shipped 2026-09-16)
+
+- Live at https://onemoregreatidea.com, static Astro 6 build deployed via manual rsync
+- All content is single-locale (English) `.md` — no `.mdx` in blog/case-studies, no French-locale artifacts
+- Contact form (formsubmit.co) confirmed working end-to-end in production, including the Preline select dropdown reset (window.HSSelect bug fixed)
+- OG image live for social sharing; case-study-5/6 draft placeholders confirmed unreachable by direct URL (404)
+- `FormHandle.ts` fully typed under `astro/tsconfigs/strict`, no `@ts-nocheck`
+- See `.planning/milestones/v1.0-ROADMAP.md` and `.planning/v1.0-MILESTONE-AUDIT.md` for full detail
 
 ## Business Context
 
@@ -23,15 +32,16 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - ✓ Homepage hero ("PRINCIPAL / OTT, WEB3 AND AI / ARCHITECT"), nav (Home/Services/Projects/About/Blog/Contact), tagline, credibility-section logos, headshots — existing
 - ✓ 4 service pages and 4 real project/case-study pages (InkTix, CCRMS, HorizonGo, Vongo) — existing
 - ✓ CCRMS blog series complete (Parts 0–6, posts 2 & 5–10) — existing
-- ✓ "AI" category added with "BMad Method vs GSD Core" series posts 11–12 published — existing
+- ✓ "AI" category added with "BMad Method vs GSD Core" series posts 11–13 published — existing
+- ✓ Proper OG image for social sharing (v1.0, CONTENT-04)
+- ✓ Disabled French locale content and tooling removed (v1.0, CONTENT-05)
+- ✓ Legacy `.mdx` blog posts and case studies migrated to `.md` (v1.0, TECHDEBT-01/02)
+- ✓ `FormHandle.ts` `@ts-nocheck` removed, proper types added (v1.0, TECHDEBT-03)
+- ✓ case-study-5/case-study-6 placeholder stubs confirmed unreachable by direct URL (v1.0, TECHDEBT-04)
 
 ### Active
 
-- [ ] Add a proper OG image for social sharing
-- [ ] Remove unused/disabled French locale content (`npm run remove-multilingual`)
-- [ ] Migrate legacy `.mdx` content to `.md`: blog posts `post-1.mdx`–`post-9.mdx` and all six case studies (`case-study-1.mdx`–`case-study-6.mdx`) — eliminates a known latent `UnknownContentCollectionError` risk in this Astro 6 setup
-- [ ] Remove `@ts-nocheck` from `src/lib/utils/FormHandle.ts` (contact form — the site's primary lead-gen path) and add proper types
-- [ ] Prevent the empty case-study-5/case-study-6 placeholder stubs from being reachable by direct URL, not just hidden from sitemap/listings
+_None — awaiting next milestone's requirements via `/gsd-new-milestone`._
 
 ### Out of Scope
 
@@ -39,9 +49,9 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - Filling case-study-5/case-study-6 with real content — confirmed with Ryc (2026-09-08): only 4 real case studies exist (InkTix, CCRMS, HorizonGo, Vongo), all already live; the two extra slots are unused stubs with nothing to migrate. Revisit only if/when a 5th project is identified (tracked as v2 CONTENT-01/02)
 - Replacing the 5 placeholder testimonials — no real testimonials available yet (tracked as v2 CONTENT-03)
 - Full redesign or theme change — Lumio theme is settled; changes are content/config/cleanup, not a re-theme
-- CI/CD pipeline (GitHub Actions, automated `astro check`/test runs) — deploy is manual rsync and works; not a current priority
-- General test-coverage expansion beyond the FormHandle typing fix — deferred; build-time failures are an acceptable safety net for now
-- Removing unused `netlify.toml`/`wrangler.toml`/`deploy:cf` — low-impact cleanup, not launch-blocking, can be revisited later
+- CI/CD pipeline (GitHub Actions, automated `astro check`/test runs) — deploy is manual rsync and works; not a current priority (tracked as v2 TECHDEBT-05)
+- General test-coverage expansion beyond the FormHandle typing fix — deferred; build-time failures are an acceptable safety net for now (tracked as v2 TECHDEBT-06)
+- Removing unused `netlify.toml`/`wrangler.toml`/`deploy:cf` — low-impact cleanup, not launch-blocking, can be revisited later (tracked as v2 TECHDEBT-07)
 
 ## Context
 
@@ -50,12 +60,11 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - Build: `npm run build` (from `themes/lumio/`) → static output in `themes/lumio/dist/`. Deploy: `rsync -avz --delete dist/ ryc@135.148.61.99:/var/www/projects/onemoregreatidea/`
 - `themes/lumio/.astro/config.generated.json` (compiled from `config.toml` by `scripts/toml-watcher.mjs`) is an implicit build dependency of `astro.config.mjs` and `src/content.config.ts` — always use the npm scripts (`dev`/`build`/`test`), never invoke `astro`/`jest` directly
 - Content collections (blog, services, case-studies) are registered under both a `config.toml`-driven folder name and a hardcoded canonical alias in `src/content.config.ts` — changing folder-name settings in `config.toml` requires auditing every `getCollection(...)` call site
-- Git was just initialized at the repo root for this project (2026-09-08); the site previously had no version control, only local disk + whatever was last rsynced to the VPS
 - Full codebase map available at `.planning/codebase/` (STACK.md, ARCHITECTURE.md, STRUCTURE.md, INTEGRATIONS.md, CONVENTIONS.md, TESTING.md, CONCERNS.md)
 
 ## Constraints
 
-- **Content format**: New blog posts must be `.md`, never `.mdx` — `.mdx` triggers `UnknownContentCollectionError` in this Astro 6 deferred-render setup (this is also *why* legacy `.mdx` content is being migrated, not just newly avoided)
+- **Content format**: New blog posts must be `.md`, never `.mdx` — `.mdx` triggers `UnknownContentCollectionError` in this Astro 6 deferred-render setup
 - **Tech stack**: Astro 6, Tailwind CSS v4, Preline UI, Node >=22.12.0 — no framework changes in scope
 - **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages despite their config files existing in the repo
 - **Domain**: onemoregreatidea.com is permanently its own domain/site for this project — no shared `baseUrl` or cert coordination with askryc.com/.mt/.net is needed here
@@ -64,11 +73,11 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Scope this GSD project around finishing existing launch items rather than new features | Site is already live; remaining work is content completeness and known tech-debt cleanup | — Pending |
-| Initialize git at repo root (2026-09-08) | GSD's planning/execution workflow commits PLAN.md/PROJECT.md/etc.; site previously had no version control | — Pending |
-| Include `.mdx`→`.md` migration in scope | Codebase map found 15 files (9 blog posts + 6 case studies) still on the known-risky `.mdx` format, working "by accident" | — Pending |
-| Fix `@ts-nocheck` on FormHandle.ts and hide empty case-study stubs from direct URL | Contact form is the primary lead-gen mechanism; empty placeholder pages shouldn't be publicly reachable | — Pending |
-| Defer CI/CD, general test coverage, and unused deploy-config cleanup | Not launch-blocking; manual rsync deploy works today | — Pending |
+| Scope this GSD project around finishing existing launch items rather than new features | Site is already live; remaining work is content completeness and known tech-debt cleanup | ✓ Good |
+| Initialize git at repo root (2026-09-08) | GSD's planning/execution workflow commits PLAN.md/PROJECT.md/etc.; site previously had no version control | ✓ Good |
+| Include `.mdx`→`.md` migration in scope | Codebase map found 15 files (9 blog posts + 6 case studies) still on the known-risky `.mdx` format, working "by accident" | ✓ Good — zero content loss, one documented byte-parity exception (serializer escaping only) |
+| Fix `@ts-nocheck` on FormHandle.ts and hide empty case-study stubs from direct URL | Contact form is the primary lead-gen mechanism; empty placeholder pages shouldn't be publicly reachable | ✓ Good — also surfaced and fixed a real production bug (window.HSSelect never assigned) |
+| Defer CI/CD, general test coverage, and unused deploy-config cleanup | Not launch-blocking; manual rsync deploy works today | ✓ Good — carried to v2 backlog |
 | onemoregreatidea.com stays permanently separate from askryc.com/.net/.mt (2026-09-08) | Ryc will run two independent projects: this Astro site on its own domain, and a separate WordPress rebuild for the askryc domains (`/Users/ryc/projects/askryc`) | ✓ Good |
 | Defer case-study-5/6 real content and real testimonials to v2 (2026-09-08) | Confirmed with Ryc: no additional case-study content or real testimonials exist yet to fill these in | ✓ Good |
 
@@ -90,4 +99,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-08 after initialization*
+*Last updated: 2026-09-16 after v1.0 milestone close*
