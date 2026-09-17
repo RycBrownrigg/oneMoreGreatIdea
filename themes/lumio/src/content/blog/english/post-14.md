@@ -6,7 +6,7 @@ customSlug: "bmad-vs-gsd-enterprise-tradeoffs-when-to-use-which"
 author: "Ryc Brownrigg"
 categories:
   - "AI"
-date: 2026-09-16T12:00:00Z
+date: 2026-09-15T12:00:00Z
 readTime: "5 min read"
 comments: 0
 draft: false
