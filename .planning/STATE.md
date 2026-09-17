@@ -4,9 +4,9 @@ current_phase: null
 current_phase_name: null
 status: milestone_complete
 stopped_at: "v1.0 milestone archived and tagged; awaiting next milestone"
-last_updated: "2026-09-16T00:00:00.000Z"
-last_activity: 2026-09-16
-last_activity_desc: "v1.0 milestone audited (passed, 6/6 requirements) and archived. ROADMAP.md/REQUIREMENTS.md moved to .planning/milestones/v1.0-*.md, PROJECT.md evolved with Current State section, MILESTONES.md created, git tagged v1.0."
+last_updated: "2026-09-17T00:00:00.000Z"
+last_activity: 2026-09-17
+last_activity_desc: "Completed quick task 260916-bby: published BMad vs GSD Series 4 blog post (post-14.md + header SVG), commit f9f0b46."
 state_head: null
 progress:
   total_phases: 0
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-09-16)
 Phase: None — between milestones
 Plan: N/A
 Status: v1.0 archived; awaiting next milestone
-Last activity: 2026-09-16 — v1.0 milestone audit passed (6/6 requirements, verified against live production site) and milestone archived.
+Last activity: 2026-09-17 — published BMad vs GSD Series 4 blog post via quick task 260916-bby.
 
 ## Accumulated Context
 
@@ -40,12 +40,18 @@ See PROJECT.md Key Decisions table for the full v1.0 decision log (all outcomes 
 
 ### Pending Todos
 
-None outstanding.
+- post-11.md's "The Series" index still renders Parts 3, 4, and 5 as plain bold text rather than links, even though Parts 3 and 4 are now both published — worth a small follow-up quick task
 
 ### Blockers/Concerns
 
 - There is a separate, unrelated GSD project at `/Users/ryc/projects/askryc` (WordPress rebuild for askryc.com/.net/.mt) — do not confuse its phases/roadmap with this project's
 - Astro content-layer cache (themes/lumio/.astro/ and node_modules/.astro/) does not self-invalidate on a content file rename/move — rebuild after any git mv of a content file with rm -rf themes/lumio/.astro node_modules/.astro node_modules/.vite first, or the build fails with a stale Rollup import error
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260916-bby | Publish BMad vs GSD Series 4 blog post (post-14.md + header SVG) | 2026-09-16 | f9f0b46 | [260916-bby-publish-new-blog-post-bmad-vs-gsd-series](./quick/260916-bby-publish-new-blog-post-bmad-vs-gsd-series/) |
 
 ## Deferred Items
 
@@ -63,6 +69,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-16T00:00:00.000Z
-Stopped at: v1.0 milestone closed and archived. Ready for `/gsd-new-milestone` when new scope is defined.
+Last session: 2026-09-17T00:00:00.000Z
+Stopped at: Quick task 260916-bby complete (Series 4 blog post published). Ready for next task or `/gsd-new-milestone`.
 Resume file: None
