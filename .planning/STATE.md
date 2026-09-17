@@ -1,19 +1,20 @@
 ---
 gsd_state_version: 1.0
-current_phase: null
+milestone: v1.0
 current_phase_name: null
 status: milestone_complete
-stopped_at: "v1.0 milestone archived and tagged; awaiting next milestone"
-last_updated: "2026-09-17T00:00:00.000Z"
+stopped_at: v1.0 milestone archived and tagged; awaiting next milestone
+last_updated: "2026-09-17T16:42:02.773Z"
 last_activity: 2026-09-17
 last_activity_desc: "Completed quick task 260916-bby: published BMad vs GSD Series 4 blog post (post-14.md + header SVG), commit f9f0b46."
-state_head: null
+state_head: 3e4c37bf11d2b2463e21a612594a39e2ac0a7425
 progress:
   total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
   percent: 0
+current_phase: null
 ---
 
 # Project State
@@ -52,6 +53,7 @@ See PROJECT.md Key Decisions table for the full v1.0 decision log (all outcomes 
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260916-bby | Publish BMad vs GSD Series 4 blog post (post-14.md + header SVG) | 2026-09-16 | f9f0b46 | [260916-bby-publish-new-blog-post-bmad-vs-gsd-series](./quick/260916-bby-publish-new-blog-post-bmad-vs-gsd-series/) |
+| 2 | fix: correct post-14 publish date to 2026-09-15 | 2026-09-17 | 3e4c37b | — |
 
 ## Deferred Items
 
