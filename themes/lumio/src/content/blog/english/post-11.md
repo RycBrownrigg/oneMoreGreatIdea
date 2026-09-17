@@ -45,9 +45,9 @@ Over the next four posts, I'll dig into that argument in depth. Here's where we'
 
 **[Part 2 — What BMad Method and GSD Core Actually Are](/blog/bmad-vs-gsd-what-bmad-and-gsd-are/)** cuts through the pitch decks and GitHub READMEs to explain how each framework works: BMad's specialist-agent roster and staged workflow, and GSD's context-isolated, wave-based execution loop.
 
-**Part 3 — Where Each One Wins, and Where It Breaks** is an honest strengths-and-weaknesses pass on both frameworks, including where BMad's process tax gets out of hand and where GSD's speed outruns product clarity.
+**[Part 3 — Where Each One Wins, and Where It Breaks](/blog/bmad-vs-gsd-where-each-wins-and-breaks/)** is an honest strengths-and-weaknesses pass on both frameworks, including where BMad's process tax gets out of hand and where GSD's speed outruns product clarity.
 
-**Part 4 — The Enterprise Tradeoffs, and When to Use Which** turns the comparison into decision rules: which one fits which kind of work and why most organizations should run both rather than crown one as the standard.
+**[Part 4 — The Enterprise Tradeoffs, and When to Use Which](/blog/bmad-vs-gsd-enterprise-tradeoffs-when-to-use-which/)** turns the comparison into decision rules: which one fits which kind of work and why most organizations should run both rather than crown one as the standard.
 
 **Part 5 — Risks, Controls, and the 90-Day Path to a Decision** closes the series with the guardrails leadership should require either way, plus the pilot plan I'd actually run to resolve this rather than arguing about it in a steering meeting.
 
