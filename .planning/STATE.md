@@ -4,10 +4,10 @@ milestone: v1.0
 current_phase_name: null
 status: milestone_complete
 stopped_at: v1.0 milestone archived and tagged; awaiting next milestone
-last_updated: "2026-09-17T16:42:02.773Z"
+last_updated: "2026-09-17T16:50:31.379Z"
 last_activity: 2026-09-17
 last_activity_desc: "Completed quick task 260916-bby: published BMad vs GSD Series 4 blog post (post-14.md + header SVG), commit f9f0b46."
-state_head: 3e4c37bf11d2b2463e21a612594a39e2ac0a7425
+state_head: bebafdc7367c5efc394b3daa5416874c15e9efba
 progress:
   total_phases: 0
   completed_phases: 0
@@ -41,7 +41,7 @@ See PROJECT.md Key Decisions table for the full v1.0 decision log (all outcomes 
 
 ### Pending Todos
 
-- post-11.md's "The Series" index still renders Parts 3, 4, and 5 as plain bold text rather than links, even though Parts 3 and 4 are now both published — worth a small follow-up quick task
+None outstanding.
 
 ### Blockers/Concerns
 
@@ -54,6 +54,7 @@ See PROJECT.md Key Decisions table for the full v1.0 decision log (all outcomes 
 |---|-------------|------|--------|-----------|
 | 260916-bby | Publish BMad vs GSD Series 4 blog post (post-14.md + header SVG) | 2026-09-16 | f9f0b46 | [260916-bby-publish-new-blog-post-bmad-vs-gsd-series](./quick/260916-bby-publish-new-blog-post-bmad-vs-gsd-series/) |
 | 2 | fix: correct post-14 publish date to 2026-09-15 | 2026-09-17 | 3e4c37b | — |
+| 3 | fix: link Part 3 and 4 in post-11 series index | 2026-09-17 | bebafdc | — |
 
 ## Deferred Items
 
