@@ -33,10 +33,20 @@ This is pure test-writing debt cleanup on already-existing, already-shipped code
 **Plans**: 4 plans
 
 Plans:
+**Wave 1**
+
 - [ ] 06-01-PLAN.md — Fix the Jest harness (`@/*` alias, bare `.astro/config.generated.json` import, `import.meta` under real ESM) and cover handleDraftPage, buildToc, navigationActive, JsonLdGenerator, absoluteUrl (tracer + expansion, Wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 06-02-PLAN.md — Cover generateTypeScale, readingTime, filteredEnabled (Wave 2)
 - [ ] 06-03-PLAN.md — Cover overrideObjects, removeEmptyKeys, uniqueIdGenerator (Wave 2)
 - [ ] 06-04-PLAN.md — Cover getRelatedContent, preline (Wave 2, phase completion)
+
+**Cross-cutting constraints:**
+
+- Running `npm --prefix themes/lumio run test:ci` after this plan still passes every suite from Plan 01 plus these 3 new suites, with zero regressions.
+- Deliberately breaking any one of these 3 modules' logic causes at least one new test in this plan to fail.
 
 **Notes:**
 
