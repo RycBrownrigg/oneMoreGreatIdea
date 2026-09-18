@@ -71,7 +71,6 @@ This repository's root (`/Users/ryc/projects/lumio2`) is NOT the Astro project r
 - `themes/lumio/astro.config.mjs` - Astro integrations (sitemap, MDX, AutoImport), i18n locales, markdown plugin pipeline, fonts
 - `themes/lumio/tsconfig.json` - strict TS, path aliases (`@/components/*` → `src/layouts/components/*`, `@/shortcodes/*` → `src/layouts/shortcodes/*`, `@/helpers/*` → `src/layouts/helpers/*`, `@/*` → `src/*`)
 - `themes/lumio/.prettierrc` - Prettier with `prettier-plugin-astro`, `prettier-plugin-toml`, `prettier-plugin-tailwindcss`; Astro files use `bracketSameLine: true`, `htmlWhitespaceSensitivity: ignore`
-- `themes/lumio/netlify.toml`, `themes/lumio/wrangler.toml` - present but deployment is actually via rsync to a VPS (135.148.61.99), not Netlify/Cloudflare Pages — these config files appear to be unused legacy/optional deploy targets from the Lumio theme template
 
 ## Platform Requirements
 
@@ -82,7 +81,7 @@ This repository's root (`/Users/ryc/projects/lumio2`) is NOT the Astro project r
 
 **Production:**
 - Static output only: `npm run build` (from `themes/lumio/`) produces `themes/lumio/dist/`
-- No server runtime required — output is deployed via rsync to a VPS and served as static files (not using the `netlify.toml`/`wrangler.toml` targets present in the repo)
+- No server runtime required — output is deployed via rsync to a VPS and served as static files. GitHub Actions CI (v1.1) runs `astro check` + tests on push/PR but never deploys (unused legacy deploy configs were removed, TECHDEBT-07 — see CONCERNS.md).
 - `npm run build` also runs `remove-draft-from-sitemap` script to strip draft-flagged content from `sitemap.xml` post-build
 
 ---

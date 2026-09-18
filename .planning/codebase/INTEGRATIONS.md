@@ -41,7 +41,7 @@
 ## CI/CD & Deployment
 
 **Hosting:**
-- Self-managed VPS (135.148.61.99), NOT Netlify or Cloudflare Pages despite `netlify.toml` and `wrangler.toml` being present in `themes/lumio/` (these appear to be unused legacy artifacts from the Lumio theme template)
+- Self-managed VPS (135.148.61.99), NOT Netlify or Cloudflare Pages. Unused legacy deploy configs from the Lumio theme template were removed in v1.1 (TECHDEBT-07 — see CONCERNS.md); GitHub Actions CI (`.github/workflows/ci.yml`) runs `astro check` + tests on push/PR but never deploys.
 - Deploy mechanism: `npm run build` (from `themes/lumio/`) produces `dist/`, which is rsynced to the VPS — this is a manual/external process, not part of the Astro project's own tooling
 
 **CI Pipeline:**

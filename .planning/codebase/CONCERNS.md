@@ -28,11 +28,10 @@ All paths are relative to `themes/lumio/` unless noted.
 - This was based on reading `scripts/remove-draft-from-sitemap.mjs` in isolation and missed `getCollectionCTM()` in `src/lib/contentParser.astro`, which filters `draft: true` entries out in production (`import.meta.env.PROD`) before `getStaticPaths()` ever sees them. Verified empirically: a production `npm run build` produces no route at all for `case-study-5`/`case-study-6` (`dist/case-studies/` contains only `vongo`, `ccrms`, `horizongo`, `inktix`). Draft pages are excluded from the build entirely, not merely hidden from the sitemap. See `.planning/phases/01-draft-placeholder-cleanup/01-VERIFICATION.md`.
 - Files (originally cited, now noted as `.md` post-migration): `src/content/case-studies/english/case-study-5.md`, `case-study-6.md`, `scripts/remove-draft-from-sitemap.mjs`
 
-**Unused deployment config files:**
-- Issue: `netlify.toml` and `wrangler.toml` exist at the project root but the actual deployment is a manual rsync of `dist/` to a VPS (135.148.61.99), not Netlify or Cloudflare Pages.
-- Files: `netlify.toml`, `wrangler.toml`
-- Impact: Low — mostly a source of confusion for future maintainers who might assume one of these is the live deploy path. `package.json` even retains a `deploy:cf` script (`wrangler pages deploy`) that isn't the real deploy mechanism.
-- Fix approach: Remove these files (and the `deploy:cf` script) if truly unused, or add a comment/README clarifying they are inactive.
+**~~Unused deployment config files~~ — RESOLVED 2026-09-18 (v1.1, TECHDEBT-07):**
+- Issue (historical): `netlify.toml` and `wrangler.toml` existed at the project root but the actual deployment is a manual rsync of `dist/` to a VPS (135.148.61.99), not Netlify or Cloudflare Pages.
+- Files (removed): `netlify.toml`, `wrangler.toml`; `package.json`'s `deploy:cf` script (`wrangler pages deploy`) also removed.
+- Resolution: Both config files and the `deploy:cf` script were deleted; CLAUDE.md and this codebase map updated to stop describing them as present.
 
 ## Known Bugs
 
@@ -76,10 +75,9 @@ Not applicable — static site, no meaningful scaling concerns at current conten
 
 ## Dependencies at Risk
 
-**`netlify.toml` / `wrangler.toml` / `deploy:cf` script drift:**
-- Risk: These configs are not exercised by the actual deploy process (rsync to VPS) and could silently go stale or reference outdated build settings.
-- Impact: Low — only relevant if someone attempts to use them, which would produce confusing results.
-- Migration plan: Remove if confirmed permanently unused, or document their inactive status.
+**~~`netlify.toml` / `wrangler.toml` / `deploy:cf` script drift~~ — RESOLVED 2026-09-18 (v1.1, TECHDEBT-07):**
+- Risk (historical): these configs were not exercised by the actual deploy process (rsync to VPS) and could silently go stale or reference outdated build settings.
+- Resolution: both files and the `deploy:cf` script were removed.
 
 ## Missing Critical Features
 

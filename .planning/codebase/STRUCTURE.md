@@ -12,11 +12,11 @@ lumio2/                              # git repo root
 ├── Images/                          # standalone image assets
 ├── Resume - Ryc Brownrigg Master.md # personal resume, not part of the site build
 ├── changelog.html, documentation.html  # static stub files from theme template
+├── .github/workflows/ci.yml         # GitHub Actions: astro check + tests on push/PR (v1.1; unused legacy deploy configs removed, TECHDEBT-07)
 └── themes/lumio/                    # ACTUAL Astro project root
     ├── astro.config.mjs             # Astro integrations, i18n, markdown pipeline
     ├── package.json                 # scripts, dependencies
     ├── tsconfig.json                # strict TS config, path aliases
-    ├── netlify.toml, wrangler.toml  # unused legacy deploy configs (actual deploy is rsync to VPS)
     ├── scripts/                     # Node build-time scripts (toml-watcher, favicon gen, sitemap cleanup)
     ├── src/
     │   ├── config/config.toml       # single source of truth for site settings

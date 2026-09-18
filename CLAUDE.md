@@ -12,7 +12,7 @@ Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, pre
 
 - **Content format**: New blog posts must be `.md`, never `.mdx` — `.mdx` triggers `UnknownContentCollectionError` in this Astro 6 deferred-render setup (this is also *why* legacy `.mdx` content is being migrated, not just newly avoided)
 - **Tech stack**: Astro 6, Tailwind CSS v4, Preline UI, Node >=22.12.0 — no framework changes in scope
-- **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages despite their config files existing in the repo
+- **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages. GitHub Actions CI (v1.1) runs `astro check` + tests on push/PR but never deploys.
 - **Domain**: `baseUrl` in `config.toml` can only hold one canonical value at a time, but the same static build is meant to serve onemoregreatidea.com, askryc.com, askryc.mt, and askryc.net — the domain decision blocks any final baseUrl/cert work
 
 <!-- GSD:project-end -->
@@ -71,7 +71,6 @@ Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, pre
 - `themes/lumio/astro.config.mjs` - Astro integrations (sitemap, MDX, AutoImport), i18n locales, markdown plugin pipeline, fonts
 - `themes/lumio/tsconfig.json` - strict TS, path aliases (`@/components/*` → `src/layouts/components/*`, `@/shortcodes/*` → `src/layouts/shortcodes/*`, `@/helpers/*` → `src/layouts/helpers/*`, `@/*` → `src/*`)
 - `themes/lumio/.prettierrc` - Prettier with `prettier-plugin-astro`, `prettier-plugin-toml`, `prettier-plugin-tailwindcss`; Astro files use `bracketSameLine: true`, `htmlWhitespaceSensitivity: ignore`
-- `themes/lumio/netlify.toml`, `themes/lumio/wrangler.toml` - present but deployment is actually via rsync to a VPS (135.148.61.99), not Netlify/Cloudflare Pages — these config files appear to be unused legacy/optional deploy targets from the Lumio theme template
 
 ## Platform Requirements
 
@@ -79,7 +78,7 @@ Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, pre
 - Run from `themes/lumio/` directory (not repo root): `npm run dev`
 - Dev server auto-selects a free port starting at 4321
 - Static output only: `npm run build` (from `themes/lumio/`) produces `themes/lumio/dist/`
-- No server runtime required — output is deployed via rsync to a VPS and served as static files (not using the `netlify.toml`/`wrangler.toml` targets present in the repo)
+- No server runtime required — output is deployed via rsync to a VPS and served as static files
 - `npm run build` also runs `remove-draft-from-sitemap` script to strip draft-flagged content from `sitemap.xml` post-build
 
 <!-- GSD:stack-end -->
