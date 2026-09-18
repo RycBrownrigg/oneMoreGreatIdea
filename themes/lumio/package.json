@@ -15,6 +15,7 @@
     "remove-draft-from-sitemap": "node ./scripts/remove-draft-from-sitemap.mjs",
     "format": "prettier -w ./src",
     "test": "cross-env TS_NODE_PROJECT=\"./tsconfig.jest.json\" jest --watch",
+    "test:ci": "cross-env TS_NODE_PROJECT=\"./tsconfig.jest.json\" jest",
     "deploy:cf": "wrangler pages deploy"
   },
   "engines": {

@@ -96,20 +96,22 @@ describe("getLocaleUrlCTM", () => {
     expect(result).toBe(expected);
   });
 
-  test("Handles relative URL with language directory in URL", () => {
+  test("Handles relative URL with a directory name that is not a configured language", () => {
+    // "french" is no longer a configured contentDir (language.json holds only "english"
+    // since the v1.0 French-locale removal), so it is treated as a literal path segment
+    // rather than stripped as a language directory.
     const url = "french/case-studies-01";
     const result = getLocaleUrlCTM(url, "en", prependValue);
-    const expected =
-      showDefaultLangInUrl && defaultLanguage === "en"
-        ? "/en/case-studies/case-studies-01/"
-        : "/case-studies/case-studies-01/";
-    expect(result).toBe(expected);
+    expect(result).toBe("/case-studies/french/case-studies-01/");
   });
 
-  test("Prepends optional value correctly", () => {
+  test("Prepends optional value correctly for an unsupported language code", () => {
+    // "es" is not a configured language (only "en" is), so normalizeLocaleCode() falls
+    // back to defaultLanguage ("en"), and since showDefaultLangInUrl is false, no
+    // language prefix is added at all.
     const url = "/pricing";
     const result = getLocaleUrlCTM(url, "es", prependValue);
-    expect(result).toBe("/es/case-studies/pricing/");
+    expect(result).toBe("/case-studies/pricing/");
   });
 
   test("Handles root URL with default language", () => {

@@ -4,5 +4,6 @@
     "moduleResolution": "node10",
     "verbatimModuleSyntax": false,
     "resolveJsonModule": true,
-  }
+  },
+  "include": [".astro/types.d.ts", "**/*"]
 }
