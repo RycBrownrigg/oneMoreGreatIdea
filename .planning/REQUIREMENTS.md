@@ -16,10 +16,10 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 ### Data/Object Utilities
 
-- [ ] **TECHDEBT-11**: Automated unit tests cover `overrideObjects.ts`
-- [ ] **TECHDEBT-13**: Automated unit tests cover `removeEmptyKeys.ts`
+- [x] **TECHDEBT-11**: Automated unit tests cover `overrideObjects.ts`
+- [x] **TECHDEBT-13**: Automated unit tests cover `removeEmptyKeys.ts`
 - [x] **TECHDEBT-09**: Automated unit tests cover `filteredEnabled.ts`
-- [ ] **TECHDEBT-12**: Automated unit tests cover `uniqueIdGenerator.ts`
+- [x] **TECHDEBT-12**: Automated unit tests cover `uniqueIdGenerator.ts`
 
 ### Navigation & Routing Utilities
 
@@ -60,9 +60,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TECHDEBT-08 | Phase 6 | Complete |
 | TECHDEBT-09 | Phase 6 | Complete |
 | TECHDEBT-10 | Phase 6 | Complete |
-| TECHDEBT-11 | Phase 6 | Pending |
-| TECHDEBT-12 | Phase 6 | Pending |
-| TECHDEBT-13 | Phase 6 | Pending |
+| TECHDEBT-11 | Phase 6 | Complete |
+| TECHDEBT-12 | Phase 6 | Complete |
+| TECHDEBT-13 | Phase 6 | Complete |
 | TECHDEBT-14 | Phase 6 | Complete |
 | TECHDEBT-15 | Phase 6 | Complete |
 | TECHDEBT-16 | Phase 6 | Complete |
