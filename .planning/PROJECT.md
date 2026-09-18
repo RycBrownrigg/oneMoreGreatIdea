@@ -21,11 +21,16 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - `netlify.toml`, `wrangler.toml`, and the `deploy:cf` script are gone; deploy stays manual via `./deploy.sh` (rsync), unaffected by CI
 - See `.planning/milestones/v1.1-ROADMAP.md` and `.planning/milestones/v1.1-MILESTONE-AUDIT.md` for full detail
 
-## Current Milestone
+## Current Milestone: v1.2 Utility Test Coverage Completion
 
-No active milestone — next step is `/gsd-new-milestone` to define v2 scope, or continue ad-hoc content work as before.
+**Goal:** Extend unit-test coverage to the 13 remaining pure, testable utility modules in `src/lib/utils/` deferred from v1.1's Phase 5 test-coverage push.
 
-Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01/02/03) — confirmed with Ryc (2026-09-17) that no real material exists yet for either. TECHDEBT-08 (13 deferred-but-testable utility modules) is the other open backlog item — see `.planning/milestones/v1.1-REQUIREMENTS.md` v2 section for both.
+**Target features:**
+- Unit tests for `generateTypeScale.ts`, `filteredEnabled.ts`, `handleDraftPage.ts`, `overrideObjects.ts`, `uniqueIdGenerator.ts`
+- Unit tests for `removeEmptyKeys.ts`, `readingTime.ts`, `buildToc.ts`, `navigationActive.ts`, `getRelatedContent.ts`
+- Unit tests for `preline.ts`, `absoluteUrl.ts`, `JsonLdGenerator.ts`
+
+Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01/02/03, unchanged) — confirmed with Ryc (2026-09-17) that no real material exists yet for either.
 
 ## Business Context
 
@@ -54,7 +59,19 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 
 ### Active
 
-_None — awaiting next milestone's requirements via `/gsd-new-milestone`._
+- [ ] **TECHDEBT-08**: Unit tests for `generateTypeScale.ts`
+- [ ] **TECHDEBT-09**: Unit tests for `filteredEnabled.ts`
+- [ ] **TECHDEBT-10**: Unit tests for `handleDraftPage.ts`
+- [ ] **TECHDEBT-11**: Unit tests for `overrideObjects.ts`
+- [ ] **TECHDEBT-12**: Unit tests for `uniqueIdGenerator.ts`
+- [ ] **TECHDEBT-13**: Unit tests for `removeEmptyKeys.ts`
+- [ ] **TECHDEBT-14**: Unit tests for `readingTime.ts`
+- [ ] **TECHDEBT-15**: Unit tests for `buildToc.ts`
+- [ ] **TECHDEBT-16**: Unit tests for `navigationActive.ts`
+- [ ] **TECHDEBT-17**: Unit tests for `getRelatedContent.ts`
+- [ ] **TECHDEBT-18**: Unit tests for `preline.ts`
+- [ ] **TECHDEBT-19**: Unit tests for `absoluteUrl.ts`
+- [ ] **TECHDEBT-20**: Unit tests for `JsonLdGenerator.ts`
 
 ### Out of Scope
 
@@ -115,4 +132,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-18 after v1.1 milestone*
+*Last updated: 2026-09-18 — v1.2 milestone started*

@@ -1,20 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: CI & Test Hardening
-status: Awaiting next milestone
-stopped_at: Phase 5 complete — all phases complete
-last_updated: "2026-09-18T18:28:25.970Z"
+milestone: v1.2
+milestone_name: Utility Test Coverage Completion
+status: planning
+last_updated: "2026-09-18T18:42:12.827Z"
 last_activity: 2026-09-18
-last_activity_desc: Milestone v1.1 completed and archived
-state_head: d738b3e0dea43149e123955f764dd67e57c39bd1
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
-current_phase: 5
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -28,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 
 ## Current Position
 
-Phase: Milestone v1.1 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-09-18 — Milestone v1.1 completed and archived
+Status: Defining requirements
+Last activity: 2026-09-18 — Milestone v1.2 started
 
 ## Accumulated Context
 
