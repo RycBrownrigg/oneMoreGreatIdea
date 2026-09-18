@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-09-18T17:47:57.774Z",
+  "phase": "5",
+  "phase_name": "Utility Test Coverage",
+  "phase_dir": ".planning/phases/05-utility-test-coverage",
+  "plan": 1,
+  "task": 2,
+  "total_tasks": 2,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": 1,
+      "name": "Prove the pattern end-to-end with dateFormat.test.ts, verified by a real CI run",
+      "status": "done",
+      "commit": "c8929ac"
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": 2,
+      "name": "Cover the remaining 5 named modules, record the full per-module accounting, prove a deliberate breakage is caught, final CI proof",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [],
+  "async_jobs": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {
+      "decision": "Test scope for Phase 5 limited to 6 named modules (dateFormat, textConverter, sortFunctions, objectFunctions, splitProtectedText, trailingSlashChecker); 13 other pure-testable modules deliberately deferred as TECHDEBT-08 (v2 backlog), 8 Astro/DOM/filesystem-coupled modules excluded as structurally untestable in this harness",
+      "rationale": "Matches the ROADMAP goal's named concerns and REQUIREMENTS.md's TECHDEBT-06 examples rather than open-ended 'test everything'; user confirmed this scope after asking for the reasoning behind each exclusion bucket",
+      "phase": "5"
+    },
+    {
+      "decision": "dateFormat.test.ts uses a noon-UTC fixed timestamp (2026-01-07T12:00:00Z), not midnight-UTC",
+      "rationale": "A midnight-UTC date string renders as the previous calendar day when Intl.DateTimeFormat formats in a negative-offset local timezone (confirmed: America/Denver, UTC-7, renders 2026-01-07 midnight-UTC as 'Jan 06, 2026'), while GitHub Actions runners default to UTC — this would have made the test pass locally but fail in CI, or vice versa. Noon UTC is safe across any realistic timezone.",
+      "phase": "5"
+    },
+    {
+      "decision": "gsd-planner and gsd-executor subagents skipped for both Phase 4 and Phase 5; orchestrating session wrote plans and executed tasks directly",
+      "rationale": "Three consecutive subagent stalls earlier this session (60+ min integration-checker, 6hr quick-task executor, 4hr phase planner) with zero output before being manually stopped. Direct execution proved reliable and let real verification (live GitHub Actions runs) happen without the stall risk.",
+      "phase": "4-5"
+    }
+  ],
+  "uncommitted_files": [
+    ".planning/STATE.md"
+  ],
+  "next_action": "Write themes/lumio/src/__tests__/textConverter.test.ts (9 exported functions: slugifyyy, markdownify, humanize, titleify, plainify, toUpperCase, toLowerCase, toSentenceCase, removeWhitespace — one normal + one empty/falsy-input test each), then sortFunctions.test.ts, objectFunctions.test.ts, splitProtectedText.test.ts, trailingSlashChecker.test.ts, per Task 2's <action> block in 05-01-PLAN.md. Read trailingSlashChecker.ts's actual current config.site.trailingSlash value from .astro/config.generated.json before writing its assertions (do not assume true or false).",
+  "context_notes": "Task 1 fully proven: dateFormat.test.ts added, committed (c8929ac), pushed to origin main, real GitHub Actions run 35376233202 confirmed conclusion:success. Task 2 is the larger remaining piece: 5 more test files, a deliberate-breakage mutation-check proof (pick one new assertion, e.g. sortByWeight's undefined-weight-sorts-last case, temporarily invert the one line of production logic it depends on, confirm the new test fails, revert with a clean git diff --stat), the full 27-module accounting table in 05-01-SUMMARY.md (6 covered / 8 Astro-DOM-filesystem-coupled excluded / 13 pure-but-deferred as TECHDEBT-08 — full lists already in 05-01-PLAN.md's <action> block, do not re-derive), then commit+push+real-CI-green-proof exactly like Task 1. After Task 2: write 05-VERIFICATION.md (mirror 04-VERIFICATION.md's structure), mark phase 5 complete via `gsd_run query phase.complete 5`, update REQUIREMENTS.md (TECHDEBT-06 checkbox + traceability to Complete), commit. This closes out the v1.1 milestone entirely (only Phase 4 and 5 existed) — after Phase 5, consider whether to also run /gsd-complete-milestone for v1.1, matching how v1.0 was closed."
+}
