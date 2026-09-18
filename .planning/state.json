@@ -1,12 +1,23 @@
 {
   "contract": "1.0.0",
   "flavor": "core",
-  "milestone": "v1.1",
-  "phases": [],
+  "milestone": "v1.1 — CI & Test Hardening",
+  "phases": [
+    {
+      "number": "4",
+      "name": "CI Pipeline & Deploy-Config Cleanup",
+      "status": "pending"
+    },
+    {
+      "number": "5",
+      "name": "Utility Test Coverage",
+      "status": "pending"
+    }
+  ],
   "next": {
-    "command": "/gsd:discuss-phase",
-    "label": "Discuss the first phase",
-    "reason": "Project initialized — plan your first phase"
+    "command": "/gsd:progress --next",
+    "label": "Advance to the next step",
+    "reason": "Phase 4 of 2 · 0% · executing"
   },
-  "updated_at": "2026-09-17T18:53:22.206Z"
+  "updated_at": "2026-09-18T14:34:41.112Z"
 }
