@@ -11,8 +11,8 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 - [ ] **TECHDEBT-08**: Automated unit tests cover `generateTypeScale.ts`
 - [ ] **TECHDEBT-14**: Automated unit tests cover `readingTime.ts`
-- [ ] **TECHDEBT-15**: Automated unit tests cover `buildToc.ts`
-- [ ] **TECHDEBT-20**: Automated unit tests cover `JsonLdGenerator.ts`
+- [x] **TECHDEBT-15**: Automated unit tests cover `buildToc.ts`
+- [x] **TECHDEBT-20**: Automated unit tests cover `JsonLdGenerator.ts`
 
 ### Data/Object Utilities
 
@@ -23,11 +23,11 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 ### Navigation & Routing Utilities
 
-- [ ] **TECHDEBT-10**: Automated unit tests cover `handleDraftPage.ts`
-- [ ] **TECHDEBT-16**: Automated unit tests cover `navigationActive.ts`
+- [x] **TECHDEBT-10**: Automated unit tests cover `handleDraftPage.ts`
+- [x] **TECHDEBT-16**: Automated unit tests cover `navigationActive.ts`
 - [ ] **TECHDEBT-17**: Automated unit tests cover `getRelatedContent.ts`
 - [ ] **TECHDEBT-18**: Automated unit tests cover `preline.ts`
-- [ ] **TECHDEBT-19**: Automated unit tests cover `absoluteUrl.ts`
+- [x] **TECHDEBT-19**: Automated unit tests cover `absoluteUrl.ts`
 
 ## v2 Requirements
 
@@ -59,17 +59,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | TECHDEBT-08 | Phase 6 | Pending |
 | TECHDEBT-09 | Phase 6 | Pending |
-| TECHDEBT-10 | Phase 6 | Pending |
+| TECHDEBT-10 | Phase 6 | Complete |
 | TECHDEBT-11 | Phase 6 | Pending |
 | TECHDEBT-12 | Phase 6 | Pending |
 | TECHDEBT-13 | Phase 6 | Pending |
 | TECHDEBT-14 | Phase 6 | Pending |
-| TECHDEBT-15 | Phase 6 | Pending |
-| TECHDEBT-16 | Phase 6 | Pending |
+| TECHDEBT-15 | Phase 6 | Complete |
+| TECHDEBT-16 | Phase 6 | Complete |
 | TECHDEBT-17 | Phase 6 | Pending |
 | TECHDEBT-18 | Phase 6 | Pending |
-| TECHDEBT-19 | Phase 6 | Pending |
-| TECHDEBT-20 | Phase 6 | Pending |
+| TECHDEBT-19 | Phase 6 | Complete |
+| TECHDEBT-20 | Phase 6 | Complete |
 
 **Coverage:**
 

@@ -30,12 +30,12 @@ This is pure test-writing debt cleanup on already-existing, already-shipped code
 3. Every module in `src/lib/utils/` is now accounted for: all 19 previously-identified pure-testable modules (6 from v1.1 Phase 5 + these 13) have dedicated Jest coverage, and the 8 Astro/DOM/filesystem-coupled modules remain explicitly out of scope, unchanged
 4. The existing v1.1 GitHub Actions workflow (`.github/workflows/ci.yml`) picks up all 13 new suites on the next push with no workflow-file edits required
 
-**Plans**: 4 plans
+**Plans**: 1/4 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Fix the Jest harness (`@/*` alias, bare `.astro/config.generated.json` import, `import.meta` under real ESM) and cover handleDraftPage, buildToc, navigationActive, JsonLdGenerator, absoluteUrl (tracer + expansion, Wave 1)
+- [x] 06-01-PLAN.md — Fix the Jest harness (`@/*` alias, bare `.astro/config.generated.json` import, `import.meta` under real ESM) and cover handleDraftPage, buildToc, navigationActive, JsonLdGenerator, absoluteUrl (tracer + expansion, Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -60,7 +60,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Utility Test Coverage Completion | 0/4 | Planned | - |
+| 6. Utility Test Coverage Completion | 1/4 | In Progress|  |
 
 ## Backlog
 
