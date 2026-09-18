@@ -6,7 +6,7 @@
     {
       "number": "4",
       "name": "CI Pipeline & Deploy-Config Cleanup",
-      "status": "pending"
+      "status": "complete"
     },
     {
       "number": "5",
@@ -16,8 +16,8 @@
   ],
   "next": {
     "command": "/gsd:progress --next",
-    "label": "Advance to the next step",
-    "reason": "Phase 4 of 2 · 0% · executing"
+    "label": "Advance to the next step (plan phase 5)",
+    "reason": "Phase 5 of 2 — needs a plan"
   },
-  "updated_at": "2026-09-18T14:34:41.112Z"
+  "updated_at": "2026-09-18T16:20:18.099Z"
 }

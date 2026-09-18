@@ -13,7 +13,7 @@ This milestone is engineering hygiene on an already-live site. Nothing here chan
 
 ## Phases
 
-- [ ] **Phase 4: CI Pipeline & Deploy-Config Cleanup** - GitHub Actions runs `astro check` + a non-watch test run on every push/PR; dead Netlify/Cloudflare deploy configs removed
+- [x] **Phase 4: CI Pipeline & Deploy-Config Cleanup** - GitHub Actions runs `astro check` + a non-watch test run on every push/PR; dead Netlify/Cloudflare deploy configs removed (completed 2026-09-18)
 - [ ] **Phase 5: Utility Test Coverage** - Pure utilities in `src/lib/utils/` gain real unit tests, enforced by the Phase 4 pipeline
 
 ## Phase Details
@@ -65,7 +65,7 @@ This milestone is engineering hygiene on an already-live site. Nothing here chan
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 4. CI Pipeline & Deploy-Config Cleanup | 0/? | Not started | - |
+| 4. CI Pipeline & Deploy-Config Cleanup | 1/1 | Complete    | 2026-09-18 |
 | 5. Utility Test Coverage | 0/? | Not started | - |
 
 ## Backlog

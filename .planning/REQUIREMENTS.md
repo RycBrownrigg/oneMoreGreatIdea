@@ -9,7 +9,7 @@ Requirements for this milestone (CI pipeline, broader test coverage, and unused 
 
 ### CI/CD
 
-- [ ] **TECHDEBT-05**: A CI workflow (GitHub Actions) runs on every push and pull request, executing `astro check` and a non-interactive test run, failing the workflow if either fails
+- [x] **TECHDEBT-05**: A CI workflow (GitHub Actions) runs on every push and pull request, executing `astro check` and a non-interactive test run, failing the workflow if either fails
 
 ### Testing
 
@@ -17,7 +17,7 @@ Requirements for this milestone (CI pipeline, broader test coverage, and unused 
 
 ### Tech Debt
 
-- [ ] **TECHDEBT-07**: Unused `netlify.toml`, `wrangler.toml`, and the `deploy:cf` npm script are removed from the repository (or, if a real reason to keep one is found, it's documented instead of removed)
+- [x] **TECHDEBT-07**: Unused `netlify.toml`, `wrangler.toml`, and the `deploy:cf` npm script are removed from the repository (or, if a real reason to keep one is found, it's documented instead of removed)
 
 ## v2 Requirements
 
@@ -46,9 +46,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TECHDEBT-05 | Phase 4 | Pending |
+| TECHDEBT-05 | Phase 4 | Complete |
 | TECHDEBT-06 | Phase 5 | Pending |
-| TECHDEBT-07 | Phase 4 | Pending |
+| TECHDEBT-07 | Phase 4 | Complete |
 
 **Coverage:**
 
@@ -58,4 +58,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-09-17*
-*Last updated: 2026-09-17 (traceability mapped to v1.1 roadmap phases 4-5)*
+*Last updated: 2026-09-18 (Phase 4 complete: TECHDEBT-05/07 verified via real GitHub Actions runs)*
