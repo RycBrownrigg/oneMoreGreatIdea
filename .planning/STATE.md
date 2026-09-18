@@ -2,42 +2,42 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: CI & Test Hardening
-current_phase: 5
-status: completed
+status: Awaiting next milestone
 stopped_at: Phase 5 complete — all phases complete
-last_updated: "2026-09-18T18:07:55.687Z"
+last_updated: "2026-09-18T18:28:25.970Z"
 last_activity: 2026-09-18
-last_activity_desc: Phase 5 complete
-state_head: 8ac5d290398fbb2b8cf2feceab6b95fefbe635fe
+last_activity_desc: Milestone v1.1 completed and archived
+state_head: d738b3e0dea43149e123955f764dd67e57c39bd1
 progress:
   total_phases: 2
   completed_phases: 2
   total_plans: 2
   completed_plans: 2
   percent: 100
+current_phase: 5
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-09-16)
+See: .planning/PROJECT.md (updated 2026-09-18)
 
 **Core value:** The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads.
-**Current focus:** v1.0 shipped and archived. No active milestone — next step is `/gsd-new-milestone` to define v2 scope (or continue ad-hoc content work as before).
+**Current focus:** v1.1 shipped and archived (CI pipeline + 6 new utility test files + deploy-config cleanup). No active milestone — next step is `/gsd-new-milestone` to define v2 scope (or continue ad-hoc content work as before).
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
-Status: All phases complete
-Last activity: 2026-09-18 — Phase 5 complete
+Phase: Milestone v1.1 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-09-18 — Milestone v1.1 completed and archived
 
 ## Accumulated Context
 
 ### Decisions
 
-See PROJECT.md Key Decisions table for the full v1.0 decision log (all outcomes now marked ✓ Good).
+See PROJECT.md Key Decisions table for the full v1.0/v1.1 decision log (all outcomes now marked ✓ Good).
 
 ### Pending Todos
 
@@ -65,9 +65,10 @@ Items acknowledged and deferred at milestone close, most recent first:
 | Content | Real content for case-study-5/6 | Deferred to v2 (CONTENT-01/02) — no content exists | Scope correction 2026-09-08 | v1 |
 | Content | Real testimonials (5 placeholders) | Deferred to v2 (CONTENT-03) — none available yet | Scope correction 2026-09-08 | v1 |
 | Domain | Domain canonicalization across all 4 domains | Removed from scope entirely — onemoregreatidea.com stays separate; askryc domains handled by a different project | Scope correction 2026-09-08 | v1 |
-| Tech Debt | CI pipeline (astro check/test on push) | Deferred to v2 (TECHDEBT-05) | Roadmap creation | v1 |
-| Tech Debt | Broader automated test coverage | Deferred to v2 (TECHDEBT-06) | Roadmap creation | v1 |
-| Tech Debt | Remove unused netlify.toml/wrangler.toml/deploy:cf | Deferred to v2 (TECHDEBT-07) | Roadmap creation | v1 |
+| Tech Debt | CI pipeline (astro check/test on push) | Completed 2026-09-18 (TECHDEBT-05, Phase 4) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
+| Tech Debt | Broader automated test coverage | Completed 2026-09-18 (TECHDEBT-06, Phase 5) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
+| Tech Debt | Remove unused netlify.toml/wrangler.toml/deploy:cf | Completed 2026-09-18 (TECHDEBT-07, Phase 4) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
+| Tech Debt | 13 pure-but-testable `src/lib/utils/` modules not covered by Phase 5 | Deferred to v2 (TECHDEBT-08) | Phase 5 execution 2026-09-18 | v1.1 |
 | Tech Debt | OG image generation script not committed (one-off) | Acknowledged, low priority | Milestone audit 2026-09-16 | v1.0 |
 
 ## Session Continuity
@@ -75,3 +76,7 @@ Items acknowledged and deferred at milestone close, most recent first:
 Last session: 2026-09-18T17:45:57.336Z
 Stopped at: Phase 5 complete — all phases complete
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone

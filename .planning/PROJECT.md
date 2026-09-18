@@ -2,13 +2,13 @@
 
 ## What This Is
 
-Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. v1.0 closed out the remaining pre-launch/launch-quality punch list on the already-live site. v1.1 is hardening the engineering safety net (CI, test coverage) and removing dead deploy-config cruft.
+Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. v1.0 closed out the remaining pre-launch/launch-quality punch list on the already-live site. v1.1 hardened the engineering safety net: every push/PR is now automatically type-checked and tested, the pure utility layer has real regression coverage, and dead deploy-config cruft is gone.
 
 ## Core Value
 
 The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads — if a visitor doesn't trust the content or stumbles onto broken/empty pages, or the contact form fails, nothing else about the site matters.
 
-## Current State (as of v1.0, shipped 2026-09-16)
+## Current State (as of v1.1, shipped 2026-09-18)
 
 - Live at https://onemoregreatidea.com, static Astro 6 build deployed via manual rsync
 - All content is single-locale (English) `.md` — no `.mdx` in blog/case-studies, no French-locale artifacts
@@ -16,18 +16,16 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - OG image live for social sharing; case-study-5/6 draft placeholders confirmed unreachable by direct URL (404)
 - `FormHandle.ts` fully typed under `astro/tsconfigs/strict`, no `@ts-nocheck`
 - Blog series expanded through post-14 (BMad vs GSD Series 4); series cross-links kept current
-- See `.planning/milestones/v1.0-ROADMAP.md` and `.planning/v1.0-MILESTONE-AUDIT.md` for full detail
+- GitHub Actions CI (`github.com/RycBrownrigg/oneMoreGreatIdea`, public repo — established this milestone) runs `astro check` + `npm run test:ci` on every push/PR, proven to genuinely gate (real green and red runs both verified)
+- 7 Jest suites / 86 tests covering `dateFormat`, `textConverter`, `sortFunctions`, `objectFunctions`, `splitProtectedText`, `trailingSlashChecker`, plus the pre-existing i18n URL util — up from 1 suite / 43 tests at v1.0 close
+- `netlify.toml`, `wrangler.toml`, and the `deploy:cf` script are gone; deploy stays manual via `./deploy.sh` (rsync), unaffected by CI
+- See `.planning/milestones/v1.1-ROADMAP.md` and `.planning/milestones/v1.1-MILESTONE-AUDIT.md` for full detail
 
-## Current Milestone: v1.1 CI & Test Hardening
+## Current Milestone
 
-**Goal:** Close out the remaining v1 tech-debt backlog — automated verification on every push, broader test coverage, and removal of unused deploy configs — so the site has a real safety net instead of relying on manual checks before deploy.
+No active milestone — next step is `/gsd-new-milestone` to define v2 scope, or continue ad-hoc content work as before.
 
-**Target features:**
-- CI pipeline: `astro check` and `npm run test` run automatically on push/PR (TECHDEBT-05)
-- Broader automated test coverage beyond `FormHandle.ts` typing and the i18n URL utility (TECHDEBT-06)
-- Remove unused `netlify.toml`, `wrangler.toml`, `deploy:cf` script (TECHDEBT-07)
-
-Case-study-5/6 real content and real testimonials remain deferred — confirmed with Ryc (2026-09-17) that no real material exists yet for either.
+Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01/02/03) — confirmed with Ryc (2026-09-17) that no real material exists yet for either. TECHDEBT-08 (13 deferred-but-testable utility modules) is the other open backlog item — see `.planning/milestones/v1.1-REQUIREMENTS.md` v2 section for both.
 
 ## Business Context
 
@@ -50,12 +48,13 @@ Case-study-5/6 real content and real testimonials remain deferred — confirmed 
 - ✓ Legacy `.mdx` blog posts and case studies migrated to `.md` (v1.0, TECHDEBT-01/02)
 - ✓ `FormHandle.ts` `@ts-nocheck` removed, proper types added (v1.0, TECHDEBT-03)
 - ✓ case-study-5/case-study-6 placeholder stubs confirmed unreachable by direct URL (v1.0, TECHDEBT-04)
+- ✓ CI pipeline (`astro check`, `npm run test:ci`) runs automatically on every push/PR, proven to genuinely gate (v1.1, TECHDEBT-05)
+- ✓ Automated unit test coverage expanded to 6 pure utility modules beyond `FormHandle.ts`/i18n URL util (v1.1, TECHDEBT-06)
+- ✓ Unused `netlify.toml`/`wrangler.toml`/`deploy:cf` removed (v1.1, TECHDEBT-07)
 
 ### Active
 
-- [ ] Set up a CI pipeline (`astro check`, `npm run test`) on push/PR (TECHDEBT-05)
-- [ ] Expand automated test coverage beyond `FormHandle.ts` typing and the i18n URL utility test (TECHDEBT-06)
-- [ ] Remove or document unused `netlify.toml`/`wrangler.toml`/`deploy:cf` deploy targets (TECHDEBT-07)
+_None — awaiting next milestone's requirements via `/gsd-new-milestone`._
 
 ### Out of Scope
 
@@ -71,14 +70,16 @@ Case-study-5/6 real content and real testimonials remain deferred — confirmed 
 - Build: `npm run build` (from `themes/lumio/`) → static output in `themes/lumio/dist/`. Deploy: `./deploy.sh` (runs build then `rsync -avz --delete dist/ ryc@135.148.61.99:/var/www/projects/onemoregreatidea/`) — still manual, not triggered by CI
 - `themes/lumio/.astro/config.generated.json` (compiled from `config.toml` by `scripts/toml-watcher.mjs`) is an implicit build dependency of `astro.config.mjs` and `src/content.config.ts` — always use the npm scripts (`dev`/`build`/`test`), never invoke `astro`/`jest` directly
 - Content collections (blog, services, case-studies) are registered under both a `config.toml`-driven folder name and a hardcoded canonical alias in `src/content.config.ts` — changing folder-name settings in `config.toml` requires auditing every `getCollection(...)` call site
-- Only one Jest test file exists today: `src/__tests__/getLocalUrlCTM.test.ts` — TECHDEBT-06's expansion starts from here
+- 7 Jest test files exist under `src/__tests__/` (86 tests): the original `getLocalUrlCTM.test.ts` plus 6 added in v1.1 (`dateFormat`, `textConverter`, `sortFunctions`, `objectFunctions`, `splitProtectedText`, `trailingSlashChecker`). 13 more pure-testable utility modules are deliberately deferred as TECHDEBT-08 (v2 backlog) — see `.planning/milestones/v1.1-phases/05-utility-test-coverage/05-01-SUMMARY.md` for the full per-module accounting
+- `themes/lumio/jest.config.ts` maps the ESM-only `marked` package to its CJS-compatible UMD build for Jest — needed the moment any test imports `textConverter.ts`
+- GitHub Actions CI (`.github/workflows/ci.yml`) runs `npm ci` → `npm run toml:watch` → `npm run astro-check` → `npm run test:ci` on every push/PR to `main`; verification-only, does not deploy
 - Full codebase map available at `.planning/codebase/` (STACK.md, ARCHITECTURE.md, STRUCTURE.md, INTEGRATIONS.md, CONVENTIONS.md, TESTING.md, CONCERNS.md)
 
 ## Constraints
 
 - **Content format**: New blog posts must be `.md`, never `.mdx` — `.mdx` triggers `UnknownContentCollectionError` in this Astro 6 deferred-render setup
 - **Tech stack**: Astro 6, Tailwind CSS v4, Preline UI, Node >=22.12.0 — no framework changes in scope
-- **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages despite their config files existing in the repo. CI (this milestone) is verification-only — it does not deploy.
+- **Deployment**: Static build only, deployed via manual rsync to the VPS at 135.148.61.99 — no server runtime, no Netlify/Cloudflare Pages (their config files were removed in v1.1). GitHub Actions CI (v1.1) runs `astro check` + tests on push/PR but never deploys.
 - **Domain**: onemoregreatidea.com is permanently its own domain/site for this project — no shared `baseUrl` or cert coordination with askryc.com/.mt/.net is needed here
 
 ## Key Decisions
@@ -91,7 +92,10 @@ Case-study-5/6 real content and real testimonials remain deferred — confirmed 
 | Fix `@ts-nocheck` on FormHandle.ts and hide empty case-study stubs from direct URL | Contact form is the primary lead-gen mechanism; empty placeholder pages shouldn't be publicly reachable | ✓ Good — also surfaced and fixed a real production bug (window.HSSelect never assigned) |
 | onemoregreatidea.com stays permanently separate from askryc.com/.net/.mt (2026-09-08) | Ryc will run two independent projects: this Astro site on its own domain, and a separate WordPress rebuild for the askryc domains (`/Users/ryc/projects/askryc`) | ✓ Good |
 | Defer case-study-5/6 real content and real testimonials to v2 (2026-09-08), still deferred at v1.1 start (2026-09-17) | No additional case-study content or real testimonials exist yet to fill these in | Pending — revisit whenever real material exists |
-| Bring CI pipeline, broader test coverage, and unused-deploy-config removal into v1.1 scope (2026-09-17) | These were the only v2-backlog items with no content dependency — ready to execute now | — Pending |
+| Bring CI pipeline, broader test coverage, and unused-deploy-config removal into v1.1 scope (2026-09-17) | These were the only v2-backlog items with no content dependency — ready to execute now | ✓ Good — all three shipped 2026-09-18 |
+| Establish the project's first GitHub remote by force-pushing onto an abandoned, unrelated single-commit scaffold at that repo name (2026-09-18) | CI needs a real remote to run against; user confirmed the target repo was abandoned before the force-push | ✓ Good |
+| Limit Phase 5 test scope to 6 named utility modules rather than all ~19 pure-testable ones, deferring 13 as TECHDEBT-08 (2026-09-18) | Matches ROADMAP's named goal and REQUIREMENTS.md's TECHDEBT-06 examples; user confirmed after asking for the reasoning behind each exclusion bucket | ✓ Good |
+| Skip planner/executor subagents for both v1.1 phases, execute and verify directly instead (2026-09-18) | Three consecutive subagent stalls (60min–6hr, zero output) earlier in the milestone; direct execution with real CI verification proved reliable | ✓ Good — worth retrying subagents normally next milestone unless stalls recur |
 
 ## Evolution
 
@@ -111,4 +115,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-17 after starting v1.1 milestone*
+*Last updated: 2026-09-18 after v1.1 milestone*
