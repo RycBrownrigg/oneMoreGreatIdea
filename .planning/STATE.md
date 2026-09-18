@@ -2,13 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: CI & Test Hardening
-status: planning
-last_updated: "2026-09-17T18:53:22.203Z"
+current_phase: 4
+current_phase_name: CI Pipeline & Deploy-Config Cleanup
+status: executing
+stopped_at: Quick task 260916-bby complete (Series 4 blog post published). Ready for next task or `/gsd-new-milestone`.
+last_updated: "2026-09-18T14:34:41.096Z"
 last_activity: 2026-09-17
+last_activity_desc: Milestone v1.1 started
+state_head: fb59b759079bf0c0fdd9999befd8088861f65f15
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
-  total_plans: 0
+  total_plans: 1
   completed_plans: 0
   percent: 0
 ---
@@ -24,9 +29,9 @@ See: .planning/PROJECT.md (updated 2026-09-16)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 4 (CI Pipeline & Deploy-Config Cleanup) — READY TO EXECUTE
 Plan: —
-Status: Defining requirements
+Status: Ready to execute
 Last activity: 2026-09-17 — Milestone v1.1 started
 
 ## Accumulated Context
