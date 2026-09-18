@@ -46,16 +46,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TECHDEBT-05 | TBD | Pending |
-| TECHDEBT-06 | TBD | Pending |
-| TECHDEBT-07 | TBD | Pending |
+| TECHDEBT-05 | Phase 4 | Pending |
+| TECHDEBT-06 | Phase 5 | Pending |
+| TECHDEBT-07 | Phase 4 | Pending |
 
 **Coverage:**
 
 - v1.1 requirements: 3 total
-- Mapped to phases: 0
-- Unmapped: 3 ⚠️ (roadmap not yet created)
+- Mapped to phases: 3 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-09-17*
-*Last updated: 2026-09-17*
+*Last updated: 2026-09-17 (traceability mapped to v1.1 roadmap phases 4-5)*
