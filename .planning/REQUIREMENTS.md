@@ -13,7 +13,7 @@ Requirements for this milestone (CI pipeline, broader test coverage, and unused 
 
 ### Testing
 
-- [ ] **TECHDEBT-06**: Automated unit tests cover the site's pure utility functions beyond `FormHandle.ts` and `i18nUtils.ts` (e.g. `dateFormat.ts`, `textConverter.ts`, `sortFunctions.ts`, `objectFunctions.ts`, `splitProtectedText.ts`, `trailingSlashChecker.ts`)
+- [x] **TECHDEBT-06**: Automated unit tests cover the site's pure utility functions beyond `FormHandle.ts` and `i18nUtils.ts` (e.g. `dateFormat.ts`, `textConverter.ts`, `sortFunctions.ts`, `objectFunctions.ts`, `splitProtectedText.ts`, `trailingSlashChecker.ts`)
 
 ### Tech Debt
 
@@ -51,7 +51,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TECHDEBT-05 | Phase 4 | Complete |
-| TECHDEBT-06 | Phase 5 | Pending |
+| TECHDEBT-06 | Phase 5 | Complete |
 | TECHDEBT-07 | Phase 4 | Complete |
 
 **Coverage:**
