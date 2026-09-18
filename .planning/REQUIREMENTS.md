@@ -29,6 +29,10 @@ Deferred to future milestones. Tracked but not in current roadmap.
 - **CONTENT-02**: Fill case-study-6 with a real project (same — empty stub, no content available)
 - **CONTENT-03**: Replace the 5 placeholder testimonials with real ones (still no real testimonials available as of 2026-09-17)
 
+### Testing
+
+- **TECHDEBT-08**: Extend unit-test coverage to the remaining pure, testable utility modules in `src/lib/utils/` not covered by Phase 5 (`generateTypeScale.ts`, `filteredEnabled.ts`, `handleDraftPage.ts`, `overrideObjects.ts`, `uniqueIdGenerator.ts`, `removeEmptyKeys.ts`, `readingTime.ts`, `buildToc.ts`, `navigationActive.ts`, `getRelatedContent.ts`, `preline.ts`, `absoluteUrl.ts`, `JsonLdGenerator.ts`) — deliberately deferred out of Phase 5's scope (2026-09-18), which focused on the modules named in the original ROADMAP goal and TECHDEBT-06 examples. Ryc confirmed these can be revisited later; full per-module classification recorded in `.planning/phases/05-utility-test-coverage/05-01-SUMMARY.md`.
+
 ## Out of Scope
 
 Explicitly excluded. Documented to prevent scope creep.
