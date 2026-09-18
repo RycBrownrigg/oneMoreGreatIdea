@@ -1,20 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-current_phase_name: null
-status: milestone_complete
-stopped_at: v1.0 milestone archived and tagged; awaiting next milestone
-last_updated: "2026-09-17T16:50:31.379Z"
+milestone: v1.1
+milestone_name: CI & Test Hardening
+status: planning
+last_updated: "2026-09-17T18:53:22.203Z"
 last_activity: 2026-09-17
-last_activity_desc: "Completed quick task 260916-bby: published BMad vs GSD Series 4 blog post (post-14.md + header SVG), commit f9f0b46."
-state_head: bebafdc7367c5efc394b3daa5416874c15e9efba
 progress:
   total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
   percent: 0
-current_phase: null
 ---
 
 # Project State
@@ -28,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-09-16)
 
 ## Current Position
 
-Phase: None — between milestones
-Plan: N/A
-Status: v1.0 archived; awaiting next milestone
-Last activity: 2026-09-17 — published BMad vs GSD Series 4 blog post via quick task 260916-bby.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-09-17 — Milestone v1.1 started
 
 ## Accumulated Context
 
