@@ -9,8 +9,8 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 ### Content & Text Utilities
 
-- [ ] **TECHDEBT-08**: Automated unit tests cover `generateTypeScale.ts`
-- [ ] **TECHDEBT-14**: Automated unit tests cover `readingTime.ts`
+- [x] **TECHDEBT-08**: Automated unit tests cover `generateTypeScale.ts`
+- [x] **TECHDEBT-14**: Automated unit tests cover `readingTime.ts`
 - [x] **TECHDEBT-15**: Automated unit tests cover `buildToc.ts`
 - [x] **TECHDEBT-20**: Automated unit tests cover `JsonLdGenerator.ts`
 
@@ -18,7 +18,7 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 - [ ] **TECHDEBT-11**: Automated unit tests cover `overrideObjects.ts`
 - [ ] **TECHDEBT-13**: Automated unit tests cover `removeEmptyKeys.ts`
-- [ ] **TECHDEBT-09**: Automated unit tests cover `filteredEnabled.ts`
+- [x] **TECHDEBT-09**: Automated unit tests cover `filteredEnabled.ts`
 - [ ] **TECHDEBT-12**: Automated unit tests cover `uniqueIdGenerator.ts`
 
 ### Navigation & Routing Utilities
@@ -57,13 +57,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TECHDEBT-08 | Phase 6 | Pending |
-| TECHDEBT-09 | Phase 6 | Pending |
+| TECHDEBT-08 | Phase 6 | Complete |
+| TECHDEBT-09 | Phase 6 | Complete |
 | TECHDEBT-10 | Phase 6 | Complete |
 | TECHDEBT-11 | Phase 6 | Pending |
 | TECHDEBT-12 | Phase 6 | Pending |
 | TECHDEBT-13 | Phase 6 | Pending |
-| TECHDEBT-14 | Phase 6 | Pending |
+| TECHDEBT-14 | Phase 6 | Complete |
 | TECHDEBT-15 | Phase 6 | Complete |
 | TECHDEBT-16 | Phase 6 | Complete |
 | TECHDEBT-17 | Phase 6 | Pending |

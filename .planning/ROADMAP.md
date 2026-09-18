@@ -30,7 +30,7 @@ This is pure test-writing debt cleanup on already-existing, already-shipped code
 3. Every module in `src/lib/utils/` is now accounted for: all 19 previously-identified pure-testable modules (6 from v1.1 Phase 5 + these 13) have dedicated Jest coverage, and the 8 Astro/DOM/filesystem-coupled modules remain explicitly out of scope, unchanged
 4. The existing v1.1 GitHub Actions workflow (`.github/workflows/ci.yml`) picks up all 13 new suites on the next push with no workflow-file edits required
 
-**Plans**: 1/4 plans executed
+**Plans**: 2/4 plans executed
 
 Plans:
 **Wave 1**
@@ -39,7 +39,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 06-02-PLAN.md — Cover generateTypeScale, readingTime, filteredEnabled (Wave 2)
+- [x] 06-02-PLAN.md — Cover generateTypeScale, readingTime, filteredEnabled (Wave 2)
 - [ ] 06-03-PLAN.md — Cover overrideObjects, removeEmptyKeys, uniqueIdGenerator (Wave 2)
 - [ ] 06-04-PLAN.md — Cover getRelatedContent, preline (Wave 2, phase completion)
 
@@ -60,7 +60,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Utility Test Coverage Completion | 1/4 | In Progress|  |
+| 6. Utility Test Coverage Completion | 2/4 | In Progress|  |
 
 ## Backlog
 
