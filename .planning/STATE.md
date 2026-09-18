@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Utility Test Coverage Completion
 status: planning
-last_updated: "2026-09-18T18:42:12.827Z"
+last_updated: "2026-09-18T19:05:00.000Z"
 last_activity: 2026-09-18
 progress:
-  total_phases: 0
+  total_phases: 1
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,20 +20,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-09-18)
 
 **Core value:** The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads.
-**Current focus:** v1.1 shipped and archived (CI pipeline + 6 new utility test files + deploy-config cleanup). No active milestone — next step is `/gsd-new-milestone` to define v2 scope (or continue ad-hoc content work as before).
+**Current focus:** v1.2 roadmap created — Phase 6 (Utility Test Coverage Completion) covers all 13 v1.2 requirements (TECHDEBT-08 through TECHDEBT-20). Next step is `/gsd-plan-phase 6`.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-09-18 — Milestone v1.2 started
+Phase: 6 - Utility Test Coverage Completion (not started)
+Plan: — (not yet planned)
+Status: Roadmap created, awaiting plan-phase
+Last activity: 2026-09-18 — v1.2 roadmap created, 13/13 requirements mapped to Phase 6
 
 ## Accumulated Context
 
 ### Decisions
 
 See PROJECT.md Key Decisions table for the full v1.0/v1.1 decision log (all outcomes now marked ✓ Good).
+
+- Roadmapped all 13 v1.2 requirements into a single Phase 6, rather than splitting along REQUIREMENTS.md's three categories (Content & Text, Data/Object, Navigation & Routing) — the 13 modules are uniform, low-risk, and have no dependencies between them, matching the v1.1 Phase 5 precedent (one phase, one plan, for 6 sibling modules)
 
 ### Pending Todos
 
@@ -64,15 +66,15 @@ Items acknowledged and deferred at milestone close, most recent first:
 | Tech Debt | CI pipeline (astro check/test on push) | Completed 2026-09-18 (TECHDEBT-05, Phase 4) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
 | Tech Debt | Broader automated test coverage | Completed 2026-09-18 (TECHDEBT-06, Phase 5) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
 | Tech Debt | Remove unused netlify.toml/wrangler.toml/deploy:cf | Completed 2026-09-18 (TECHDEBT-07, Phase 4) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
-| Tech Debt | 13 pure-but-testable `src/lib/utils/` modules not covered by Phase 5 | Deferred to v2 (TECHDEBT-08) | Phase 5 execution 2026-09-18 | v1.1 |
+| Tech Debt | 13 pure-but-testable `src/lib/utils/` modules not covered by Phase 5 | Promoted into v1.2 active scope (TECHDEBT-08 through TECHDEBT-20, Phase 6) — was deferred to v2 at Phase 5 execution | Phase 5 execution 2026-09-18 | v1.1 → v1.2 |
 | Tech Debt | OG image generation script not committed (one-off) | Acknowledged, low priority | Milestone audit 2026-09-16 | v1.0 |
 
 ## Session Continuity
 
-Last session: 2026-09-18T17:45:57.336Z
-Stopped at: Phase 5 complete — all phases complete
+Last session: 2026-09-18T19:05:00.000Z
+Stopped at: v1.2 roadmap created (Phase 6 defined, 13/13 requirements mapped) — awaiting plan-phase
 Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Run `/gsd-plan-phase 6` to create the detailed phase plan

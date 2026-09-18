@@ -57,26 +57,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TECHDEBT-08 | TBD | Pending |
-| TECHDEBT-09 | TBD | Pending |
-| TECHDEBT-10 | TBD | Pending |
-| TECHDEBT-11 | TBD | Pending |
-| TECHDEBT-12 | TBD | Pending |
-| TECHDEBT-13 | TBD | Pending |
-| TECHDEBT-14 | TBD | Pending |
-| TECHDEBT-15 | TBD | Pending |
-| TECHDEBT-16 | TBD | Pending |
-| TECHDEBT-17 | TBD | Pending |
-| TECHDEBT-18 | TBD | Pending |
-| TECHDEBT-19 | TBD | Pending |
-| TECHDEBT-20 | TBD | Pending |
+| TECHDEBT-08 | Phase 6 | Pending |
+| TECHDEBT-09 | Phase 6 | Pending |
+| TECHDEBT-10 | Phase 6 | Pending |
+| TECHDEBT-11 | Phase 6 | Pending |
+| TECHDEBT-12 | Phase 6 | Pending |
+| TECHDEBT-13 | Phase 6 | Pending |
+| TECHDEBT-14 | Phase 6 | Pending |
+| TECHDEBT-15 | Phase 6 | Pending |
+| TECHDEBT-16 | Phase 6 | Pending |
+| TECHDEBT-17 | Phase 6 | Pending |
+| TECHDEBT-18 | Phase 6 | Pending |
+| TECHDEBT-19 | Phase 6 | Pending |
+| TECHDEBT-20 | Phase 6 | Pending |
 
 **Coverage:**
 
 - v1.2 requirements: 13 total
-- Mapped to phases: 0 (pending roadmap creation)
-- Unmapped: 13 ⚠️ (expected — roadmapper fills this next)
+- Mapped to phases: 13/13 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-09-18*
-*Last updated: 2026-09-18 (initial definition)*
+*Last updated: 2026-09-18 (roadmap created — all 13 requirements mapped to Phase 6)*
