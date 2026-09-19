@@ -37,6 +37,39 @@
 
 ---
 
+## Milestone: v1.2 — Utility Test Coverage Completion
+
+**Shipped:** 2026-09-19
+**Phases:** 1 (Phase 6) | **Plans:** 4 | **Sessions:** 1
+
+### What Was Built
+- 13 new Jest test files (one per previously-untested pure `src/lib/utils/` module: `handleDraftPage`, `buildToc`, `navigationActive`, `JsonLdGenerator`, `absoluteUrl`, `generateTypeScale`, `readingTime`, `filteredEnabled`, `overrideObjects`, `removeEmptyKeys`, `uniqueIdGenerator`, `getRelatedContent`, `preline`), growing the suite from 7/86 to 20 suites / 121 tests with zero regressions
+- A real-ESM Jest harness fix (`@/*` alias resolution, bare `.astro/config.generated.json` import, `import.meta` support via `NODE_OPTIONS=--experimental-vm-modules`) landed once in Plan 06-01 and reused cleanly by all three later plans with zero conflicts
+- Closed out the utility-layer regression safety net started in v1.1 Phase 5 — all 19 pure-testable `src/lib/utils/` modules now have dedicated coverage
+
+### What Worked
+- Sequencing the harness fix as a single foundational Wave-1 plan (06-01) before the three parallel Wave-2 plans (06-02/03/04) — every later plan needed zero harness changes, confirmed by an independent integration-checker re-run showing `git diff` empty on `jest.config.ts`/`tsconfig.jest.json`/`package.json` after 06-01's commit
+- Deliberate break-and-restore checks (on `buildToc.ts` and `overrideObjects.ts`) performed independently by both the plan executor and the phase verifier, proving the new tests exercise real behavior rather than being tautological
+- Honest disclosure of a real, structural test-harness limitation (`handleDraftPage.ts`'s 404-Response branch is unreachable under Jest because `import.meta.env.PROD` is always undefined) instead of quietly marking the requirement done — surfaced in the test file's own comment, in code review, in phase verification, and filed as a standalone follow-up todo rather than blocking the milestone
+
+### What Was Inefficient
+- Nothing notable — this was a low-risk, uniform, single-phase milestone (13 small pure-function test files) that matched its v1.1 Phase 5 precedent closely and executed without rework
+
+### Patterns Established
+- A single foundational "fix the harness once" plan ahead of parallel content-writing plans avoids the harness-conflict risk entirely, rather than letting each plan patch config independently
+- Cross-plan integration checks for test-infrastructure-only milestones should verify: harness changes don't conflict, the full suite passes live (not just per-SUMMARY claims), CI auto-discovery still needs zero workflow edits, and no test file creates fragile cross-plan coupling
+
+### Key Lessons
+1. When a Jest/`import.meta.env`-style harness limitation makes a requirement's *letter* satisfiable but not its *spirit*, disclose it explicitly (test comment + review + verification + a tracked follow-up) rather than either silently passing it or blocking the whole milestone over a low-risk, well-understood gap.
+2. Splitting harness-fix work into its own tracer plan before fanning out parallel content plans is a reusable pattern beyond this milestone — it turns a potential N-way config conflict into a single point of truth.
+
+### Cost Observations
+- Model mix: predominantly Sonnet (direct plan execution and phase verification), Haiku for both subagents used this milestone (`gsd-integration-checker` at audit time, resolved via `resolve-model`)
+- Sessions: 1 (execution and close-out completed in a single continuous session)
+- Notable: zero subagent stalls this milestone (contrast with v1.1's three stalls) — the harness-first sequencing pattern and small, uniform task shape may have contributed to reliable direct + subagent execution alike
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -45,6 +78,7 @@
 |-----------|----------|--------|------------|
 | v1.0 | — | 3 | Initial launch-quality punch list; git initialized for the project |
 | v1.1 | 2 | 2 | First real CI pipeline + public GitHub remote; subagent stalls led to direct-execution-and-verify becoming the working pattern |
+| v1.2 | 1 | 1 | Harness-first tracer plan pattern (fix Jest once, fan out content plans after) — zero subagent stalls, zero cross-plan harness conflicts |
 
 ### Cumulative Quality
 
@@ -52,8 +86,10 @@
 |-----------|-------|----------|--------------------|
 | v1.0 | 43 (1 suite) | `FormHandle.ts` typing + i18n URL util only | — |
 | v1.1 | 86 (7 suites) | + 6 pure utility modules (date, text, sort, object, protected-text-split, trailing-slash) | 0 (marked/slugify already present; UMD-build mapping is test-config only) |
+| v1.2 | 121 (20 suites) | + 13 pure utility modules — all 19 pure-testable `src/lib/utils/` modules now covered | 0 (harness config only: real-ESM `moduleNameMapper`/`NODE_OPTIONS` changes, no new packages) |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. Treat "should already work" planning assumptions about test-harness compatibility as unverified until a real test exercises that exact code path — v1.1 hit this twice (jest.config.ts's `.astro/types.d.ts` gap in Phase 4, `marked`'s ESM-only packaging in Phase 5).
-2. Real, reproduced verification (live CI runs, mutation checks re-run independently) catches things a plan's own claims and a SUMMARY's prose cannot — worth the extra step every time before calling a phase done.
+1. Treat "should already work" planning assumptions about test-harness compatibility as unverified until a real test exercises that exact code path — v1.1 hit this twice (jest.config.ts's `.astro/types.d.ts` gap in Phase 4, `marked`'s ESM-only packaging in Phase 5); v1.2 hit a related but distinct case — `import.meta.env` is structurally unavailable under Jest regardless of config, which is a harness *ceiling*, not a fixable gap, and was handled by disclosure rather than a doomed fix attempt.
+2. Real, reproduced verification (live CI runs, mutation checks re-run independently) catches things a plan's own claims and a SUMMARY's prose cannot — worth the extra step every time before calling a phase done. v1.2's integration checker re-ran the full suite live rather than trusting VERIFICATION.md's numbers, consistent with this pattern.
+3. Sequencing a single "fix the shared harness once" plan ahead of parallel content-writing plans (established in v1.2) eliminates a whole class of cross-plan config conflicts — worth defaulting to whenever multiple plans in a wave depend on the same test/build harness.
