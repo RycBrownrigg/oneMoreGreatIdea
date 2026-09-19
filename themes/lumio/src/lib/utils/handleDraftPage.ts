@@ -4,10 +4,14 @@
  * - Optionally excludes draft pages from the sitemap.
  *
  * @param {PageData} pageData - The page's frontmatter data object
+ * @param {boolean} [isProd] - Optional injectable production flag, primarily for tests. Falls
+ *   back to the build-time `import.meta.env.PROD` read when omitted, which is how all
+ *   production call sites use this function.
  * @returns {Response | undefined} A 404 Response if draft is true; otherwise undefined.
  */
-function handleDraftPage(pageData: any): Response | undefined {
-  if (pageData.draft && import.meta.env.PROD) {
+function handleDraftPage(pageData: any, isProd?: boolean): Response | undefined {
+  const effectiveIsProd = isProd ?? Boolean(import.meta.env && import.meta.env.PROD);
+  if (pageData.draft && effectiveIsProd) {
     // Return a 404 response to exclude the page from `dist` folder output
     return new Response(null, {
       status: 404,

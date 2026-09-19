@@ -13,9 +13,11 @@ describe("handleDraftPage", () => {
     expect(handleDraftPage({ draft: false })).toBeUndefined();
   });
 
-  test("throws when draft is true, because import.meta.env is undefined under Jest", () => {
-    expect(() => handleDraftPage({ draft: true })).toThrow(
-      "Cannot read properties of undefined (reading 'PROD')",
-    );
+  test("returns a 404 Response when draft is true and isProd is explicitly true", () => {
+    const result = handleDraftPage({ draft: true }, true);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Response);
+    expect(result?.status).toBe(404);
+    expect(result?.statusText).toBe("Not Found");
   });
 });
