@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-09-19)
 Phase: Milestone v1.2 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-09-19 — Milestone v1.2 completed and archived
+Last activity: 2026-09-19 — Completed quick task 260919-dz1: Refactor handleDraftPage.ts to accept an injectable isProd param
 
 ## Accumulated Context
 
@@ -47,7 +47,7 @@ See PROJECT.md Key Decisions table for the full v1.0/v1.1 decision log (all outc
 
 ### Pending Todos
 
-- Refactor handleDraftPage to accept injectable isProd param (minor, testing) — `.planning/todos/pending/2026-09-19-refactor-handledraftpage-to-accept-injectable-isprod-param.md`
+_None — the handleDraftPage isProd-injection follow-up was completed 2026-09-19 (quick task 260919-dz1); see `.planning/todos/completed/2026-09-19-refactor-handledraftpage-to-accept-injectable-isprod-param.md`._
 
 ### Blockers/Concerns
 
@@ -61,6 +61,7 @@ See PROJECT.md Key Decisions table for the full v1.0/v1.1 decision log (all outc
 | 260916-bby | Publish BMad vs GSD Series 4 blog post (post-14.md + header SVG) | 2026-09-16 | f9f0b46 | [260916-bby-publish-new-blog-post-bmad-vs-gsd-series](./quick/260916-bby-publish-new-blog-post-bmad-vs-gsd-series/) |
 | 2 | fix: correct post-14 publish date to 2026-09-15 | 2026-09-17 | 3e4c37b | — |
 | 3 | fix: link Part 3 and 4 in post-11 series index | 2026-09-17 | bebafdc | — |
+| 260919-dz1 | Refactor handleDraftPage.ts to accept an injectable isProd param, closing the last disclosed v1.2 test-coverage gap (TECHDEBT-10/IN-01) | 2026-09-19 | 980100c | [260919-dz1-refactor-handledraftpage-ts-to-accept-an](./quick/260919-dz1-refactor-handledraftpage-ts-to-accept-an/) |
 
 ## Deferred Items
 
