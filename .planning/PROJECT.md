@@ -54,7 +54,7 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 - ✓ Unused `netlify.toml`/`wrangler.toml`/`deploy:cf` removed (v1.1, TECHDEBT-07)
 - ✓ Unit tests for `generateTypeScale.ts` (v1.2, TECHDEBT-08)
 - ✓ Unit tests for `filteredEnabled.ts` (v1.2, TECHDEBT-09)
-- ✓ Unit tests for `handleDraftPage.ts` (v1.2, TECHDEBT-10) — dedicated test file covers the `draft:false` path; the production 404-Response branch is structurally unreachable under Jest (`import.meta.env.PROD` is always undefined) and is tracked as a follow-up todo rather than blocking this requirement
+- ✓ Unit tests for `handleDraftPage.ts` (v1.2, TECHDEBT-10) — the function takes an optional injectable `isProd` production flag, and the test suite asserts the real 404 `Response` (status and statusText) directly for the draft-in-production branch; closed by quick task 260919-dz1
 - ✓ Unit tests for `overrideObjects.ts` (v1.2, TECHDEBT-11)
 - ✓ Unit tests for `uniqueIdGenerator.ts` (v1.2, TECHDEBT-12)
 - ✓ Unit tests for `removeEmptyKeys.ts` (v1.2, TECHDEBT-13)
@@ -110,7 +110,7 @@ _None — awaiting next milestone's requirements via `/gsd-new-milestone`._
 | Establish the project's first GitHub remote by force-pushing onto an abandoned, unrelated single-commit scaffold at that repo name (2026-09-18) | CI needs a real remote to run against; user confirmed the target repo was abandoned before the force-push | ✓ Good |
 | Limit Phase 5 test scope to 6 named utility modules rather than all ~19 pure-testable ones, deferring 13 as TECHDEBT-08 (2026-09-18) | Matches ROADMAP's named goal and REQUIREMENTS.md's TECHDEBT-06 examples; user confirmed after asking for the reasoning behind each exclusion bucket | ✓ Good |
 | Skip planner/executor subagents for both v1.1 phases, execute and verify directly instead (2026-09-18) | Three consecutive subagent stalls (60min–6hr, zero output) earlier in the milestone; direct execution with real CI verification proved reliable | ✓ Good — worth retrying subagents normally next milestone unless stalls recur |
-| Accept handleDraftPage's 404-Response branch as untestable under Jest (TECHDEBT-10) and defer a fix rather than block Phase 6 (2026-09-19) | `import.meta.env.PROD` is always undefined under Jest, so the branch is structurally unreachable in the current harness; disclosed by code review and the phase verifier as low-risk (static site, no server runtime) | ✓ Good — tracked as a todo (`refactor-handledraftpage-to-accept-injectable-isprod-param`) rather than a gap-closure plan |
+| Accept handleDraftPage's 404-Response branch as untestable under Jest (TECHDEBT-10) and defer a fix rather than block Phase 6 (2026-09-19) | `import.meta.env.PROD` is always undefined under Jest, so the branch is structurally unreachable in the current harness; disclosed by code review and the phase verifier as low-risk (static site, no server runtime) | ✓ Good — deferral honored, todo closed by quick task 260919-dz1; the branch is now under CI coverage via an injectable `isProd` param |
 
 ## Evolution
 
