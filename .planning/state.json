@@ -1,23 +1,18 @@
 {
   "contract": "1.0.0",
   "flavor": "core",
-  "milestone": "v1.1 — CI & Test Hardening",
+  "milestone": "v1.2 — Utility Test Coverage Completion",
   "phases": [
     {
-      "number": "4",
-      "name": "CI Pipeline & Deploy-Config Cleanup",
-      "status": "complete"
-    },
-    {
-      "number": "5",
-      "name": "Utility Test Coverage",
-      "status": "complete"
+      "number": "6",
+      "name": "Utility Test Coverage Completion",
+      "status": "in_progress"
     }
   ],
   "next": {
-    "command": "/gsd:progress",
-    "label": "Show progress",
-    "reason": "Unsure of state — showing progress"
+    "command": "/gsd:progress --next",
+    "label": "Advance to the next step (verify)",
+    "reason": "Phase 6 of 1 · 0% · ready to verify"
   },
-  "updated_at": "2026-09-18T18:28:25.983Z"
+  "updated_at": "2026-09-19T14:59:56.391Z"
 }

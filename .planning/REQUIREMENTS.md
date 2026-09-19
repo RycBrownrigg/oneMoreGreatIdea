@@ -25,8 +25,8 @@ Requirements for this milestone (unit-test coverage for the 13 pure, testable `s
 
 - [x] **TECHDEBT-10**: Automated unit tests cover `handleDraftPage.ts`
 - [x] **TECHDEBT-16**: Automated unit tests cover `navigationActive.ts`
-- [ ] **TECHDEBT-17**: Automated unit tests cover `getRelatedContent.ts`
-- [ ] **TECHDEBT-18**: Automated unit tests cover `preline.ts`
+- [x] **TECHDEBT-17**: Automated unit tests cover `getRelatedContent.ts`
+- [x] **TECHDEBT-18**: Automated unit tests cover `preline.ts`
 - [x] **TECHDEBT-19**: Automated unit tests cover `absoluteUrl.ts`
 
 ## v2 Requirements
@@ -66,8 +66,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TECHDEBT-14 | Phase 6 | Complete |
 | TECHDEBT-15 | Phase 6 | Complete |
 | TECHDEBT-16 | Phase 6 | Complete |
-| TECHDEBT-17 | Phase 6 | Pending |
-| TECHDEBT-18 | Phase 6 | Pending |
+| TECHDEBT-17 | Phase 6 | Complete |
+| TECHDEBT-18 | Phase 6 | Complete |
 | TECHDEBT-19 | Phase 6 | Complete |
 | TECHDEBT-20 | Phase 6 | Complete |
 
