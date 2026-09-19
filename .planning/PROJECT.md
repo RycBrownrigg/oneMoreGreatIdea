@@ -56,22 +56,23 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 - ✓ CI pipeline (`astro check`, `npm run test:ci`) runs automatically on every push/PR, proven to genuinely gate (v1.1, TECHDEBT-05)
 - ✓ Automated unit test coverage expanded to 6 pure utility modules beyond `FormHandle.ts`/i18n URL util (v1.1, TECHDEBT-06)
 - ✓ Unused `netlify.toml`/`wrangler.toml`/`deploy:cf` removed (v1.1, TECHDEBT-07)
+- ✓ Unit tests for `generateTypeScale.ts` (v1.2, TECHDEBT-08)
+- ✓ Unit tests for `filteredEnabled.ts` (v1.2, TECHDEBT-09)
+- ✓ Unit tests for `handleDraftPage.ts` (v1.2, TECHDEBT-10) — dedicated test file covers the `draft:false` path; the production 404-Response branch is structurally unreachable under Jest (`import.meta.env.PROD` is always undefined) and is tracked as a follow-up todo rather than blocking this requirement
+- ✓ Unit tests for `overrideObjects.ts` (v1.2, TECHDEBT-11)
+- ✓ Unit tests for `uniqueIdGenerator.ts` (v1.2, TECHDEBT-12)
+- ✓ Unit tests for `removeEmptyKeys.ts` (v1.2, TECHDEBT-13)
+- ✓ Unit tests for `readingTime.ts` (v1.2, TECHDEBT-14)
+- ✓ Unit tests for `buildToc.ts` (v1.2, TECHDEBT-15)
+- ✓ Unit tests for `navigationActive.ts` (v1.2, TECHDEBT-16)
+- ✓ Unit tests for `getRelatedContent.ts` (v1.2, TECHDEBT-17)
+- ✓ Unit tests for `preline.ts` (v1.2, TECHDEBT-18)
+- ✓ Unit tests for `absoluteUrl.ts` (v1.2, TECHDEBT-19)
+- ✓ Unit tests for `JsonLdGenerator.ts` (v1.2, TECHDEBT-20)
 
 ### Active
 
-- [ ] **TECHDEBT-08**: Unit tests for `generateTypeScale.ts`
-- [ ] **TECHDEBT-09**: Unit tests for `filteredEnabled.ts`
-- [ ] **TECHDEBT-10**: Unit tests for `handleDraftPage.ts`
-- [ ] **TECHDEBT-11**: Unit tests for `overrideObjects.ts`
-- [ ] **TECHDEBT-12**: Unit tests for `uniqueIdGenerator.ts`
-- [ ] **TECHDEBT-13**: Unit tests for `removeEmptyKeys.ts`
-- [ ] **TECHDEBT-14**: Unit tests for `readingTime.ts`
-- [ ] **TECHDEBT-15**: Unit tests for `buildToc.ts`
-- [ ] **TECHDEBT-16**: Unit tests for `navigationActive.ts`
-- [ ] **TECHDEBT-17**: Unit tests for `getRelatedContent.ts`
-- [ ] **TECHDEBT-18**: Unit tests for `preline.ts`
-- [ ] **TECHDEBT-19**: Unit tests for `absoluteUrl.ts`
-- [ ] **TECHDEBT-20**: Unit tests for `JsonLdGenerator.ts`
+None — all v1.2 requirements shipped in Phase 6.
 
 ### Out of Scope
 
@@ -87,7 +88,7 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 - Build: `npm run build` (from `themes/lumio/`) → static output in `themes/lumio/dist/`. Deploy: `./deploy.sh` (runs build then `rsync -avz --delete dist/ ryc@135.148.61.99:/var/www/projects/onemoregreatidea/`) — still manual, not triggered by CI
 - `themes/lumio/.astro/config.generated.json` (compiled from `config.toml` by `scripts/toml-watcher.mjs`) is an implicit build dependency of `astro.config.mjs` and `src/content.config.ts` — always use the npm scripts (`dev`/`build`/`test`), never invoke `astro`/`jest` directly
 - Content collections (blog, services, case-studies) are registered under both a `config.toml`-driven folder name and a hardcoded canonical alias in `src/content.config.ts` — changing folder-name settings in `config.toml` requires auditing every `getCollection(...)` call site
-- 7 Jest test files exist under `src/__tests__/` (86 tests): the original `getLocalUrlCTM.test.ts` plus 6 added in v1.1 (`dateFormat`, `textConverter`, `sortFunctions`, `objectFunctions`, `splitProtectedText`, `trailingSlashChecker`). 13 more pure-testable utility modules are deliberately deferred as TECHDEBT-08 (v2 backlog) — see `.planning/milestones/v1.1-phases/05-utility-test-coverage/05-01-SUMMARY.md` for the full per-module accounting
+- 20 Jest test files exist under `src/__tests__/` (121 tests): the original `getLocalUrlCTM.test.ts`, 6 added in v1.1 (`dateFormat`, `textConverter`, `sortFunctions`, `objectFunctions`, `splitProtectedText`, `trailingSlashChecker`), and 13 added in v1.2 Phase 6 (`generateTypeScale`, `filteredEnabled`, `handleDraftPage`, `overrideObjects`, `uniqueIdGenerator`, `removeEmptyKeys`, `readingTime`, `buildToc`, `navigationActive`, `getRelatedContent`, `preline`, `absoluteUrl`, `JsonLdGenerator`). All 19 pure-testable `src/lib/utils/` modules now have dedicated coverage; the remaining ~8 are Astro/DOM/filesystem-coupled and explicitly out of scope
 - `themes/lumio/jest.config.ts` maps the ESM-only `marked` package to its CJS-compatible UMD build for Jest — needed the moment any test imports `textConverter.ts`
 - GitHub Actions CI (`.github/workflows/ci.yml`) runs `npm ci` → `npm run toml:watch` → `npm run astro-check` → `npm run test:ci` on every push/PR to `main`; verification-only, does not deploy
 - Full codebase map available at `.planning/codebase/` (STACK.md, ARCHITECTURE.md, STRUCTURE.md, INTEGRATIONS.md, CONVENTIONS.md, TESTING.md, CONCERNS.md)
@@ -113,6 +114,7 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 | Establish the project's first GitHub remote by force-pushing onto an abandoned, unrelated single-commit scaffold at that repo name (2026-09-18) | CI needs a real remote to run against; user confirmed the target repo was abandoned before the force-push | ✓ Good |
 | Limit Phase 5 test scope to 6 named utility modules rather than all ~19 pure-testable ones, deferring 13 as TECHDEBT-08 (2026-09-18) | Matches ROADMAP's named goal and REQUIREMENTS.md's TECHDEBT-06 examples; user confirmed after asking for the reasoning behind each exclusion bucket | ✓ Good |
 | Skip planner/executor subagents for both v1.1 phases, execute and verify directly instead (2026-09-18) | Three consecutive subagent stalls (60min–6hr, zero output) earlier in the milestone; direct execution with real CI verification proved reliable | ✓ Good — worth retrying subagents normally next milestone unless stalls recur |
+| Accept handleDraftPage's 404-Response branch as untestable under Jest (TECHDEBT-10) and defer a fix rather than block Phase 6 (2026-09-19) | `import.meta.env.PROD` is always undefined under Jest, so the branch is structurally unreachable in the current harness; disclosed by code review and the phase verifier as low-risk (static site, no server runtime) | ✓ Good — tracked as a todo (`refactor-handledraftpage-to-accept-injectable-isprod-param`) rather than a gap-closure plan |
 
 ## Evolution
 
@@ -132,4 +134,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-18 — v1.2 milestone started*
+*Last updated: 2026-09-19 — v1.2 milestone complete after Phase 6*

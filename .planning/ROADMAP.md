@@ -14,7 +14,7 @@ This is pure test-writing debt cleanup on already-existing, already-shipped code
 
 ## Phases
 
-- [ ] **Phase 6: Utility Test Coverage Completion** - The remaining 13 pure `src/lib/utils/` modules gain real unit tests, closing out the utility-layer coverage gap left by v1.1 Phase 5
+- [x] **Phase 6: Utility Test Coverage Completion** - The remaining 13 pure `src/lib/utils/` modules gain real unit tests, closing out the utility-layer coverage gap left by v1.1 Phase 5 (completed 2026-09-19)
 
 ## Phase Details
 
@@ -60,7 +60,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Utility Test Coverage Completion | 4/4 | In Progress|  |
+| 6. Utility Test Coverage Completion | 4/4 | Complete    | 2026-09-19 |
 
 ## Backlog
 
