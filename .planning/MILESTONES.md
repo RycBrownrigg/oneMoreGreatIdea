@@ -1,12 +1,16 @@
 # Milestones: Ryc Brownrigg Consulting Site
 
-## v1.2 Utility Test Coverage Completion (Shipped: 2026-09-19)
+## v1.2 — Utility Test Coverage Completion
 
-**Phases completed:** 1 phases, 4 plans, 5 tasks
+**Shipped:** 2026-09-19
+**Phases:** 6 (1 phase, 4 plans, 11 tasks)
+**Requirements:** 13/13 satisfied
+**Audit:** `.planning/milestones/v1.2-MILESTONE-AUDIT.md` — passed, 7/7 integration checks, no gaps
+**Full record:** `.planning/milestones/v1.2-ROADMAP.md`, `.planning/milestones/v1.2-REQUIREMENTS.md`
 
-**Key accomplishments:**
+Completed the utility-layer regression safety net started in v1.1 Phase 5: added 13 new real-behavior Jest test files (one per previously-untested pure `src/lib/utils/` module — `handleDraftPage`, `buildToc`, `navigationActive`, `JsonLdGenerator`, `absoluteUrl`, `generateTypeScale`, `readingTime`, `filteredEnabled`, `overrideObjects`, `removeEmptyKeys`, `uniqueIdGenerator`, `getRelatedContent`, `preline`), growing the suite from 7 suites/86 tests to 20 suites/121 tests with zero regressions. Fixed the Jest harness for real ESM mode (`@/*` alias resolution, bare `.astro/config.generated.json` import, `import.meta` support) once in the first plan, reused cleanly by all three later plans with zero conflicts — confirmed by an independent integration-checker re-run. All 19 pure-testable `src/lib/utils/` modules now have dedicated coverage; the remaining ~8 Astro/DOM/filesystem-coupled modules stay explicitly out of scope. One real, structural test-harness limitation (`handleDraftPage.ts`'s production 404-Response branch is unreachable under Jest because `import.meta.env.PROD` is always undefined) was honestly disclosed rather than silently passed, and filed as a standalone follow-up todo.
 
-- (none recorded)
+Known verification overrides: 1 newly acknowledged, 0 carried forward from a prior close (see STATE.md Deferred Items) — a pending todo to refactor `handleDraftPage.ts` with an injectable `isProd` param, already disclosed as a known, low-risk gap in 06-REVIEW.md and 06-VERIFICATION.md.
 
 ---
 
