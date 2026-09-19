@@ -4,8 +4,13 @@ title: Refactor handleDraftPage to accept injectable isProd param
 area: testing
 severity: minor
 files:
+
   - themes/lumio/src/lib/utils/handleDraftPage.ts
   - themes/lumio/src/__tests__/handleDraftPage.test.ts
+
+audit_acknowledged:
+  milestone: v1.2
+  at: 2026-09-19
 ---
 
 ## Problem
@@ -18,6 +23,7 @@ artifact (`import.meta.env` being `undefined` throws a `TypeError`) — it never
 module's real 404-branch logic.
 
 This was surfaced during Phase 6 (utility-test-coverage-completion) verification:
+
 - `06-REVIEW.md` IN-01 (informational, non-blocking)
 - `06-VERIFICATION.md` human_verification item 1 — explicitly flagged as a known, disclosed,
   non-blocking gap (low risk: static site, no server runtime), not a hidden defect.
