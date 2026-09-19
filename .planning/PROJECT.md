@@ -2,13 +2,13 @@
 
 ## What This Is
 
-Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. v1.0 closed out the remaining pre-launch/launch-quality punch list on the already-live site. v1.1 hardened the engineering safety net: every push/PR is now automatically type-checked and tested, the pure utility layer has real regression coverage, and dead deploy-config cruft is gone.
+Ryc Brownrigg's personal consulting website, built on the Lumio Astro theme, presenting him as a "Principal OTT, Web3 and AI Architect" available for consulting engagements. It's live at onemoregreatidea.com and showcases services, real project case studies (InkTix, CCRMS, HorizonGo, Vongo), and a blog. onemoregreatidea.com remains its own dedicated Astro site permanently — a separate WordPress project (`/Users/ryc/projects/askryc`) covers askryc.com/.net/.mt. v1.0 closed out the remaining pre-launch/launch-quality punch list on the already-live site. v1.1 hardened the engineering safety net: every push/PR is now automatically type-checked and tested, the pure utility layer has real regression coverage, and dead deploy-config cruft is gone. v1.2 completed that regression safety net — all 19 pure-testable `src/lib/utils/` modules now have dedicated Jest coverage, not just the first 6.
 
 ## Core Value
 
 The site must credibly present Ryc as a hireable consulting authority and reliably capture contact-form leads — if a visitor doesn't trust the content or stumbles onto broken/empty pages, or the contact form fails, nothing else about the site matters.
 
-## Current State (as of v1.1, shipped 2026-09-18)
+## Current State (as of v1.2, shipped 2026-09-19)
 
 - Live at https://onemoregreatidea.com, static Astro 6 build deployed via manual rsync
 - All content is single-locale (English) `.md` — no `.mdx` in blog/case-studies, no French-locale artifacts
@@ -16,21 +16,17 @@ The site must credibly present Ryc as a hireable consulting authority and reliab
 - OG image live for social sharing; case-study-5/6 draft placeholders confirmed unreachable by direct URL (404)
 - `FormHandle.ts` fully typed under `astro/tsconfigs/strict`, no `@ts-nocheck`
 - Blog series expanded through post-14 (BMad vs GSD Series 4); series cross-links kept current
-- GitHub Actions CI (`github.com/RycBrownrigg/oneMoreGreatIdea`, public repo — established this milestone) runs `astro check` + `npm run test:ci` on every push/PR, proven to genuinely gate (real green and red runs both verified)
-- 7 Jest suites / 86 tests covering `dateFormat`, `textConverter`, `sortFunctions`, `objectFunctions`, `splitProtectedText`, `trailingSlashChecker`, plus the pre-existing i18n URL util — up from 1 suite / 43 tests at v1.0 close
+- GitHub Actions CI (`github.com/RycBrownrigg/oneMoreGreatIdea`, public repo) runs `astro check` + `npm run test:ci` on every push/PR, proven to genuinely gate (real green and red runs both verified)
+- 20 Jest suites / 121 tests: the original i18n URL util, 6 added in v1.1, and 13 added in v1.2 (Phase 6) — all 19 pure-testable `src/lib/utils/` modules now have dedicated regression coverage; the remaining ~8 are Astro/DOM/filesystem-coupled and explicitly out of scope
 - `netlify.toml`, `wrangler.toml`, and the `deploy:cf` script are gone; deploy stays manual via `./deploy.sh` (rsync), unaffected by CI
-- See `.planning/milestones/v1.1-ROADMAP.md` and `.planning/milestones/v1.1-MILESTONE-AUDIT.md` for full detail
+- One known, disclosed test-coverage gap: `handleDraftPage.ts`'s production 404-Response branch can't be exercised under Jest (`import.meta.env.PROD` is always undefined in the harness) — tracked as a deferred todo (inject an `isProd` param), not a hidden defect
+- See `.planning/milestones/v1.2-ROADMAP.md` and `.planning/v1.2-MILESTONE-AUDIT.md` for full detail
 
-## Current Milestone: v1.2 Utility Test Coverage Completion
+## Current Milestone
 
-**Goal:** Extend unit-test coverage to the 13 remaining pure, testable utility modules in `src/lib/utils/` deferred from v1.1's Phase 5 test-coverage push.
+No active milestone — next step is `/gsd-new-milestone` to define v2 scope, or continue ad-hoc content work as before.
 
-**Target features:**
-- Unit tests for `generateTypeScale.ts`, `filteredEnabled.ts`, `handleDraftPage.ts`, `overrideObjects.ts`, `uniqueIdGenerator.ts`
-- Unit tests for `removeEmptyKeys.ts`, `readingTime.ts`, `buildToc.ts`, `navigationActive.ts`, `getRelatedContent.ts`
-- Unit tests for `preline.ts`, `absoluteUrl.ts`, `JsonLdGenerator.ts`
-
-Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01/02/03, unchanged) — confirmed with Ryc (2026-09-17) that no real material exists yet for either.
+Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01/02/03) — confirmed with Ryc (2026-09-17) that no real material exists yet for either. The `handleDraftPage.ts` `isProd`-injection follow-up (see Current State above) is the other open backlog item.
 
 ## Business Context
 
@@ -72,7 +68,7 @@ Case-study-5/6 real content and real testimonials remain deferred (v2 CONTENT-01
 
 ### Active
 
-None — all v1.2 requirements shipped in Phase 6.
+_None — awaiting next milestone's requirements via `/gsd-new-milestone`._
 
 ### Out of Scope
 

@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Utility Test Coverage Completion
-current_phase: 06
-status: completed
+status: Awaiting next milestone
 stopped_at: Phase 06 complete — all phases complete
-last_updated: "2026-09-19T15:21:21.599Z"
+last_updated: "2026-09-19T15:30:41.733Z"
 last_activity: 2026-09-19
-last_activity_desc: Phase 06 complete
-state_head: 241e52189bf4dc817fa18ec44998ef04c46309fd
+last_activity_desc: Milestone v1.2 completed and archived
+state_head: 1a0de7e15c4788b1b9a0ee7473aae459bac1bf07
 progress:
   total_phases: 1
   completed_phases: 1
   total_plans: 4
   completed_plans: 4
   percent: 100
+current_phase: 06
 ---
 
 # Project State
@@ -28,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-09-19)
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Status: All phases complete
-Last activity: 2026-09-19 — Phase 06 complete
+Phase: Milestone v1.2 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-09-19 — Milestone v1.2 completed and archived
 
 ## Accumulated Context
 
@@ -76,6 +76,7 @@ Items acknowledged and deferred at milestone close, most recent first:
 | Tech Debt | Remove unused netlify.toml/wrangler.toml/deploy:cf | Completed 2026-09-18 (TECHDEBT-07, Phase 4) — was deferred to v2 at roadmap creation, then promoted into v1.1 | Roadmap creation | v1.1 |
 | Tech Debt | 13 pure-but-testable `src/lib/utils/` modules not covered by Phase 5 | Promoted into v1.2 active scope (TECHDEBT-08 through TECHDEBT-20, Phase 6) — was deferred to v2 at Phase 5 execution | Phase 5 execution 2026-09-18 | v1.1 → v1.2 |
 | Tech Debt | OG image generation script not committed (one-off) | Acknowledged, low priority | Milestone audit 2026-09-16 | v1.0 |
+| todos | 2026-09-19-refactor-handledraftpage-to-accept-injectable-isprod-param.md | (presence-only) | 2026-09-19 | v1.2 |
 
 ## Session Continuity
 
@@ -85,7 +86,7 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Run `/gsd-complete-milestone` to archive v1.2 and prepare for the next milestone, or `/gsd-new-milestone` to start scoping new work
+- Start the next milestone with /gsd-new-milestone
 
 ## Performance Metrics
 

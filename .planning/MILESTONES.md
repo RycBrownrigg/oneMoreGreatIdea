@@ -1,5 +1,15 @@
 # Milestones: Ryc Brownrigg Consulting Site
 
+## v1.2 Utility Test Coverage Completion (Shipped: 2026-09-19)
+
+**Phases completed:** 1 phases, 4 plans, 5 tasks
+
+**Key accomplishments:**
+
+- (none recorded)
+
+---
+
 ## v1.1 — CI & Test Hardening
 
 **Shipped:** 2026-09-18
