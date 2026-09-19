@@ -48,7 +48,7 @@ See PROJECT.md Key Decisions table for the full v1.0/v1.1 decision log (all outc
 
 ### Pending Todos
 
-None outstanding.
+- Refactor handleDraftPage to accept injectable isProd param (minor, testing) — `.planning/todos/pending/2026-09-19-refactor-handledraftpage-to-accept-injectable-isprod-param.md`
 
 ### Blockers/Concerns
 
